@@ -17,12 +17,14 @@
  * limitations under the License.
  */
 
-#include <unordered_map>
+#include <numa.h>
 #include <Rcpp.h>
+
+#include <unordered_map>
 #include "binding/knori.hpp"
 
-RcppExport SEXP R_kmeans(SEXP rdatafn, SEXP rnrow, SEXP rncol, SEXP rk,
-        SEXP rmax_iters, SEXP rnnodes, SEXP rnthread,
+RcppExport SEXP R_knor_kmeans(SEXP rdatafn, SEXP rnrow, SEXP rncol, SEXP rk,
+        SEXP rmax_iters, SEXP rnthread,
         SEXP rp_centers, SEXP rinit,
         SEXP rtolerance, SEXP rdist_type,
         SEXP rcentersfn, SEXP romp) {
@@ -32,7 +34,6 @@ RcppExport SEXP R_kmeans(SEXP rdatafn, SEXP rnrow, SEXP rncol, SEXP rk,
 	size_t ncol = INTEGER(rncol)[0];
 	unsigned k = INTEGER(rk)[0];
 	size_t max_iters = INTEGER(rmax_iters)[0];
-	unsigned nnodes = INTEGER(rnnodes)[0];
 	int nthread = INTEGER(rnthread)[0];
 	double* p_centers = REAL(rp_centers);
 	std::string init = CHAR(STRING_ELT(rinit,0));
@@ -41,15 +42,13 @@ RcppExport SEXP R_kmeans(SEXP rdatafn, SEXP rnrow, SEXP rncol, SEXP rk,
 	std::string centersfn = CHAR(STRING_ELT(rcentersfn,0));
     bool omp = INTEGER(romp)[0];
 
-	if (rnthread < 1) {
-		fprintf(stderr, "# threads must be >= 1");
-		return R_NilValue;
-	}
+	if (nthread == -1)
+        nthread = kpmeans::base::get_num_omp_threads();
 
     srand(1234);
 
     kpmeans::base::kmeans_t kret = kpmeans::base::kmeans(datafn,
-            nrow, ncol, k, max_iters, nnodes, nthread, p_centers,
+            nrow, ncol, k, max_iters, numa_num_task_nodes(), nthread, p_centers,
             init, tolerance, dist_type, centersfn, omp);
 
 	Rcpp::List ret;
