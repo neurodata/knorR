@@ -1,11 +1,11 @@
 PKG_CFLAGS=-DUSING_R -I. -Ilibauto -Ilibman -Ilibkcommon \
-     @CFLAGS@ -DNDEBUG -DBOOST_LOG_DYN_LINK -DUSE_HWLOC -DUSE_NUMA -fopenmp \
+     -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g -DNDEBUG -DBOOST_LOG_DYN_LINK -DUSE_HWLOC -DUSE_NUMA -fopenmp \
     -DPACKAGE_VERSION=\"@VERSION@\"
 PKG_CXXFLAGS= -DUSING_R -I. -Ilibauto -Ilibman -Ilibkcommon \
-     @CFLAGS@ -DNDEBUG -DBOOST_LOG_DYN_LINK -DUSE_HWLOC -DUSE_NUMA -fopenmp \
+     -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g -DNDEBUG -DBOOST_LOG_DYN_LINK -DUSE_HWLOC -DUSE_NUMA -fopenmp \
     -DPACKAGE_VERSION=\"@VERSION@\" -std=gnu++11
-PKG_LIBS=@knorR_lib@ -lpthread -lhwloc -lnuma
+PKG_LIBS=-lpthread -lhwloc -lnuma
 
 all: $(SHLIB)
 
-OBJECTS=rinterface.o libkcommon/thd_safe_bool_vector.o libkcommon/util.o libauto/kmeans.o libman/base_kmeans_coordinator.o libauto/min-tri-kmeans.o libman/kmeans_coordinator.o libman/kmeans_task_coordinator.o libman/kmeans_task_coordinator_wrap.o libkcommon/clusters.o libman/kmeans_task_thread.o libkcommon/dist_matrix.o libman/kmeans_thread.o libkcommon/io.o libkcommon/kmeans_types.o libkcommon/prune_stats.o
+OBJECTS=rinterface.o libkcommon/thd_safe_bool_vector.o libkcommon/util.o libauto/kmeans.o libman/base_kmeans_coordinator.o libauto/min-tri-kmeans.o libman/kmeans_coordinator.o libman/kmeans_task_coordinator.o libkcommon/clusters.o libman/kmeans_task_thread.o libkcommon/dist_matrix.o libman/kmeans_thread.o libkcommon/io.o libkcommon/kmeans_types.o libkcommon/prune_stats.o

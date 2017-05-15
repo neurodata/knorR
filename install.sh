@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 PACK="knorR*.tar.gz"
-rm -f configure
+rm -rf config.* configure
 aclocal; autoconf
 rm -f $PACK
 R CMD build .
