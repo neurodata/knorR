@@ -61,12 +61,12 @@ RcppExport SEXP R_knor_kmeans(SEXP rdatafn, SEXP rnrow, SEXP rncol, SEXP rk,
 #pragma omp parallel for firstprivate(p_centers) shared(centers)
     for (unsigned row = 0; row < k; row++)
         for (size_t col = 0; col < ncol; col++)
-            centers(row, col) = kret.centers[row*ncol + col];
+            centers(row, col) = kret.centroids[row*ncol + col];
 	ret["centers"] = centers;
 
 	Rcpp::IntegerVector assignment(nrow);
 	for (size_t rid = 0; rid < nrow; rid++)
-		assignment[rid] = kret.assignment[rid] + 1; // 1-based indexing
+		assignment[rid] = kret.assignments[rid] + 1; // 1-based indexing
 	ret["cluster"] = assignment;
 
 	Rcpp::IntegerVector size(k);
