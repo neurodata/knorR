@@ -34,6 +34,7 @@
 #'
 #' @return A list containing the output of kmeans.
 #'
+#' @export
 #' @name kmeans
 #' @author Disa Mhembere <disa@@jhu.edu>
 #' @rdname kmeans
