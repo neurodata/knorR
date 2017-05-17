@@ -23,33 +23,33 @@
 #include <unordered_map>
 #include "binding/knori.hpp"
 
-RcppExport SEXP R_knor_kmeans(SEXP rdatafn, SEXP rnrow, SEXP rncol, SEXP rk,
+RcppExport SEXP R_knor_kmeans(SEXP rdatafn, SEXP rk,
+        SEXP rnrow, SEXP rncol,
         SEXP rmax_iters, SEXP rnthread,
-        SEXP rp_centers, SEXP rinit,
-        SEXP rtolerance, SEXP rdist_type,
-        SEXP rcentersfn, SEXP romp) {
+        SEXP rinit, SEXP rtolerance,
+        SEXP rdist_type, SEXP romp) {
 
     std::string datafn = CHAR(STRING_ELT(rdatafn,0));
-	size_t nrow = INTEGER(rnrow)[0];
-	size_t ncol = INTEGER(rncol)[0];
 	unsigned k = INTEGER(rk)[0];
-	size_t max_iters = INTEGER(rmax_iters)[0];
+	size_t nrow = static_cast<size_t>(REAL(rnrow)[0]);
+	size_t ncol = static_cast<size_t>(REAL(rncol)[0]);
+	size_t max_iters = static_cast<size_t>(REAL(rmax_iters)[0]);
 	int nthread = INTEGER(rnthread)[0];
-	double* p_centers = REAL(rp_centers);
 	std::string init = CHAR(STRING_ELT(rinit,0));
 	double tolerance = REAL(rtolerance)[0];
 	std::string dist_type = CHAR(STRING_ELT(rdist_type,0));
-	std::string centersfn = CHAR(STRING_ELT(rcentersfn,0));
     bool omp = INTEGER(romp)[0];
 
-	if (nthread == -1)
+	if (nthread == -1) {
         nthread = kpmeans::base::get_num_omp_threads();
+        std::cout << "Running on " << nthread << " threads!\n";
+    }
 
     srand(1234);
 
     kpmeans::base::kmeans_t kret = kpmeans::base::kmeans(datafn,
-            nrow, ncol, k, max_iters, numa_num_task_nodes(), nthread, p_centers,
-            init, tolerance, dist_type, centersfn, omp);
+            nrow, ncol, k, max_iters, numa_num_task_nodes(), nthread, NULL,
+            init, tolerance, dist_type, "", omp);
 
 	Rcpp::List ret;
     ret["nrow"] = kret.nrow;
@@ -58,7 +58,7 @@ RcppExport SEXP R_knor_kmeans(SEXP rdatafn, SEXP rnrow, SEXP rncol, SEXP rk,
     ret["k"] = kret.k;
 
 	Rcpp::NumericMatrix centers = Rcpp::NumericMatrix(k, ncol);
-#pragma omp parallel for firstprivate(p_centers) shared(centers)
+#pragma omp parallel for shared(centers)
     for (unsigned row = 0; row < k; row++)
         for (size_t col = 0; col < ncol; col++)
             centers(row, col) = kret.centroids[row*ncol + col];
