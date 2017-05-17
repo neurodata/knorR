@@ -4,7 +4,7 @@ PKG_CFLAGS=-DUSING_R -I. -Ilibauto -Ilibman -Ilibkcommon \
 PKG_CXXFLAGS= -DUSING_R -I. -Ilibauto -Ilibman -Ilibkcommon \
      -g -O2 -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2 -g -DNDEBUG -DBOOST_LOG_DYN_LINK -DUSE_HWLOC -DUSE_NUMA -fopenmp \
     -DPACKAGE_VERSION=\"@VERSION@\" -std=gnu++11
-PKG_LIBS=-lpthread -lhwloc -lnuma
+PKG_LIBS=-lpthread -lhwloc -lnuma -lboost_log
 
 all: $(SHLIB)
 
