@@ -7,13 +7,13 @@ R bindings for *k-means* NUMA optimized routines. This package runs on **Linux**
 The following packages must be installed as follows on the system in order to compile knorR.
 
 ```
-libssl-dev libxml2-dev libcurl4-openssl-dev libnuma-dbg libnuma-dev libnuma1 libboost-all-dev
+libssl-dev libxml2-dev libcurl4-openssl-dev libnuma-dbg libnuma-dev libnuma1 libboost-all-dev r-base-core
 ```
 
 For Ubuntu 16.04 this can be done as follows:
 
 ```
-apt install -y libssl-dev libxml2-dev libcurl4-openssl-dev libnuma-dbg libnuma-dev libnuma1 libboost-all-dev
+apt install -y libssl-dev libxml2-dev libcurl4-openssl-dev libnuma-dbg libnuma-dev libnuma1 libboost-all-dev r-base-core
 ```
 
 ### Bleeding edge install
@@ -23,8 +23,6 @@ Install directly from github
 
 ```
 # Install dependencies if you don't have them
-install.packages("git2r", dependencies=TRUE)
-install.packages("httr", dependencies=TRUE)
 install.packages("devtools", dependencies=TRUE)
 
 # Load and install the package
@@ -38,4 +36,11 @@ Install from CRAN directly.
 
 ```
 install.packages("knorR")
+```
+
+### Help
+Check the R docs
+
+```
+??knorR::kmeans
 ```
