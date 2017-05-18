@@ -15,9 +15,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#'  Perform k-means clustering on a data matrix.
+#' Perform k-means clustering on a data matrix.
 #'
-#' K-means provides `k` disjoint sets for a dataset.
+#' K-means provides `k` disjoint sets for a dataset using a parallel and fast
+#' NUMA optimized version of Lloyd's algorithm. The details of which are found
+#' in this paper https://arxiv.org/pdf/1606.08905.pdf.
 #'
 #' @param data Data file name on disk
 #' @param nrow The number of samples in the dataset
@@ -29,9 +31,14 @@
 #' @param init The type of initialization to use
 #' @param tolerance The convergence tolerance
 #' @param dist.type What dissimilarity metric to use
-#' @param  omp Use (slower) OpenMP threads rather than pthreads (default: FALSE)
+#' @param omp Use (slower) OpenMP threads rather than pthreads (default: FALSE)
 #'
-#' @return A list containing the output of kmeans.
+#' @return A list containing the attributes of the output of kmeans.
+#'  cluster: A vector of integers (from ‘1:k’) indicating the cluster to
+#'          which each point is allocated.
+#'  centers: A matrix of cluster centres.
+#'  size: The number of points in each cluster.
+#'  iter: The number of (outer) iterations.
 #'
 #' @export
 #' @name kmeans
@@ -45,7 +52,7 @@ kmeans <- function(data, centers, nrow=-1, ncol=-1,
 
     if (class(data) == "character") {
         if (class(centers) == "numeric") {
-            ret <- .Call("R_knor_kmeans", as.character(data),
+            ret <- .Call("R_knor_kmeans", normalizePath(as.character(data)),
                          as.integer(centers), as.double(nrow),
                          as.double(ncol),
                          as.double(max.iters), as.integer(nthread),

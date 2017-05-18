@@ -4,25 +4,23 @@
 \alias{kmeans}
 \title{Perform k-means clustering on a data matrix.}
 \usage{
-kmeans(datafn, nrow, ncol, k, max.iters = .Machine$integer.max,
-  nthread = -1, centers = NULL, init = c("kmeanspp", "random", "forgy",
-  "none"), tolerance = 1e-06, dist.type = c("eucl", "cos"),
-  centersfn = "", omp = FALSE)
+kmeans(data, centers, nrow = -1, ncol = -1,
+  max.iters = .Machine$integer.max, nthread = -1, init = c("kmeanspp",
+  "random", "forgy", "none"), tolerance = 1e-06, dist.type = c("eucl",
+  "cos"), omp = FALSE)
 }
 \arguments{
-\item{datafn}{Data file name on disk}
+\item{data}{Data file name on disk}
+
+\item{centers}{Pre-computed centroids filename or in-memory data}
 
 \item{nrow}{The number of samples in the dataset}
 
 \item{ncol}{The number of features in the dataset}
 
-\item{k}{The desired number of clusters}
-
 \item{max.iters}{Then maximum number of iteration of k-means to perform}
 
 \item{nthread}{The number of parallel thread to run}
-
-\item{centers}{Pre-computed centroids}
 
 \item{init}{The type of initialization to use}
 
@@ -30,15 +28,22 @@ kmeans(datafn, nrow, ncol, k, max.iters = .Machine$integer.max,
 
 \item{dist.type}{What dissimilarity metric to use}
 
-\item{centersfn}{Filename containing centers}
-
 \item{omp}{Use (slower) OpenMP threads rather than pthreads (default: FALSE)}
+
+\item{k}{The desired number of clusters}
 }
 \value{
-A list containing the output of kmeans.
+A list containing the attributes of the output of kmeans.
+ cluster: A vector of integers (from ‘1:k’) indicating the cluster to
+         which each point is allocated.
+ centers: A matrix of cluster centres.
+ size: The number of points in each cluster.
+ iter: The number of (outer) iterations.
 }
 \description{
-K-means provides `k` disjoint sets for a dataset.
+K-means provides `k` disjoint sets for a dataset using a parallel and fast
+NUMA optimized version of Lloyd's algorithm. The details of which are found
+in this paper https://arxiv.org/pdf/1606.08905.pdf.
 }
 \author{
 Disa Mhembere <disa@jhu.edu>
