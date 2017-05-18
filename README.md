@@ -14,7 +14,7 @@ require(devtools)
 install_github("flashxio/knorR")
 ```
 
-### Stable builds
+### Stable builds (NOT yet available)
 
 Install from CRAN directly.
 
