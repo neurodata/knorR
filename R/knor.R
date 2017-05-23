@@ -21,7 +21,7 @@
 #' NUMA optimized version of Lloyd's algorithm. The details of which are found
 #' in this paper https://arxiv.org/pdf/1606.08905.pdf.
 #'
-#' @param data Data file name on disk
+#' @param data Data file name on disk or In memory data matrix
 #' @param nrow The number of samples in the dataset
 #' @param ncol The number of features in the dataset
 #' @param k The desired number of clusters
@@ -64,7 +64,16 @@ kmeans <- function(data, centers, nrow=-1, ncol=-1,
             stopifnot(FALSE)
         }
     } else if (class(data) == "matrix") {
-        cat("In memory Converting matrix in memory ...\n")
-        stopifnot(FALSE)
+        if (class(centers) == "numeric") {
+            ret <- .Call("R_knor_kmeans_data_im", as.matrix(data),
+                         as.integer(centers),
+                         as.double(max.iters), as.integer(nthread),
+                         as.character(init), as.double(tolerance),
+                         as.character(dist.type), as.logical(omp),
+                         PACKAGE="knorR")
+        } else if (class(centers) == "matrix") {
+            cat("ERROR: Precomputed centers not yet supported!\n")
+            stopifnot(FALSE)
+        }
     }
 }
