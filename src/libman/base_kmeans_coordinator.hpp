@@ -76,7 +76,8 @@ public:
     virtual void random_partition_init() = 0;
     virtual void forgy_init() = 0;
 
-    virtual kpmeans::base::kmeans_t run_kmeans() = 0;
+    virtual kpmeans::base::kmeans_t run_kmeans(double* allocd_data=NULL,
+        bool numa_opt=false) = 0;
     virtual void kmeanspp_init() = 0;
     virtual void wake4run(kpmeans::thread_state_t state) = 0;
     virtual const double* get_thd_data(const unsigned row_id) const = 0;
@@ -89,6 +90,8 @@ public:
     std::vector<std::shared_ptr<base_kmeans_thread> >& get_threads() {
         return threads;
     }
+
+    virtual void set_thread_data_ptr(double* allocd_data);
 
     virtual void set_global_ptrs() { throw kpmeans::base::abstract_exception(); };
     virtual const void print_thread_data() {

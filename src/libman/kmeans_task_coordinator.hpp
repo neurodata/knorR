@@ -98,11 +98,13 @@ public:
     void set_thd_dist_v_ptr(double* v);
     void run_init();
     void set_global_ptrs();
+    void set_thread_data_ptr(double* allocd_data) override;
 
     virtual void kmeanspp_init();
     virtual void random_partition_init();
     virtual void forgy_init();
-    virtual kpmbase::kmeans_t run_kmeans() override;
+    virtual kpmbase::kmeans_t run_kmeans(double* allocd_data,
+        bool numa_opt) override;
 
     const double* get_thd_data(const unsigned row_id) const;
 
@@ -110,7 +112,6 @@ public:
     void set_prune_init(const bool prune_init);
     virtual const void print_thread_data();
     virtual void build_thread_state();
-
 };
 } } // End namespace kpmeans, prune
 #endif
