@@ -49,14 +49,12 @@ kpmbase::kmeans_t kmeans(double* data, const size_t nrow,
     kpmbase::kmeans_t ret;
 
     if (omp) {
-        printf("Calling FULL kmeans ..\n");
         kpmeans::kmeans_coordinator::ptr kc =
             kpmeans::kmeans_coordinator::create("",
                     nrow, ncol, k, max_iters, nnodes, nthread, p_centers,
                     init, tolerance, dist_type);
         ret = kc->run_kmeans(data);
     } else {
-        printf("Calling PRUNED kmeans ..\n");
         kpmprune::kmeans_task_coordinator::ptr kc =
             kpmprune::kmeans_task_coordinator::create(
                     "", nrow, ncol, k, max_iters, nnodes,
@@ -87,14 +85,12 @@ kpmbase::kmeans_t kmeans(const std::string datafn, const size_t nrow,
     }
 
     if (omp) {
-        printf("calling full kmeans ..\n");
         kpmeans::kmeans_coordinator::ptr kc =
             kpmeans::kmeans_coordinator::create(datafn,
                     nrow, ncol, k, max_iters, nnodes, nthread, p_centers,
                     init, tolerance, dist_type);
         ret = kc->run_kmeans();
     } else {
-        printf("calling pruned kmeans ..\n");
         kpmprune::kmeans_task_coordinator::ptr kc =
             kpmprune::kmeans_task_coordinator::create(
                     datafn, nrow, ncol, k, max_iters, nnodes, nthread, p_centers,
@@ -102,7 +98,7 @@ kpmbase::kmeans_t kmeans(const std::string datafn, const size_t nrow,
         ret = kc->run_kmeans();
     }
 
-    if (p_centers) { delete [] p_centers; }
+    // NOTE: the caller must take responsibility of cleaning up p_centers
     return ret;
 }
 

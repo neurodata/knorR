@@ -60,8 +60,13 @@ kmeans <- function(data, centers, nrow=-1, ncol=-1,
                          as.character(dist.type), as.logical(omp),
                          PACKAGE="knorR")
         } else if (class(centers) == "matrix") {
-            cat("ERROR: Precomputed centers not yet supported!\n")
-            stopifnot(FALSE)
+            ret <- .Call("R_knor_kmeans_centroids_im",
+                         normalizePath(as.character(data)),
+                         as.matrix(centers), as.double(nrow),
+                         as.double(max.iters), as.integer(nthread),
+                         as.character(init), as.double(tolerance),
+                         as.character(dist.type), as.logical(omp),
+                         PACKAGE="knorR")
         }
     } else if (class(data) == "matrix") {
         if (class(centers) == "numeric") {
@@ -72,8 +77,12 @@ kmeans <- function(data, centers, nrow=-1, ncol=-1,
                          as.character(dist.type), as.logical(omp),
                          PACKAGE="knorR")
         } else if (class(centers) == "matrix") {
-            cat("ERROR: Precomputed centers not yet supported!\n")
-            stopifnot(FALSE)
+            ret <- .Call("R_knor_kmeans_data_centroids_im", as.matrix(data),
+                         as.matrix(centers),
+                         as.double(max.iters), as.integer(nthread),
+                         as.character(init), as.double(tolerance),
+                         as.character(dist.type), as.logical(omp),
+                         PACKAGE="knorR")
         }
     }
 }
