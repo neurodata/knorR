@@ -38,9 +38,23 @@ Install from CRAN directly.
 install.packages("knorR")
 ```
 
+# Docker
+
+A Docker images with all dependencies installed can be obtained by:
+
+```
+docker pull flashxio/knorr-base
+```
+
+**NOTE**: The knorR package must still be installed on this image via:
+`install.packages("knorR")`
+
+If you prefer to build the image yourself, you can use this
+[Dockerfile](https://github.com/flashxio/knor/tree/dev/R/Dockerfile)
+
 ### Help
 Check the R docs
 
 ```
-??knorR::kmeans
+?knorR::kmeans
 ```

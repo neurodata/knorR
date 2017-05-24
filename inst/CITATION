@@ -1,0 +1,19 @@
+citHeader("To cite knorR in publications use:")
+
+citEntry(entry = "Article",
+  title        = "knor: A NUMA-Optimized In-Memory, Distributed and Semi-External-Memory k-means Library",
+  author       = personList(as.person("Disa Mhembere"),
+                   as.person("Da Zheng"), as.person("Carey E. Priebe"),
+				as.person("Joshua T. Vogelstein"), as.person("Randal Burns")),
+  journal      = "High-Performance Parallel and Distributed Computing",
+  year         = "2017",
+  volume       = "26",
+  url          = "https://arxiv.org/pdf/1606.08905.pdf",
+
+  textVersion  =
+  paste("Disa Mhembere, Da Zheng, Carey E. Priebe, Joshua T. Vogelstein, Randal
+  Burns (2017).",
+        "knor: A NUMA-Optimized In-Memory, Distributed and Semi-External-Memory k-means Library.",
+        "High-Performance Parallel and Distributed Computing, 26.",
+        "URL https://arxiv.org/pdf/1606.08905.pdf")
+)
