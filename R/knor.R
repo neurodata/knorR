@@ -64,9 +64,22 @@ kmeans <- function(data, centers, nrow=-1, ncol=-1,
                          normalizePath(as.character(data)),
                          as.matrix(centers), as.double(nrow),
                          as.double(max.iters), as.integer(nthread),
-                         as.character(init), as.double(tolerance),
+                         as.double(tolerance),
                          as.character(dist.type), as.logical(omp),
                          PACKAGE="knorR")
+        }
+        else if (class(centers) == "list") {
+            ret <- .Call("R_knor_kmeans_data_centroids_em",
+                         normalizePath(as.character(data)),
+                         normalizePath(as.character(centers[1])),
+                         as.integer(centers[2]),
+                         as.double(nrow), as.double(ncol),
+                         as.double(max.iters), as.integer(nthread),
+                         as.double(tolerance),
+                         as.character(dist.type), as.logical(omp),
+                         PACKAGE="knorR")
+        } else {
+            stop(paste("Cannot handle centers of type", class(centers), "\n"))
         }
     } else if (class(data) == "matrix") {
         if (class(centers) == "numeric") {
@@ -80,9 +93,20 @@ kmeans <- function(data, centers, nrow=-1, ncol=-1,
             ret <- .Call("R_knor_kmeans_data_centroids_im", as.matrix(data),
                          as.matrix(centers),
                          as.double(max.iters), as.integer(nthread),
-                         as.character(init), as.double(tolerance),
+                         as.double(tolerance),
                          as.character(dist.type), as.logical(omp),
                          PACKAGE="knorR")
+        } else if (class(centers) == "character") {
+            ret <- .Call("R_knor_kmeans_data_im_centroids_em", as.matrix(data),
+                         normalizePath(centers),
+                         as.double(max.iters), as.integer(nthread),
+                         as.double(tolerance),
+                         as.character(dist.type), as.logical(omp),
+                         PACKAGE="knorR")
+        } else {
+            stop(paste("Cannot handle centers of type", class(centers), "\n"))
         }
+    } else {
+        stop(paste("Cannot handle data of type", class(data), "\n"))
     }
 }

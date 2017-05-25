@@ -22,6 +22,7 @@
 
 #include <unordered_map>
 #include "binding/knori.hpp"
+#include "libkcommon/io.hpp"
 
 /**
   * Transform the C output to R
@@ -48,7 +49,7 @@ static void marshall_c_to_r(const kpmbase::kmeans_t& kret,
 
 	Rcpp::IntegerVector size(kret.k);
 	for (unsigned i = 0; i < kret.k; i++)
-		size[i] = kret.assignment_count[i];
+        size[i] = kret.assignment_count[i];
     ret["size"] = size;
 }
 
@@ -57,7 +58,7 @@ static void marshall_c_to_r(const kpmbase::kmeans_t& kret,
   **/
 RcppExport SEXP R_knor_kmeans_data_centroids_im(SEXP rdata, SEXP rk,
         SEXP rmax_iters, SEXP rnthread,
-        SEXP rinit, SEXP rtolerance,
+        SEXP rtolerance,
         SEXP rdist_type, SEXP romp) {
 
     Rcpp::NumericMatrix data = Rcpp::NumericMatrix(rdata);
@@ -65,7 +66,6 @@ RcppExport SEXP R_knor_kmeans_data_centroids_im(SEXP rdata, SEXP rk,
 
 	size_t max_iters = static_cast<size_t>(REAL(rmax_iters)[0]);
 	int nthread = INTEGER(rnthread)[0];
-	std::string init = CHAR(STRING_ELT(rinit,0));
 	double tolerance = REAL(rtolerance)[0];
 	std::string dist_type = CHAR(STRING_ELT(rdist_type,0));
     bool omp = INTEGER(romp)[0];
@@ -91,10 +91,9 @@ RcppExport SEXP R_knor_kmeans_data_centroids_im(SEXP rdata, SEXP rk,
 		for (size_t col = 0; col < ncol; col++)
 			ccentroids[row*ncol + col] = centroids(row, col);
 
-
     kpmeans::base::kmeans_t kret = kpmeans::base::kmeans(&cdata[0],
-            nrow, ncol, k, max_iters, numa_num_task_nodes(), nthread, NULL,
-            init, tolerance, dist_type, "", omp);
+            nrow, ncol, k, max_iters, numa_num_task_nodes(), nthread,
+            &ccentroids[0], "none", tolerance, dist_type, omp);
 
 	Rcpp::List ret;
     marshall_c_to_r(kret, ret);
@@ -133,7 +132,7 @@ RcppExport SEXP R_knor_kmeans_data_im(SEXP rdata, SEXP rk,
 
     kpmeans::base::kmeans_t kret = kpmeans::base::kmeans(&cdata[0],
             nrow, ncol, k, max_iters, numa_num_task_nodes(), nthread, NULL,
-            init, tolerance, dist_type, "", omp);
+            init, tolerance, dist_type, omp);
 
 	Rcpp::List ret;
     marshall_c_to_r(kret, ret);
@@ -144,16 +143,13 @@ RcppExport SEXP R_knor_kmeans_data_im(SEXP rdata, SEXP rk,
   * Centroids only in-memory
   */
 RcppExport SEXP R_knor_kmeans_centroids_im(SEXP rdata, SEXP rk,
-        SEXP rnrow,
-        SEXP rmax_iters, SEXP rnthread,
-        SEXP rinit, SEXP rtolerance,
+        SEXP rnrow, SEXP rmax_iters, SEXP rnthread, SEXP rtolerance,
         SEXP rdist_type, SEXP romp) {
 
     std::string data = CHAR(STRING_ELT(rdata,0));
 	size_t nrow = static_cast<size_t>(REAL(rnrow)[0]);
 	size_t max_iters = static_cast<size_t>(REAL(rmax_iters)[0]);
 	int nthread = INTEGER(rnthread)[0];
-	std::string init = CHAR(STRING_ELT(rinit,0));
 	double tolerance = REAL(rtolerance)[0];
 	std::string dist_type = CHAR(STRING_ELT(rdist_type,0));
     bool omp = INTEGER(romp)[0];
@@ -174,7 +170,7 @@ RcppExport SEXP R_knor_kmeans_centroids_im(SEXP rdata, SEXP rk,
 
     kpmeans::base::kmeans_t kret = kpmeans::base::kmeans(data,
             nrow, ncol, k, max_iters, numa_num_task_nodes(), nthread,
-            &ccentroids[0], "none", tolerance, dist_type, "", omp);
+            &ccentroids[0], "none", tolerance, dist_type, omp);
 
 	Rcpp::List ret;
     marshall_c_to_r(kret, ret);
@@ -207,7 +203,96 @@ RcppExport SEXP R_knor_kmeans(SEXP rdata, SEXP rk,
 
     kpmeans::base::kmeans_t kret = kpmeans::base::kmeans(data,
             nrow, ncol, k, max_iters, numa_num_task_nodes(), nthread, NULL,
-            init, tolerance, dist_type, "", omp);
+            init, tolerance, dist_type, omp);
+
+	Rcpp::List ret;
+    marshall_c_to_r(kret, ret);
+	return ret;
+}
+
+/**
+  * Data in-memory and centroids on disk
+  **/
+RcppExport SEXP R_knor_kmeans_data_im_centroids_em(
+        SEXP rdata, SEXP rk,
+        SEXP rmax_iters, SEXP rnthread,
+        SEXP rtolerance,
+        SEXP rdist_type, SEXP romp) {
+
+    Rcpp::NumericMatrix data = Rcpp::NumericMatrix(rdata);
+	size_t max_iters = static_cast<size_t>(REAL(rmax_iters)[0]);
+	int nthread = INTEGER(rnthread)[0];
+	double tolerance = REAL(rtolerance)[0];
+	std::string dist_type = CHAR(STRING_ELT(rdist_type,0));
+    bool omp = INTEGER(romp)[0];
+	const size_t nrow = data.nrow();
+	const size_t ncol = data.ncol();
+    std::vector<double> cdata(nrow*ncol);
+
+    // Figure out k and load centroids
+    std::string centroidfn = CHAR(STRING_ELT(rk,0));
+    std::ifstream in(centroidfn, std::ifstream::ate | std::ifstream::binary);
+    size_t k = in.tellg()/(sizeof(double)*ncol);
+    std::vector<double> ccentroids(k*ncol);
+    kpmbase::bin_rm_reader<double> br(centroidfn);
+    br.read(ccentroids);
+
+    srand(1234);
+    if (nthread == -1)
+        nthread = kpmeans::base::get_num_omp_threads();
+
+// TODO: Slow transpose
+#pragma omp parallel for firstprivate(data) shared (cdata)
+	for (size_t row = 0; row < nrow; row++)
+		for (size_t col = 0; col < ncol; col++)
+			cdata[row*ncol + col] = data(row, col);
+
+    kpmeans::base::kmeans_t kret = kpmeans::base::kmeans(&cdata[0],
+            nrow, ncol, k, max_iters, numa_num_task_nodes(), nthread,
+            &ccentroids[0], "none", tolerance, dist_type, omp);
+
+	Rcpp::List ret;
+    marshall_c_to_r(kret, ret);
+	return ret;
+}
+
+/**
+  * Data on disk and centroids on disk
+  **/
+RcppExport SEXP R_knor_kmeans_data_centroids_em(
+        SEXP rdata, SEXP rcentroids, SEXP rk,
+        SEXP rnrow, SEXP rncol,
+        SEXP rmax_iters, SEXP rnthread,
+        SEXP rtolerance,
+        SEXP rdist_type, SEXP romp) {
+
+    std::string data = CHAR(STRING_ELT(rdata,0));
+	size_t nrow = static_cast<size_t>(REAL(rnrow)[0]);
+	size_t ncol = static_cast<size_t>(REAL(rncol)[0]);
+
+	size_t max_iters = static_cast<size_t>(REAL(rmax_iters)[0]);
+	int nthread = INTEGER(rnthread)[0];
+	double tolerance = REAL(rtolerance)[0];
+	std::string dist_type = CHAR(STRING_ELT(rdist_type,0));
+    bool omp = INTEGER(romp)[0];
+
+    std::vector<double> cdata(nrow*ncol);
+
+    // Figure out k and load centroids
+    std::string centroidfn = CHAR(STRING_ELT(rcentroids,0));
+	unsigned k = INTEGER(rk)[0];
+
+    std::vector<double> ccentroids(k*ncol);
+    kpmbase::bin_rm_reader<double> br(centroidfn);
+    br.read(ccentroids);
+
+    srand(1234);
+    if (nthread == -1)
+        nthread = kpmeans::base::get_num_omp_threads();
+
+    kpmeans::base::kmeans_t kret = kpmeans::base::kmeans(data,
+            nrow, ncol, k, max_iters, numa_num_task_nodes(), nthread,
+            &ccentroids[0], "none", tolerance, dist_type, omp);
 
 	Rcpp::List ret;
     marshall_c_to_r(kret, ret);
