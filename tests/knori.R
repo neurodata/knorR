@@ -1,6 +1,7 @@
 require(knorR)
 
-fn <- "~/Research/knor/test-data/matrix_r50_c5_rrw.bin"
+fn <- "../data/matrix_r50_c5_rrw.bin"
+centroidfn <- "../data/init_clusters_k8_c5.bin"
 k <- 8
 nrow <- 50
 ncol <- 5
@@ -10,7 +11,9 @@ nthread <- 2
 # Data in memory, compute centroids
 test.data.in.mem <- function() {
     cat("Data ==> memory, centroids ==> compute\n\n")
-    data <- replicate(ncol, rnorm(nrow))
+    #data <- replicate(ncol, rnorm(nrow))
+    data <- matrix(readBin(fn, "double", (nrow*ncol), 8),
+                        nrow=nrow, ncol=ncol)
     print(kmeans(data, k, nrow, ncol, nthread=nthread))
 }
 
@@ -23,25 +26,36 @@ test.data.ex.mem <- function() {
 # Data on disk, centroids in memory
 test.centroids.in.mem <- function() {
     cat("Data ==> disk, centroids ==> memory\n\n")
-    centroids <- replicate(ncol, rnorm(k))
+    centroids <- matrix(readBin(centroidfn, "double", (k*ncol), 8),
+                        nrow=k, ncol=ncol)
     print(kmeans(fn, centroids, nrow, nthread=nthread))
 }
 
 # Data in memory, centroids in memory
 test.data.centroids.in.mem <- function() {
     cat("Data ==> memory, centroids ==> memory\n\n")
-    data <- replicate(ncol, rnorm(nrow))
-    centroids <- replicate(ncol, rnorm(k))
+    data <- matrix(readBin(fn, "double", (nrow*ncol), 8),
+                        nrow=nrow, ncol=ncol)
+    centroids <- matrix(readBin(centroidfn, "double", (k*ncol), 8),
+                        nrow=k, ncol=ncol)
 
     print(kmeans(data, centroids, nthread=nthread))
 }
 
-# Data on disk, centroids on disk
-# TODO
-
 # Data in memory, centroids on disk
-# TODO
+test.data.in.mem.centroids.em <- function() {
+    cat("Data ==> memory, centroids ==> disk\n\n")
+    data <- matrix(readBin(fn, "double", (nrow*ncol), 8),
+                        nrow=nrow, ncol=ncol)
+    print(kmeans(data, centroidfn, nthread=nthread))
+}
 
+# Data on disk, centroids on disk
+test.data.centroids.em <- function() {
+    cat("Data ==> disk, centroids ==> disk\n\n")
+    print(kmeans(fn, list(centroidfn, k), nrow=nrow,
+                 ncol=ncol,nthread=nthread))
+}
 
 # Main
 test.data.in.mem()
@@ -49,3 +63,5 @@ test.data.in.mem()
 test.data.ex.mem()
 test.centroids.in.mem()
 test.data.centroids.in.mem()
+test.data.in.mem.centroids.em()
+test.data.centroids.em()
