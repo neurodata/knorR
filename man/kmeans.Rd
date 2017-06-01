@@ -7,12 +7,15 @@
 kmeans(data, centers, nrow = -1, ncol = -1,
   max.iters = .Machine$integer.max, nthread = -1, init = c("kmeanspp",
   "random", "forgy", "none"), tolerance = 1e-06, dist.type = c("eucl",
-  "cos"), omp = FALSE)
+  "cos"), omp = FALSE, numa.opt = FALSE)
 }
 \arguments{
-\item{data}{Data file name on disk}
+\item{data}{Data file name on disk or In memory data matrix}
 
-\item{centers}{Pre-computed centroids filename or in-memory data}
+\item{centers}{Either (i) The number of centers (i.e., k), or
+(ii) an In-memory data matrix, or (iii) A 2-Element `list` with element 1
+being a filename for precomputed centers, and element 2
+the number of centroids.}
 
 \item{nrow}{The number of samples in the dataset}
 
@@ -22,15 +25,18 @@ kmeans(data, centers, nrow = -1, ncol = -1,
 
 \item{nthread}{The number of parallel thread to run}
 
-\item{init}{The type of initialization to use}
+\item{init}{The type of initialization to use c("kmeanspp", "random",
+"forgy", "none")}
 
 \item{tolerance}{The convergence tolerance}
 
-\item{dist.type}{What dissimilarity metric to use}
+\item{dist.type}{What dissimilarity metric to use c("eucl", "cos")}
 
 \item{omp}{Use (slower) OpenMP threads rather than pthreads (default: FALSE)}
 
-\item{k}{The desired number of clusters}
+\item{numa.opt}{When passing `data` as an in-memory data matrix you can
+optimize memory placement for Linux NUMA machines. **NOTE** that performance may
+degrade with very large data & it requires 2*memory of that without this.}
 }
 \value{
 A list containing the attributes of the output of kmeans.
