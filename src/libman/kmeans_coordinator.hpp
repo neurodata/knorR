@@ -75,7 +75,7 @@ class kmeans_coordinator : public kpmeans::base_kmeans_coordinator {
         std::pair<unsigned, unsigned> get_rid_len_tup(const unsigned thd_id);
         // Pass file handle to threads to read & numa alloc
         virtual kpmbase::kmeans_t run_kmeans(double* allocd_data,
-        bool numa_opt) override;
+                const bool numa_opt) override;
         void update_clusters();
         void kmeanspp_init();
         void wake4run(kpmeans::thread_state_t state);

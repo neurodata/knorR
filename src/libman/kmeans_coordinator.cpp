@@ -263,22 +263,18 @@ void kmeans_coordinator::run_init() {
 /**
  * Main driver for kmeans
  */
-kpmbase::kmeans_t kmeans_coordinator::run_kmeans(double* allocd_data,
-        bool numa_opt) {
+kpmbase::kmeans_t kmeans_coordinator::run_kmeans(
+        double* allocd_data, const bool numa_opt=false) {
 #ifdef PROFILER
     ProfilerStart("libman/kmeans_coordinator.perf");
 #endif
 
-    if (NULL == allocd_data) {
+    if (!numa_opt && NULL == allocd_data) {
         wake4run(ALLOC_DATA);
         wait4complete();
-    } else {
-        if (numa_opt) {
-            throw kpmbase::not_implemented_exception();
-        } else {
-            set_thread_data_ptr(allocd_data);
-        }
-    }
+    } else if (allocd_data) { // No NUMA opt
+        set_thread_data_ptr(allocd_data);
+    } // Do nothing for numa_opt .. done in binding/knori.hpp
 
     struct timeval start, end;
     gettimeofday(&start , NULL);
