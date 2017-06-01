@@ -59,7 +59,7 @@ static void marshall_c_to_r(const kpmbase::kmeans_t& kret,
 RcppExport SEXP R_knor_kmeans_data_centroids_im(SEXP rdata, SEXP rk,
         SEXP rmax_iters, SEXP rnthread,
         SEXP rtolerance,
-        SEXP rdist_type, SEXP romp) {
+        SEXP rdist_type, SEXP romp, SEXP rnuma_opt) {
 
     Rcpp::NumericMatrix data = Rcpp::NumericMatrix(rdata);
     Rcpp::NumericMatrix centroids = Rcpp::NumericMatrix(rk);
@@ -72,6 +72,7 @@ RcppExport SEXP R_knor_kmeans_data_centroids_im(SEXP rdata, SEXP rk,
 	unsigned k = centroids.nrow();
 	const size_t nrow = data.nrow();
 	const size_t ncol = data.ncol();
+    bool numa_opt = INTEGER(rnuma_opt)[0];
 
     std::vector<double> cdata(nrow*ncol);
     std::vector<double> ccentroids(k*ncol);
@@ -93,7 +94,7 @@ RcppExport SEXP R_knor_kmeans_data_centroids_im(SEXP rdata, SEXP rk,
 
     kpmeans::base::kmeans_t kret = kpmeans::base::kmeans(&cdata[0],
             nrow, ncol, k, max_iters, numa_num_task_nodes(), nthread,
-            &ccentroids[0], "none", tolerance, dist_type, omp);
+            &ccentroids[0], "none", tolerance, dist_type, omp, numa_opt);
 
 	Rcpp::List ret;
     marshall_c_to_r(kret, ret);
