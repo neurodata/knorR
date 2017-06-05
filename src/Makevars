@@ -23,5 +23,8 @@ endif
 
 all: $(SHLIB)
 
-OBJECTS=rinterface.o libkcommon/thd_safe_bool_vector.o libkcommon/util.o
-libman/base_kmeans_coordinator.o libman/kmeans_coordinator.o libman/kmeans_task_coordinator.o libkcommon/clusters.o libman/base_kmeans_thread.o libman/kmeans_task_thread.o libkcommon/dist_matrix.o libman/kmeans_thread.o libkcommon/io.o libkcommon/kmeans_types.o libkcommon/prune_stats.o
+OBJECTS=rinterface.o libkcommon/thd_safe_bool_vector.o libkcommon/util.o libman/base_kmeans_coordinator.o libman/kmeans_coordinator.o libman/kmeans_task_coordinator.o libkcommon/clusters.o libman/base_kmeans_thread.o libman/kmeans_task_thread.o libkcommon/dist_matrix.o libman/kmeans_thread.o libkcommon/io.o libkcommon/kmeans_types.o libkcommon/prune_stats.o
+
+ifeq ($(UNAME_S), Linux)
+	OBJECTS += libauto/kmeans.o libauto/min-tri-kmeans.o
+endif
