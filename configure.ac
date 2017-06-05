@@ -17,27 +17,6 @@ CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
 FCFLAGS=`"${R_HOME}/bin/R" CMD config FCFLAGS`
 FLIBS=`"${R_HOME}/bin/R" CMD config FLIBS`
 
-UNAME_S=`uname -s`
-build_linux=no
-build_mac=no
-
-# Detect the target system
-case "$UNAME_S" in
-    Linux*)
-        build_linux=yes
-        ;;
-    Darwin*)
-        build_mac=yes
-        ;;
-    *)
-        AC_MSG_ERROR(["OS $UNAME_S is not supported"])
-        ;;
-esac
-
-## Pass the conditionals to automake
-AM_CONDITIONAL([LINUX], [test "$build_linux" = "yes"])
-AM_CONDITIONAL([OSX], [test "$build_mac" = "yes"])
-
 AC_LANG(C)
 AC_PROG_CC
 
@@ -51,22 +30,14 @@ LIBS=$LIBS_SAVE
 AC_CHECK_HEADER([sys/times.h],
       [AC_DEFINE([HAVE_TIMES_H], [1], [Define to 1 if you have the sys/times.h header])])
 
-if test $build_linux = yes; then
-    echo "Skipping hwloc on Mac\n"
-else
-    AC_CHECK_HEADER([hwloc.h], [AC_SUBST(HWLOC_DEF, -DUSE_HWLOC)])
-    AC_CHECK_LIB([hwloc], [hwloc_topology_load], [AC_SUBST(HWLOC_LIB, -lhwloc)])
-fi
+AC_CHECK_HEADER([hwloc.h], [AC_SUBST(HWLOC_DEF, -DUSE_HWLOC)])
+AC_CHECK_LIB([hwloc], [hwloc_topology_load], [AC_SUBST(HWLOC_LIB, -lhwloc)])
 
 AC_CHECK_HEADER([pthread.h], [], [AC_MSG_ERROR("can't find pthread")])
 AC_CHECK_LIB([pthread], [pthread_create], [AC_SUBST(PTHREAD_LIB, -lpthread)], [AC_MSG_ERROR("can't find pthread")])
 
-if test $build_linux = yes; then
-    echo "Skipping numa on Mac\n"
-else
-    AC_CHECK_HEADER([numa.h], [AC_SUBST(NUMA_DEF, -DUSE_NUMA)])
-    AC_CHECK_LIB([numa], [numa_alloc_local], [AC_SUBST(NUMA_LIB, -lnuma)])
-fi
+AC_CHECK_HEADER([numa.h], [AC_SUBST(NUMA_DEF, -DUSE_NUMA)])
+AC_CHECK_LIB([numa], [numa_alloc_local], [AC_SUBST(NUMA_LIB, -lnuma)])
 
 AC_CONFIG_FILES([src/Makevars.tmp:src/Makevars.in], [
     if test -f src/Makevars && cmp -s src/Makevars.tmp src/Makevars; then

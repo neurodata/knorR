@@ -14,7 +14,7 @@ else
     PKG_CFLAGS=-DUSING_R -I. -Ilibman -Ilibkcommon \
                @CPPFLAGS@ @CFLAGS@ -DNDEBUG -DBOOST_LOG_DYN_LINK \
                -DPACKAGE_VERSION=\"@PACKAGE_VERSION@\"
-    PKG_CXXFLAGS= -DUSING_R -I. -Ilibman -Ilibkcommon \
+    PKG_CXXFLAGS=-DUSING_R -I. -Ilibman -Ilibkcommon \
                  @CPPFLAGS@ @CFLAGS@ -DNDEBUG -DBOOST_LOG_DYN_LINK \
                  -DPACKAGE_VERSION=\"@PACKAGE_VERSION@\" -std=gnu++11 \
                  -I/usr/local/opt/boost/include -DOSX
