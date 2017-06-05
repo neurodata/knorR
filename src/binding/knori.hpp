@@ -20,16 +20,20 @@
 #ifndef __KNORI_HPP__
 #define __KNORI_HPP__
 
-#include <limits>
-#include <numa.h>
-
-#include "signal.h"
 #include "io.hpp"
+#if LINUX
 #include "kmeans.hpp"
+#endif
 
 #include "kmeans_coordinator.hpp"
 #include "kmeans_task_coordinator.hpp"
 #include "util.hpp"
+
+#if LINUX
+#include "numa_reorg.hpp"
+
+namespace kpmbind = kpmeans::binding;
+#endif
 
 namespace kpmeans { namespace base {
     // NOTE: It is the callers job to allocate/free data & p_centers
@@ -37,31 +41,60 @@ namespace kpmeans { namespace base {
 kpmbase::kmeans_t kmeans(double* data, const size_t nrow,
         const size_t ncol, const unsigned k,
         size_t max_iters=std::numeric_limits<size_t>::max(),
+#ifdef LINUX
         unsigned nnodes=numa_num_task_nodes(),
+#else
+        unsigned nnodes=1,
+#endif
         unsigned nthread=kpmbase::get_num_omp_threads(),
         double* p_centers=NULL, std::string init="kmeanspp",
         double tolerance=-1, std::string dist_type="eucl",
-        bool omp=false) {
+        bool omp=false, bool numa_opt=false) {
 
     if (p_centers)
         init = "none";
 
     kpmbase::kmeans_t ret;
 
+#ifdef LINUX
     if (omp) {
         kpmeans::kmeans_coordinator::ptr kc =
             kpmeans::kmeans_coordinator::create("",
                     nrow, ncol, k, max_iters, nnodes, nthread, p_centers,
                     init, tolerance, dist_type);
-        ret = kc->run_kmeans(data);
+
+        if (numa_opt) {
+            kpmbind::memory_distributor<double>::ptr md =
+                kpmbind::memory_distributor<double>::create(data,
+                        nnodes, nrow, ncol);
+
+            md->numa_reorg(kc->get_threads());
+            ret = kc->run_kmeans(NULL, true);
+        } else {
+            ret = kc->run_kmeans(data);
+        }
     } else {
+#endif
         kpmprune::kmeans_task_coordinator::ptr kc =
             kpmprune::kmeans_task_coordinator::create(
                     "", nrow, ncol, k, max_iters, nnodes,
                     nthread, p_centers,
                     init, tolerance, dist_type);
-        ret = kc->run_kmeans(data);
+#ifdef LINUX
+        if (numa_opt) {
+            kpmbind::memory_distributor<double>::ptr md =
+                kpmbind::memory_distributor<double>::create(data,
+                        nnodes, nrow, ncol);
+
+            md->numa_reorg(kc->get_threads());
+            ret = kc->run_kmeans(NULL, true);
+        } else {
+#endif
+            ret = kc->run_kmeans(data);
+#ifdef LINUX
+        }
     }
+#endif
 
     return ret;
 }
@@ -69,7 +102,12 @@ kpmbase::kmeans_t kmeans(double* data, const size_t nrow,
 kpmbase::kmeans_t kmeans(const std::string datafn, const size_t nrow,
         const size_t ncol, const unsigned k,
         size_t max_iters=std::numeric_limits<size_t>::max(),
+
+#ifdef LINUX
         unsigned nnodes=numa_num_task_nodes(),
+#else
+        unsigned nnodes=1,
+#endif
         unsigned nthread=kpmbase::get_num_omp_threads(),
         double* p_centers=NULL, std::string init="kmeanspp",
         double tolerance=-1, std::string dist_type="eucl",
@@ -80,6 +118,7 @@ kpmbase::kmeans_t kmeans(const std::string datafn, const size_t nrow,
 
     kpmbase::kmeans_t ret;
 
+#ifdef LINUX
     if (omp) {
         kpmeans::kmeans_coordinator::ptr kc =
             kpmeans::kmeans_coordinator::create(datafn,
@@ -87,12 +126,15 @@ kpmbase::kmeans_t kmeans(const std::string datafn, const size_t nrow,
                     init, tolerance, dist_type);
         ret = kc->run_kmeans();
     } else {
+#endif
         kpmprune::kmeans_task_coordinator::ptr kc =
             kpmprune::kmeans_task_coordinator::create(
                     datafn, nrow, ncol, k, max_iters, nnodes, nthread, p_centers,
                     init, tolerance, dist_type);
         ret = kc->run_kmeans();
+#ifdef LINUX
     }
+#endif
 
     // NOTE: the caller must take responsibility of cleaning up p_centers
     return ret;

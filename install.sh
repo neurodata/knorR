@@ -2,7 +2,7 @@
 
 PACK="knorR*.tar.gz"
 rm -rf config.* configure
-aclocal; autoconf
+autoconf
 rm -f $PACK
 R CMD build .
 R CMD INSTALL $PACK

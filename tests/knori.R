@@ -55,8 +55,7 @@ test.data.centroids.in.mem <- function() {
                         nrow=nrow, ncol=ncol)
     centroids <- matrix(readBin(centroidfn, "double", (k*ncol), 8),
                         nrow=k, ncol=ncol)
-
-    print(kmeans(data, centroids, nthread=nthread))
+    kmeans(data, centroids, nthread=nthread)
 }
 
 # Data in memory, centroids on disk
@@ -64,7 +63,7 @@ test.data.in.mem.centroids.em <- function() {
     cat("Data ==> memory, centroids ==> disk\n\n")
     data <- matrix(readBin(fn, "double", (nrow*ncol), 8),
                         nrow=nrow, ncol=ncol)
-    print(kmeans(data, centroidfn, nthread=nthread))
+    kmeans(data, centroidfn, nthread=nthread)
 }
 
 # Data on disk, centroids on disk
@@ -74,11 +73,39 @@ test.data.centroids.em <- function() {
                  ncol=ncol,nthread=nthread))
 }
 
+# Data in memory, centroids in memory, numa reorg
+test.data.centroids.in.mem.numa.reorg <- function() {
+    cat("Data ==> memory, centroids ==> memory, NUMA reorg\n\n")
+    data <- matrix(readBin(fn, "double", (nrow*ncol), 8),
+                        nrow=nrow, ncol=ncol)
+    centroids <- matrix(readBin(centroidfn, "double", (k*ncol), 8),
+                        nrow=k, ncol=ncol)
+    ret <- kmeans(data, centroids, nthread=nthread, numa.opt=TRUE)
+}
+
+# Data in memory, centroids on disk, numa reorg
+test.data.in.mem.centroids.em.numa.reorg <- function() {
+    cat("Data ==> memory, centroids ==> disk, NUMA reorg\n\n")
+    data <- matrix(readBin(fn, "double", (nrow*ncol), 8),
+                        nrow=nrow, ncol=ncol)
+    kmeans(data, centroidfn, nthread=nthread, numa.opt=TRUE)
+}
+
+eq <- function (obj1, obj2) {
+    all(mapply(match.fun("=="), obj1, obj2))
+}
+
 # Main
 test.data.in.mem()
-test.data.in.mem()
 test.data.ex.mem()
+
 test.centroids.in.mem()
-test.data.centroids.in.mem()
-test.data.in.mem.centroids.em()
 test.data.centroids.em()
+
+ret1 <- test.data.centroids.in.mem()
+ret2 <- test.data.centroids.in.mem.numa.reorg()
+stopifnot(all.equal(ret1, ret2))
+
+ret1 <- test.data.in.mem.centroids.em()
+ret2 <- test.data.in.mem.centroids.em.numa.reorg()
+stopifnot(all.equal(ret1, ret2))

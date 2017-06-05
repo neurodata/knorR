@@ -17,8 +17,14 @@
  * limitations under the License.
  */
 
+#ifdef LINUX
+#include <omp.h>
+#endif
+
 #include <atomic>
 #include <fstream>
+#include <thread>
+
 #include "util.hpp"
 #include "exception.hpp"
 
@@ -26,7 +32,10 @@ namespace kpmeans { namespace base {
 double get_bic(const std::vector<double>& dist_v, const size_t nrow,
         const size_t ncol, const unsigned k) {
         double bic = 0;
+
+#ifdef LINUX
 #pragma omp parallel for reduction(+:bic) shared (dist_v)
+#endif
     for (unsigned i = 0; i < dist_v.size(); i++) {
         bic += (dist_v[i] );
     }
@@ -37,14 +46,15 @@ double get_bic(const std::vector<double>& dist_v, const size_t nrow,
 
 void spherical_projection(double* data, const size_t nrow,
         const size_t ncol) {
+#ifdef LINUX
 #pragma omp parallel for shared (data)
+#endif
     for (unsigned row = 0; row < nrow; row++) {
         double norm2 = 0;
         for (unsigned col = 0; col < ncol; col++)
             norm2 += (data[row]*data[row]);
-        sqrt(norm2);
         for (unsigned col = 0; col < ncol; col++)
-            data[col] = data[col]/norm2;
+            data[col] = data[col]/sqrt(norm2);
     }
 }
 
@@ -56,12 +66,13 @@ float time_diff(struct timeval time1, struct timeval time2) {
 
 // Verbatim from FlashX
 int get_num_omp_threads() {
-    std::atomic<int> num_threads;
-#pragma omp parallel
-    {
-        num_threads = omp_get_num_threads();
+    int num_threads = std::thread::hardware_concurrency();
+    if (!num_threads) {
+        std::cout << "\n\n[WARNING]: Failed to detect # of CPUs/threads!" <<
+            " Using default: 1\n\n";
+        num_threads = 1;
     }
-    return num_threads.load();
+    return num_threads;
 }
 
 init_type_t get_init_type(const std::string init) {

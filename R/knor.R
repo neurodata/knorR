@@ -24,14 +24,20 @@
 #' @param data Data file name on disk or In memory data matrix
 #' @param nrow The number of samples in the dataset
 #' @param ncol The number of features in the dataset
-#' @param k The desired number of clusters
 #' @param max.iters Then maximum number of iteration of k-means to perform
 #' @param nthread The number of parallel thread to run
-#' @param centers Pre-computed centroids filename or in-memory data
-#' @param init The type of initialization to use
+#' @param centers Either (i) The number of centers (i.e., k), or
+#'  (ii) an In-memory data matrix, or (iii) A 2-Element `list` with element 1
+#'  being a filename for precomputed centers, and element 2
+#'  the number of centroids.
+#' @param init The type of initialization to use c("kmeanspp", "random",
+#'  "forgy", "none")
 #' @param tolerance The convergence tolerance
-#' @param dist.type What dissimilarity metric to use
+#' @param dist.type What dissimilarity metric to use c("eucl", "cos")
 #' @param omp Use (slower) OpenMP threads rather than pthreads (default: FALSE)
+#' @param numa.opt When passing `data` as an in-memory data matrix you can
+#'  optimize memory placement for Linux NUMA machines. **NOTE** that performance may
+#'  degrade with very large data & it requires 2*memory of that without this.
 #'
 #' @return A list containing the attributes of the output of kmeans.
 #'  cluster: A vector of integers (from ‘1:k’) indicating the cluster to
@@ -48,7 +54,8 @@
 kmeans <- function(data, centers, nrow=-1, ncol=-1,
                    max.iters=.Machine$integer.max, nthread=-1,
                    init=c("kmeanspp", "random", "forgy", "none"),
-                   tolerance=1E-6, dist.type=c("eucl", "cos"), omp=FALSE) {
+                   tolerance=1E-6, dist.type=c("eucl", "cos"),
+                   omp=FALSE, numa.opt=FALSE) {
 
     if (class(data) == "character") {
         if (class(centers) == "numeric") {
@@ -88,6 +95,7 @@ kmeans <- function(data, centers, nrow=-1, ncol=-1,
                          as.double(max.iters), as.integer(nthread),
                          as.character(init), as.double(tolerance),
                          as.character(dist.type), as.logical(omp),
+                         as.logical(numa.opt),
                          PACKAGE="knorR")
         } else if (class(centers) == "matrix") {
             ret <- .Call("R_knor_kmeans_data_centroids_im", as.matrix(data),
@@ -95,6 +103,7 @@ kmeans <- function(data, centers, nrow=-1, ncol=-1,
                          as.double(max.iters), as.integer(nthread),
                          as.double(tolerance),
                          as.character(dist.type), as.logical(omp),
+                         as.logical(numa.opt),
                          PACKAGE="knorR")
         } else if (class(centers) == "character") {
             ret <- .Call("R_knor_kmeans_data_im_centroids_em", as.matrix(data),
@@ -102,6 +111,7 @@ kmeans <- function(data, centers, nrow=-1, ncol=-1,
                          as.double(max.iters), as.integer(nthread),
                          as.double(tolerance),
                          as.character(dist.type), as.logical(omp),
+                         as.logical(numa.opt),
                          PACKAGE="knorR")
         } else {
             stop(paste("Cannot handle centers of type", class(centers), "\n"))
