@@ -23,7 +23,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-#include <omp.h>
 #include <assert.h>
 
 #include <vector>
@@ -239,8 +238,7 @@ class bin_io {
         void read_cat() {
             T arr [ncol];
             for (size_t i = 0; i < nrow; i++) {
-                size_t num_read = fread(&arr[0], sizeof(T)*ncol, 1, f);
-                assert(num_read == 1);
+                assert(fread(&arr[0], sizeof(T)*ncol, 1, f) == 1);
                 cat(arr);
             }
         }
@@ -248,20 +246,17 @@ class bin_io {
         std::vector<T> readline() {
             std::vector<T> v;
             v.resize(ncol);
-            size_t num_read = fread(&v[0], sizeof(T)*ncol, 1, f);
-            assert(num_read == 1);
+            assert(fread(&v[0], sizeof(T)*ncol, 1, f) == 1);
             return v;
         }
 
         void readline(T* v) {
-            size_t num_read = fread(&v[0], sizeof(T)*ncol, 1, f);
-            assert(num_read == 1);
+            assert(fread(&v[0], sizeof(T)*ncol, 1, f) == 1);
         }
 
         // Read all the data!
         void read(std::vector<T>* v) {
-            size_t num_read = fread(&((*v)[0]), sizeof(T)*ncol*nrow, 1, f);
-            assert(num_read == 1);
+            assert(fread(&((*v)[0]), sizeof(T)*ncol*nrow, 1, f) == 1);
         }
 
         // Read all the data!
@@ -270,8 +265,7 @@ class bin_io {
         }
 
         void write(const T* data, const size_t numel) {
-            size_t num_put = fwrite(data, sizeof(T)*numel, 1, f);
-            assert(num_put == 1);
+            assert(fwrite(data, sizeof(T)*numel, 1, f) == 1);
         }
 
         void write(const std::vector<T>& data, const size_t numel) {
