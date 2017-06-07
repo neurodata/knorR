@@ -58,7 +58,7 @@ kmeans <- function(data, centers, nrow=-1, ncol=-1,
                    omp=FALSE, numa.opt=FALSE) {
 
     if (class(data) == "character") {
-        if (class(centers) == "numeric") {
+        if (class(centers) == "numeric" || class(centers) == "integer") {
             ret <- .Call("R_knor_kmeans", normalizePath(as.character(data)),
                          as.integer(centers), as.double(nrow),
                          as.double(ncol),
@@ -89,7 +89,7 @@ kmeans <- function(data, centers, nrow=-1, ncol=-1,
             stop(paste("Cannot handle centers of type", class(centers), "\n"))
         }
     } else if (class(data) == "matrix") {
-        if (class(centers) == "numeric") {
+        if (class(centers) == "numeric" || class(centers) == "integer") {
             ret <- .Call("R_knor_kmeans_data_im", as.matrix(data),
                          as.integer(centers),
                          as.double(max.iters), as.integer(nthread),
