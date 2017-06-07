@@ -89,3 +89,6 @@ expect_identical(ret1, ret2)
 ret1 <- test.data.in.mem.centroids.em()
 ret2 <- test.data.in.mem.centroids.em.numa.reorg()
 expect_identical(ret1, ret2)
+
+source("verify-correctness.R")
+test.iris()
