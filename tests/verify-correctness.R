@@ -16,25 +16,19 @@
 # limitations under the License.
 
 require(knorR)
+require(testthat)
 
-verify.equivalent <- function(data, nclust) {
-    centroids <- kmeans(iris.mat, k, iter.max=1, algorithm="Lloyd")$centers
+verify.equivalent <- function(data, k) {
+    suppressWarnings(centroids <-
+        stats::kmeans(data, k, iter.max=1, algorithm="Lloyd")$centers)
 
-    kms <- stats::kmeans(iris.mat, centroids, iter.max=10, algorithm="Lloyd")
-    knor.kms <- knorR::kmeans(iris.mat, centroids, max.iters=10, nthread=4)
-
-    # We shouldn't test attributes
-    if (all.equal(knor.kms$centers, kms$centers, check.attributes=FALSE)) {
-        cat("\nstat::kmeans == knorR::kmeans SUCCESS!\n")
-        return TRUE
-    } else {
-        cat("[ERROR]: stat::kmeans == knorR::kmeans SUCCESS!\n")
-        return FALSE
-    }
+    kms <- stats::kmeans(data, centroids, iter.max=10, algorithm="Lloyd")
+    knor.kms <- knorR::kmeans(data, centroids, max.iters=10, nthread=4)
+    expect_equivalent(knor.kms$centers, kms$centers)
 }
 
-test.iris() <- function() {
+test.iris <- function() {
     iris.mat <- as.matrix(iris[,1:4])
     k <- length(unique(iris[, dim(iris)[2]])) # Number of unique classes
-    stopifnot(verify.equivalent(iris.mat, k))
+    verify.equivalent(iris.mat, k)
 }

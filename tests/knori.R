@@ -16,22 +16,20 @@
 # limitations under the License.
 
 require(knorR)
+require(testthat)
 
-fn <- "../data/matrix_r50_c5_rrw.bin"
-centroidfn <- "../data/init_clusters_k8_c5.bin"
+fn <- "test.data.bin"
+centroidfn <- "test.centroids.bin"
+
 k <- 8
 nrow <- 50
 ncol <- 5
 nthread <- 2
 
-
 # Data in memory, compute centroids
 test.data.in.mem <- function() {
     cat("Data ==> memory, centroids ==> compute\n\n")
-    #data <- replicate(ncol, rnorm(nrow))
-    data <- matrix(readBin(fn, "double", (nrow*ncol), 8),
-                        nrow=nrow, ncol=ncol)
-    print(kmeans(data, k, nrow, ncol, nthread=nthread))
+    print(kmeans(test_data, k, nrow, ncol, nthread=nthread))
 }
 
 # Data on disk, compute centroids
@@ -43,27 +41,19 @@ test.data.ex.mem <- function() {
 # Data on disk, centroids in memory
 test.centroids.in.mem <- function() {
     cat("Data ==> disk, centroids ==> memory\n\n")
-    centroids <- matrix(readBin(centroidfn, "double", (k*ncol), 8),
-                        nrow=k, ncol=ncol)
-    print(kmeans(fn, centroids, nrow, nthread=nthread))
+    print(kmeans(fn, test_centroids, nrow, nthread=nthread))
 }
 
 # Data in memory, centroids in memory
 test.data.centroids.in.mem <- function() {
     cat("Data ==> memory, centroids ==> memory\n\n")
-    data <- matrix(readBin(fn, "double", (nrow*ncol), 8),
-                        nrow=nrow, ncol=ncol)
-    centroids <- matrix(readBin(centroidfn, "double", (k*ncol), 8),
-                        nrow=k, ncol=ncol)
-    kmeans(data, centroids, nthread=nthread)
+    kmeans(test_data, test_centroids, nthread=nthread)
 }
 
 # Data in memory, centroids on disk
 test.data.in.mem.centroids.em <- function() {
     cat("Data ==> memory, centroids ==> disk\n\n")
-    data <- matrix(readBin(fn, "double", (nrow*ncol), 8),
-                        nrow=nrow, ncol=ncol)
-    kmeans(data, centroidfn, nthread=nthread)
+    kmeans(test_data, centroidfn, nthread=nthread)
 }
 
 # Data on disk, centroids on disk
@@ -76,23 +66,13 @@ test.data.centroids.em <- function() {
 # Data in memory, centroids in memory, numa reorg
 test.data.centroids.in.mem.numa.reorg <- function() {
     cat("Data ==> memory, centroids ==> memory, NUMA reorg\n\n")
-    data <- matrix(readBin(fn, "double", (nrow*ncol), 8),
-                        nrow=nrow, ncol=ncol)
-    centroids <- matrix(readBin(centroidfn, "double", (k*ncol), 8),
-                        nrow=k, ncol=ncol)
-    ret <- kmeans(data, centroids, nthread=nthread, numa.opt=TRUE)
+    ret <- kmeans(test_data, test_centroids, nthread=nthread, numa.opt=TRUE)
 }
 
 # Data in memory, centroids on disk, numa reorg
 test.data.in.mem.centroids.em.numa.reorg <- function() {
     cat("Data ==> memory, centroids ==> disk, NUMA reorg\n\n")
-    data <- matrix(readBin(fn, "double", (nrow*ncol), 8),
-                        nrow=nrow, ncol=ncol)
-    kmeans(data, centroidfn, nthread=nthread, numa.opt=TRUE)
-}
-
-eq <- function (obj1, obj2) {
-    all(mapply(match.fun("=="), obj1, obj2))
+    kmeans(test_data, centroidfn, nthread=nthread, numa.opt=TRUE)
 }
 
 # Main
@@ -104,8 +84,8 @@ test.data.centroids.em()
 
 ret1 <- test.data.centroids.in.mem()
 ret2 <- test.data.centroids.in.mem.numa.reorg()
-stopifnot(all.equal(ret1, ret2))
+expect_identical(ret1, ret2)
 
 ret1 <- test.data.in.mem.centroids.em()
 ret2 <- test.data.in.mem.centroids.em.numa.reorg()
-stopifnot(all.equal(ret1, ret2))
+expect_identical(ret1, ret2)
