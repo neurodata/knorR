@@ -79,7 +79,6 @@ RcppExport SEXP R_knor_kmeans_data_centroids_im(SEXP rdata, SEXP rk,
     std::vector<double> cdata(nrow*ncol);
     std::vector<double> ccentroids(k*ncol);
 
-    srand(1234);
     if (nthread == -1)
         nthread = kpmeans::base::get_num_omp_threads();
 
@@ -129,7 +128,6 @@ RcppExport SEXP R_knor_kmeans_data_im(SEXP rdata, SEXP rk,
 	const size_t ncol = data.ncol();
     std::vector<double> cdata(nrow*ncol);
 
-    srand(1234);
     if (nthread == -1)
         nthread = kpmeans::base::get_num_omp_threads();
 
@@ -174,7 +172,6 @@ RcppExport SEXP R_knor_kmeans_centroids_im(SEXP rdata, SEXP rk,
 	const size_t ncol = centroids.ncol();
     std::vector<double> ccentroids(k*ncol);
 
-    srand(1234);
     if (nthread == -1)
         nthread = kpmeans::base::get_num_omp_threads();
 
@@ -218,7 +215,6 @@ RcppExport SEXP R_knor_kmeans(SEXP rdata, SEXP rk,
 	std::string dist_type = CHAR(STRING_ELT(rdist_type,0));
     bool omp = INTEGER(romp)[0];
 
-    srand(1234);
     if (nthread == -1)
         nthread = kpmeans::base::get_num_omp_threads();
 
@@ -264,7 +260,6 @@ RcppExport SEXP R_knor_kmeans_data_im_centroids_em(
     kpmbase::bin_rm_reader<double> br(centroidfn);
     br.read(ccentroids);
 
-    srand(1234);
     if (nthread == -1)
         nthread = kpmeans::base::get_num_omp_threads();
 
@@ -319,7 +314,6 @@ RcppExport SEXP R_knor_kmeans_data_centroids_em(
     kpmbase::bin_rm_reader<double> br(centroidfn);
     br.read(ccentroids);
 
-    srand(1234);
     if (nthread == -1)
         nthread = kpmeans::base::get_num_omp_threads();
 
