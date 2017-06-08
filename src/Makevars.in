@@ -7,7 +7,7 @@ ifeq ($(UNAME_S), Linux)
                -DPACKAGE_VERSION=\"@PACKAGE_VERSION@\"
     PKG_CXXFLAGS= -DUSING_R -I. -Ilibauto -Ilibman -Ilibkcommon \
                  @CPPFLAGS@ @CFLAGS@ -DNDEBUG -DBOOST_LOG_DYN_LINK \
-                 @HWLOC_DEF@ @NUMA_DEF@ -fopenmp -DLINUX \
+                 @HWLOC_DEF@ @NUMA_DEF@ -fopenmp -DLINUX -DBIND\
                  -DPACKAGE_VERSION=\"@PACKAGE_VERSION@\" -std=gnu++11
     PKG_LIBS=@PTHREAD_LIB@ @HWLOC_LIB@ @NUMA_LIB@ -lboost_log
 else
@@ -17,7 +17,7 @@ else
     PKG_CXXFLAGS=-DUSING_R -I. -Ilibman -Ilibkcommon \
                  @CPPFLAGS@ @CFLAGS@ -DNDEBUG -DBOOST_LOG_DYN_LINK \
                  -DPACKAGE_VERSION=\"@PACKAGE_VERSION@\" -std=gnu++11 \
-                 -I/usr/local/opt/boost/include -DOSX
+                 -I/usr/local/opt/boost/include -DOSX -DBIND
     PKG_LIBS=@PTHREAD_LIB@ -lboost_log-mt -lboost_system \
 				-L/usr/local/opt/boost/lib
 endif
