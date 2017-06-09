@@ -17,7 +17,7 @@
 
 #' Perform k-means clustering on a data matrix.
 #'
-#' K-means provides `k` disjoint sets for a dataset using a parallel and fast
+#' K-means provides \strong{k} disjoint sets for a dataset using a parallel and fast
 #' NUMA optimized version of Lloyd's algorithm. The details of which are found
 #' in this paper https://arxiv.org/pdf/1606.08905.pdf.
 #'
@@ -27,24 +27,30 @@
 #' @param max.iters Then maximum number of iteration of k-means to perform
 #' @param nthread The number of parallel thread to run
 #' @param centers Either (i) The number of centers (i.e., k), or
-#'  (ii) an In-memory data matrix, or (iii) A 2-Element `list` with element 1
+#'  (ii) an In-memory data matrix, or (iii) A 2-Element \emph{list} with element 1
 #'  being a filename for precomputed centers, and element 2
 #'  the number of centroids.
 #' @param init The type of initialization to use c("kmeanspp", "random",
 #'  "forgy", "none")
 #' @param tolerance The convergence tolerance
-#' @param dist.type What dissimilarity metric to use c("eucl", "cos")
-#' @param omp Use (slower) OpenMP threads rather than pthreads (default: FALSE)
-#' @param numa.opt When passing `data` as an in-memory data matrix you can
-#'  optimize memory placement for Linux NUMA machines. **NOTE** that performance may
-#'  degrade with very large data & it requires 2*memory of that without this.
+#' @param dist.type What dissimilarity metric to use
+#' @param omp Use (slower) OpenMP threads rather than pthreads
+#' @param numa.opt When passing \emph{data} as an in-memory data matrix you can
+#'  optimize memory placement for Linux NUMA machines. \strong{NOTE:}
+#'  performance may degrade with very large data & it requires
+#'  2*memory of that without this.
 #'
 #' @return A list containing the attributes of the output of kmeans.
-#'  cluster: A vector of integers (from ‘1:k’) indicating the cluster to
+#'  cluster: A vector of integers (from 1:\strong{k}) indicating the cluster to
 #'          which each point is allocated.
 #'  centers: A matrix of cluster centres.
 #'  size: The number of points in each cluster.
 #'  iter: The number of (outer) iterations.
+#'
+#' @examples
+#' iris.mat <- as.matrix(iris[,1:4])
+#' k <- length(unique(iris[, dim(iris)[2]])) # Number of unique classes
+#' kms <- kmeans(iris.mat, k)
 #'
 #' @export
 #' @name kmeans
