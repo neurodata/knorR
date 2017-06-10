@@ -1,14 +1,15 @@
-UNAME_S := $(shell uname -s)
+UNAME_S=$(shell uname -s)
+CXX_STD = CXX11
 
 ifeq ($(UNAME_S), Linux)
     PKG_CFLAGS=-DUSING_R -I. -Ilibauto -Ilibman -Ilibkcommon \
                @CPPFLAGS@ @CFLAGS@ -DNDEBUG -DBOOST_LOG_DYN_LINK @HWLOC_DEF@ \
-               @NUMA_DEF@ -fopenmp \
+               @NUMA_DEF@ \
                -DPACKAGE_VERSION=\"@PACKAGE_VERSION@\"
     PKG_CXXFLAGS= -DUSING_R -I. -Ilibauto -Ilibman -Ilibkcommon \
                  @CPPFLAGS@ @CFLAGS@ -DNDEBUG -DBOOST_LOG_DYN_LINK \
-                 @HWLOC_DEF@ @NUMA_DEF@ -fopenmp -DLINUX -DBIND\
-                 -DPACKAGE_VERSION=\"@PACKAGE_VERSION@\" -std=gnu++11
+                 @HWLOC_DEF@ @NUMA_DEF@ $(SHLIB_OPENMP_CXXFLAGS) -DLINUX -DBIND\
+                 -DPACKAGE_VERSION=\"@PACKAGE_VERSION@\"
     PKG_LIBS=@PTHREAD_LIB@ @HWLOC_LIB@ @NUMA_LIB@ -lboost_log
 else
     PKG_CFLAGS=-DUSING_R -I. -Ilibman -Ilibkcommon \
@@ -16,7 +17,7 @@ else
                -DPACKAGE_VERSION=\"@PACKAGE_VERSION@\"
     PKG_CXXFLAGS=-DUSING_R -I. -Ilibman -Ilibkcommon \
                  @CPPFLAGS@ @CFLAGS@ -DNDEBUG -DBOOST_LOG_DYN_LINK \
-                 -DPACKAGE_VERSION=\"@PACKAGE_VERSION@\" -std=gnu++11 \
+                 -DPACKAGE_VERSION=\"@PACKAGE_VERSION@\" \
                  -I/usr/local/opt/boost/include -DOSX -DBIND
     PKG_LIBS=@PTHREAD_LIB@ -lboost_log-mt -lboost_system \
 				-L/usr/local/opt/boost/lib
@@ -27,5 +28,5 @@ all: $(SHLIB)
 OBJECTS=rinterface.o libman/base_kmeans_thread.o libkcommon/thd_safe_bool_vector.o libkcommon/util.o libman/base_kmeans_coordinator.o libman/kmeans_coordinator.o libman/kmeans_task_coordinator.o libkcommon/clusters.o libman/kmeans_task_thread.o libkcommon/dist_matrix.o libman/kmeans_thread.o libkcommon/io.o libkcommon/kmeans_types.o libkcommon/prune_stats.o
 
 ifeq ($(UNAME_S), Linux)
-	OBJECTS += libauto/kmeans.o libauto/min-tri-kmeans.o
+    OBJECTS=rinterface.o libman/base_kmeans_thread.o libkcommon/thd_safe_bool_vector.o libkcommon/util.o libman/base_kmeans_coordinator.o libman/kmeans_coordinator.o libman/kmeans_task_coordinator.o libkcommon/clusters.o libman/kmeans_task_thread.o libkcommon/dist_matrix.o libman/kmeans_thread.o libkcommon/io.o libkcommon/kmeans_types.o libkcommon/prune_stats.o libauto/kmeans.o libauto/min-tri-kmeans.o
 endif
