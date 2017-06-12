@@ -4,14 +4,14 @@
 \name{test_centroids}
 \alias{test_centroids}
 \title{A small example of centroids of dim: (8,5) used as for micro-benchmarks
-of the knorR package. The data are randomly generated.}
+of the knor package. The data are randomly generated.}
 \format{An object of class \code{"matrix"}}
 \usage{
 data(test_centroids)
 }
 \description{
 A small example of centroids of dim: (8,5) used as for micro-benchmarks
-of the knorR package. The data are randomly generated.
+of the knor package. The data are randomly generated.
 }
 \examples{
 data(test_centroids)

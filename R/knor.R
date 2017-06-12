@@ -1,7 +1,7 @@
 # Copyright 2017 Neurodata (http://neurodata.io)
 # Written by Disa Mhembere (disa@jhu.edu)
 #
-# This file is part of knorR.
+# This file is part of knor.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -71,7 +71,7 @@ kmeans <- function(data, centers, nrow=-1, ncol=-1,
                          as.double(max.iters), as.integer(nthread),
                          as.character(init), as.double(tolerance),
                          as.character(dist.type), as.logical(omp),
-                         PACKAGE="knorR")
+                         PACKAGE="knor")
         } else if (class(centers) == "matrix") {
             ret <- .Call("R_knor_kmeans_centroids_im",
                          normalizePath(as.character(data)),
@@ -79,7 +79,7 @@ kmeans <- function(data, centers, nrow=-1, ncol=-1,
                          as.double(max.iters), as.integer(nthread),
                          as.double(tolerance),
                          as.character(dist.type), as.logical(omp),
-                         PACKAGE="knorR")
+                         PACKAGE="knor")
         }
         else if (class(centers) == "list") {
             ret <- .Call("R_knor_kmeans_data_centroids_em",
@@ -90,7 +90,7 @@ kmeans <- function(data, centers, nrow=-1, ncol=-1,
                          as.double(max.iters), as.integer(nthread),
                          as.double(tolerance),
                          as.character(dist.type), as.logical(omp),
-                         PACKAGE="knorR")
+                         PACKAGE="knor")
         } else {
             stop(paste("Cannot handle centers of type", class(centers), "\n"))
         }
@@ -102,7 +102,7 @@ kmeans <- function(data, centers, nrow=-1, ncol=-1,
                          as.character(init), as.double(tolerance),
                          as.character(dist.type), as.logical(omp),
                          as.logical(numa.opt),
-                         PACKAGE="knorR")
+                         PACKAGE="knor")
         } else if (class(centers) == "matrix") {
             ret <- .Call("R_knor_kmeans_data_centroids_im", as.matrix(data),
                          as.matrix(centers),
@@ -110,7 +110,7 @@ kmeans <- function(data, centers, nrow=-1, ncol=-1,
                          as.double(tolerance),
                          as.character(dist.type), as.logical(omp),
                          as.logical(numa.opt),
-                         PACKAGE="knorR")
+                         PACKAGE="knor")
         } else if (class(centers) == "character") {
             ret <- .Call("R_knor_kmeans_data_im_centroids_em", as.matrix(data),
                          normalizePath(centers),
@@ -118,7 +118,7 @@ kmeans <- function(data, centers, nrow=-1, ncol=-1,
                          as.double(tolerance),
                          as.character(dist.type), as.logical(omp),
                          as.logical(numa.opt),
-                         PACKAGE="knorR")
+                         PACKAGE="knor")
         } else {
             stop(paste("Cannot handle centers of type", class(centers), "\n"))
         }

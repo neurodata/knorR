@@ -1,7 +1,7 @@
 # Copyright 2017 Neurodata (http://neurodata.io)
 # Written by Disa Mhembere (disa@jhu.edu)
 #
-# This file is part of knorR.
+# This file is part of knor.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#' A small dataset of dim: (50,5) used as for micro-benchmarks of the knorR
+#' A small dataset of dim: (50,5) used as for micro-benchmarks of the knor
 #' package. The data are randomly generated hence a clear number of clusters
 #' will be hard to find.
 #'
@@ -30,7 +30,7 @@
 "test_data"
 
 #' A small example of centroids of dim: (8,5) used as for micro-benchmarks
-#' of the knorR package. The data are randomly generated.
+#' of the knor package. The data are randomly generated.
 #'
 #' @name test_centroids
 #' @docType data

@@ -1,4 +1,4 @@
-citHeader("To cite knorR in publications use:")
+citHeader("To cite knor in publications use:")
 
 citEntry(entry = "Article",
   title        = "knor: A NUMA-Optimized In-Memory, Distributed and Semi-External-Memory k-means Library",

@@ -1,10 +1,10 @@
-# knorR
+# knor
 
 R bindings for *k-means* NUMA optimized routines. This package runs on **Linux** only!
 
 # Installation
 
-The following packages must be installed as follows on the system in order to compile knorR.
+The following packages must be installed as follows on the system in order to compile knor.
 
 ```
 libssl-dev libxml2-dev libcurl4-openssl-dev libnuma-dbg libnuma-dev libnuma1 libboost-all-dev r-base-core
@@ -35,7 +35,7 @@ install_github("flashxio/knorR")
 Install from CRAN directly.
 
 ```
-install.packages("knorR")
+install.packages("knor")
 ```
 
 # Docker
@@ -46,8 +46,8 @@ A Docker images with all dependencies installed can be obtained by:
 docker pull flashxio/knorr-base
 ```
 
-**NOTE**: The knorR package must still be installed on this image via:
-`install.packages("knorR")`
+**NOTE**: The knor package must still be installed on this image via:
+`install.packages("knor")`
 
 If you prefer to build the image yourself, you can use this
 [Dockerfile](https://github.com/flashxio/knor/tree/dev/R/Dockerfile)
@@ -56,5 +56,5 @@ If you prefer to build the image yourself, you can use this
 Check the R docs
 
 ```
-?knorR::kmeans
+?knor::kmeans
 ```

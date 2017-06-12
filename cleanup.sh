@@ -9,4 +9,4 @@ rm -rf ..Rcheck/ \
     src/libkcommon/*.o\
     src/libman/*.o\
     knor*.tar.gz\
-    knorR.Rcheck
+    knor*.Rcheck

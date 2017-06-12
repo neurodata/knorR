@@ -1,4 +1,4 @@
-Package: knorR
+Package: knor
 Version: 0.0-1
 Date: 2017-05-11
 Title: NUMA optimized, parallel kmeans

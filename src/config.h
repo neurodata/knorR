@@ -35,13 +35,13 @@
 #define PACKAGE_BUGREPORT "disa@jhu.edu"
 
 /* Define to the full name of this package. */
-#define PACKAGE_NAME "knorR"
+#define PACKAGE_NAME "knor"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "knorR @VERSION@"
+#define PACKAGE_STRING "knor @VERSION@"
 
 /* Define to the one symbol short name of this package. */
-#define PACKAGE_TARNAME "knorr"
+#define PACKAGE_TARNAME "knor"
 
 /* Define to the home page for this package. */
 #define PACKAGE_URL ""

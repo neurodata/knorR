@@ -2,7 +2,7 @@
  * Copyright 2017 neurodata (http://neurodata.io/)
  * Written by Disa Mhembere (disa@jhu.edu)
  *
- * This file is part of knorR
+ * This file is part of knor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-PACK="knorR*.tar.gz"
+PACK="knor*.tar.gz"
 ./cleanup.sh
 autoconf
 ./configure

@@ -1,4 +1,4 @@
 library(testthat)
-library(knorR)
+library(knor)
 
-test_check("knorR")
+test_check("knor")

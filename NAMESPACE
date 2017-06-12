@@ -1,4 +1,4 @@
-useDynLib(knorR)
+useDynLib(knor)
 
 import(Rcpp)
 export(kmeans)

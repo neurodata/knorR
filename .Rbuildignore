@@ -2,5 +2,5 @@
 ^src/Makevars$
 ^autom4te.cache$
 ^README.md$
-^knorR_.*\.tar\.gz$
+^knor_.*\.tar\.gz$
 ^.*\.sh$
