@@ -1,0 +1,6 @@
+^.git.*$
+^src/Makevars$
+^autom4te.cache$
+^README.md$
+^knorR_.*\.tar\.gz$
+^.*\.sh$

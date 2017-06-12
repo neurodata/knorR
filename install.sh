@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 PACK="knorR*.tar.gz"
-rm -rf config.* configure
+./cleanup.sh
 autoconf
 ./configure
 rm -f $PACK
