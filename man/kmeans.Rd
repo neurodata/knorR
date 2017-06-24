@@ -21,7 +21,7 @@ the number of centroids.}
 
 \item{ncol}{The number of features in the dataset}
 
-\item{max.iters}{Then maximum number of iteration of k-means to perform}
+\item{max.iters}{The maximum number of iteration of k-means to perform}
 
 \item{nthread}{The number of parallel thread to run}
 

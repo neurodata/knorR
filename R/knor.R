@@ -24,7 +24,7 @@
 #' @param data Data file name on disk or In memory data matrix
 #' @param nrow The number of samples in the dataset
 #' @param ncol The number of features in the dataset
-#' @param max.iters Then maximum number of iteration of k-means to perform
+#' @param max.iters The maximum number of iteration of k-means to perform
 #' @param nthread The number of parallel thread to run
 #' @param centers Either (i) The number of centers (i.e., k), or
 #'  (ii) an In-memory data matrix, or (iii) A 2-Element \emph{list} with element 1
