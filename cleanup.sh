@@ -3,6 +3,7 @@
 rm -rf ..Rcheck/ \
     config.*\
     autom4te.cache\
+    aclocal.m4\
     src/*.o\
     src/Makevars\
     src/libauto/*.o\
