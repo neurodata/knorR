@@ -17,9 +17,6 @@
  * limitations under the License.
  */
 
-#ifdef LINUX
-#include <numa.h>
-#endif
 #include <Rcpp.h>
 
 #include <unordered_map>
@@ -82,11 +79,7 @@ RcppExport SEXP R_knor_kmeans_data_centroids_im(SEXP rdata, SEXP rk,
     if (nthread == -1)
         nthread = kpmeans::base::get_num_omp_threads();
 
-#ifdef LINUX
-    unsigned nnodes = numa_num_task_nodes();
-#else
-    unsigned nnodes = 1;
-#endif
+    unsigned nnodes = kpmbase::get_num_nodes();
 
 // TODO: Slow transpose
 #pragma omp parallel for firstprivate(data) shared (cdata)
@@ -131,11 +124,7 @@ RcppExport SEXP R_knor_kmeans_data_im(SEXP rdata, SEXP rk,
     if (nthread == -1)
         nthread = kpmeans::base::get_num_omp_threads();
 
-#ifdef LINUX
-    unsigned nnodes = numa_num_task_nodes();
-#else
-    unsigned nnodes = 1;
-#endif
+    unsigned nnodes = kpmbase::get_num_nodes();
 
 // TODO: Slow transpose
 #pragma omp parallel for firstprivate(data) shared (cdata)
@@ -175,11 +164,7 @@ RcppExport SEXP R_knor_kmeans_centroids_im(SEXP rdata, SEXP rk,
     if (nthread == -1)
         nthread = kpmeans::base::get_num_omp_threads();
 
-#ifdef LINUX
-    unsigned nnodes = numa_num_task_nodes();
-#else
-    unsigned nnodes = 1;
-#endif
+    unsigned nnodes = kpmbase::get_num_nodes();
 
 #pragma omp parallel for firstprivate(centroids) shared (ccentroids)
 	for (size_t row = 0; row < k; row++)
@@ -218,11 +203,7 @@ RcppExport SEXP R_knor_kmeans(SEXP rdata, SEXP rk,
     if (nthread == -1)
         nthread = kpmeans::base::get_num_omp_threads();
 
-#ifdef LINUX
-    unsigned nnodes = numa_num_task_nodes();
-#else
-    unsigned nnodes = 1;
-#endif
+    unsigned nnodes = kpmbase::get_num_nodes();
 
     kpmeans::base::kmeans_t kret = kpmeans::base::kmeans(data,
             nrow, ncol, k, max_iters, nnodes, nthread, NULL,
@@ -263,11 +244,7 @@ RcppExport SEXP R_knor_kmeans_data_im_centroids_em(
     if (nthread == -1)
         nthread = kpmeans::base::get_num_omp_threads();
 
-#ifdef LINUX
-    unsigned nnodes = numa_num_task_nodes();
-#else
-    unsigned nnodes = 1;
-#endif
+    unsigned nnodes = kpmbase::get_num_nodes();
 
 // TODO: Slow transpose
 #pragma omp parallel for firstprivate(data) shared (cdata)
@@ -317,11 +294,7 @@ RcppExport SEXP R_knor_kmeans_data_centroids_em(
     if (nthread == -1)
         nthread = kpmeans::base::get_num_omp_threads();
 
-#ifdef LINUX
-    unsigned nnodes = numa_num_task_nodes();
-#else
-    unsigned nnodes = 1;
-#endif
+    unsigned nnodes = kpmbase::get_num_nodes();
 
     kpmeans::base::kmeans_t kret = kpmeans::base::kmeans(data,
             nrow, ncol, k, max_iters, nnodes, nthread,
