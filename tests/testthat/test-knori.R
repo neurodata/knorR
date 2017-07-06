@@ -84,11 +84,15 @@ test.data.centroids.em()
 
 ret1 <- test.data.centroids.in.mem()
 ret2 <- test.data.centroids.in.mem.numa.reorg()
-expect_identical(ret1, ret2)
+test_that("Data in-mem compared to numa reorg", {
+              expect_identical(ret1, ret2)
+})
 
 ret1 <- test.data.in.mem.centroids.em()
 ret2 <- test.data.in.mem.centroids.em.numa.reorg()
-expect_identical(ret1, ret2)
+test_that("centroids EM compared to numa reorg", {
+              expect_identical(ret1, ret2)
+})
 
 source("verify-correctness.R")
 test.iris()

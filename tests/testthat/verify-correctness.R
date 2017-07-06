@@ -24,7 +24,9 @@ verify.equivalent <- function(data, k) {
 
     kms <- stats::kmeans(data, centroids, iter.max=10, algorithm="Lloyd")
     knor.kms <- knor::kmeans(data, centroids, max.iters=10, nthread=4)
-    expect_equivalent(knor.kms$centers, kms$centers)
+    test_that("Verify equivalent test",{
+                  expect_equivalent(knor.kms$centers, kms$centers)
+        })
 }
 
 test.iris <- function() {
