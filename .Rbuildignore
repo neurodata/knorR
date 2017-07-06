@@ -2,5 +2,6 @@
 ^src/Makevars$
 ^autom4te.cache$
 ^README.md$
+^Dockerfile$
 ^knor_.*\.tar\.gz$
 ^.*\.sh$

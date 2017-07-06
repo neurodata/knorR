@@ -1,7 +1,7 @@
 Package: knor
 Version: 0.0-1
 Date: 2017-06-26
-Title: Non-Uniform Memory Access (NUMA) Optimized, Parallel K-means
+Title: Non-Uniform Memory Access (NUMA) Optimized, Parallel K-Means
 Author: See AUTHORS file.
 Maintainer: Disa Mhembere <disa@jhu.edu>
 Description: The k-means NUMA Optimized Routine library or knor is a highly optimized and fast library for computing k-means in parallel with accelerations for Non-Uniform Memory Access (NUMA) architectures.
