@@ -1,6 +1,7 @@
 # knor
 
-R bindings for *k-means* NUMA optimized routines. This package runs on **Linux** only!
+R bindings for *k-means* NUMA optimized routines. This package runs on **Linux**
+and **Mac OSX** only!
 
 # Installation
 
