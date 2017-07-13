@@ -2,31 +2,31 @@ UNAME_S=$(shell uname -s)
 CXX_STD = CXX11
 
 ifeq ($(UNAME_S), Linux)
-    PKG_CFLAGS=-DUSING_R -I. -Ilibauto -Ilibman -Ilibkcommon \
-               @CPPFLAGS@ @CFLAGS@ -DNDEBUG -DBOOST_LOG_DYN_LINK @HWLOC_DEF@ \
+    PKG_CFLAGS=-DUSING_R -Icknor -Icknor/libauto -Icknor/libman -Icknor/libkcommon \
+               @CPPFLAGS@ @CFLAGS@ -DNDEBUG\
                @NUMA_DEF@ \
                -DPACKAGE_VERSION=\"@PACKAGE_VERSION@\"
-    PKG_CXXFLAGS=-DUSING_R -I. -Ilibauto -Ilibman -Ilibkcommon \
-                 @CPPFLAGS@ @CFLAGS@ -DNDEBUG -DBOOST_LOG_DYN_LINK \
+    PKG_CXXFLAGS=-DUSING_R -Icknor/ -Icknor/libauto -Icknor/libman \
+                 -Icknor/libkcommon \
+                 @CPPFLAGS@ @CFLAGS@ -DNDEBUG\
                  @HWLOC_DEF@ @NUMA_DEF@ $(SHLIB_OPENMP_CXXFLAGS) -DLINUX -DBIND\
                  -DPACKAGE_VERSION=\"@PACKAGE_VERSION@\"
-    PKG_LIBS=@PTHREAD_LIB@ @HWLOC_LIB@ @NUMA_LIB@ -lboost_log
+    PKG_LIBS=@PTHREAD_LIB@ @HWLOC_LIB@ @NUMA_LIB@
 else
-    PKG_CFLAGS=-DUSING_R -I. -Ilibman -Ilibkcommon \
-               @CPPFLAGS@ @CFLAGS@ -DNDEBUG -DBOOST_LOG_DYN_LINK \
+    PKG_CFLAGS=-DUSING_R -Icknor -Icknor/libman -Icknor/libkcommon \
+               @CPPFLAGS@ @CFLAGS@ -DNDEBUG \
                -DPACKAGE_VERSION=\"@PACKAGE_VERSION@\"
-    PKG_CXXFLAGS=-DUSING_R -I. -Ilibman -Ilibkcommon \
-                 @CPPFLAGS@ @CFLAGS@ -DNDEBUG -DBOOST_LOG_DYN_LINK \
+    PKG_CXXFLAGS=-DUSING_R -I. -Icknor/libman -Icknor/libkcommon \
+                 @CPPFLAGS@ @CFLAGS@ -DNDEBUG \
                  -DPACKAGE_VERSION=\"@PACKAGE_VERSION@\" \
-                 -I/usr/local/opt/boost/include -DOSX -DBIND
-    PKG_LIBS=@PTHREAD_LIB@ -lboost_log-mt -lboost_system \
-				-L/usr/local/opt/boost/lib
+                 -DOSX -DBIND
+    PKG_LIBS=@PTHREAD_LIB@
 endif
 
 all: $(SHLIB)
 
-OBJECTS=rinterface.o libman/base_kmeans_thread.o libkcommon/thd_safe_bool_vector.o libkcommon/util.o libman/base_kmeans_coordinator.o libman/kmeans_coordinator.o libman/kmeans_task_coordinator.o libkcommon/clusters.o libman/kmeans_task_thread.o libkcommon/dist_matrix.o libman/kmeans_thread.o libkcommon/io.o libkcommon/kmeans_types.o libkcommon/prune_stats.o
+OBJECTS=rinterface.o cknor/libman/base_kmeans_thread.o cknor/libkcommon/thd_safe_bool_vector.o cknor/libkcommon/util.o cknor/libman/base_kmeans_coordinator.o cknor/libman/kmeans_coordinator.o cknor/libman/kmeans_task_coordinator.o cknor/libkcommon/clusters.o cknor/libman/kmeans_task_thread.o cknor/libkcommon/dist_matrix.o cknor/libman/kmeans_thread.o cknor/libkcommon/io.o cknor/libkcommon/kmeans_types.o cknor/libkcommon/prune_stats.o
 
 ifeq ($(UNAME_S), Linux)
-    OBJECTS+=libauto/kmeans.o libauto/min-tri-kmeans.o
+    OBJECTS+=cknor/libauto/kmeans.o cknor/libauto/min-tri-kmeans.o
 endif
