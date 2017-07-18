@@ -9,9 +9,9 @@ ifeq ($(UNAME_S), Linux)
     PKG_CXXFLAGS=-DUSING_R -Icknor/ -Icknor/libauto -Icknor/libman \
                  -Icknor/libkcommon \
                  @CPPFLAGS@ @CFLAGS@ -DNDEBUG\
-                 @HWLOC_DEF@ @NUMA_DEF@ $(SHLIB_OPENMP_CXXFLAGS) -DLINUX -DBIND\
+                 @NUMA_DEF@ $(SHLIB_OPENMP_CXXFLAGS) -DLINUX -DBIND\
                  -DPACKAGE_VERSION=\"@PACKAGE_VERSION@\"
-    PKG_LIBS=@PTHREAD_LIB@ @HWLOC_LIB@ @NUMA_LIB@
+    PKG_LIBS=@PTHREAD_LIB@ @NUMA_LIB@
 else
     PKG_CFLAGS=-DUSING_R -Icknor -Icknor/libman -Icknor/libkcommon \
                @CPPFLAGS@ @CFLAGS@ -DNDEBUG \

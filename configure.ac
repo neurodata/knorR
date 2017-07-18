@@ -30,9 +30,6 @@ LIBS=$LIBS_SAVE
 AC_CHECK_HEADER([sys/times.h],
       [AC_DEFINE([HAVE_TIMES_H], [1], [Define to 1 if you have the sys/times.h header])])
 
-AC_CHECK_HEADER([hwloc.h], [AC_SUBST(HWLOC_DEF, -DUSE_HWLOC)])
-AC_CHECK_LIB([hwloc], [hwloc_topology_load], [AC_SUBST(HWLOC_LIB, -lhwloc)])
-
 AC_CHECK_HEADER([pthread.h], [], [AC_MSG_ERROR("can't find pthread")])
 AC_CHECK_LIB([pthread], [pthread_create], [AC_SUBST(PTHREAD_LIB, -lpthread)], [AC_MSG_ERROR("can't find pthread")])
 
