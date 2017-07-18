@@ -40,5 +40,5 @@ addons:
     packages:
       - libssl-dev
       - libxml2-dev
-	  - libcurl4-openssl-dev
-	  - libnuma-dbg libnuma-dev libnuma1
+      - libcurl4-openssl-dev
+      - libnuma-dbg libnuma-dev libnuma1
