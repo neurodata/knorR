@@ -26,12 +26,9 @@ compiler:
 notifications:
   email: false
 install:
-  - sudo apt-get -y update
-  - sudo apt-get -y upgrade
+  - Rscript -e "install.packages('devtools', dependencies=TRUE, repos='http://cran.rstudio.com/')"
   - ./install.sh
   - cd tests && Rscript testthat.R
-  #- sudo apt-get -y install libnuma-dbg libnuma-dev libnuma1
-  #- sudo apt-get -y install build-essential
 script:
 - cd test && python test.py && cd -
 
