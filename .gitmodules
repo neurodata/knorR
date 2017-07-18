@@ -1,0 +1,3 @@
+[submodule "cknor"]
+	path = src/cknor
+	url = https://github.com/flashxio/knor.git

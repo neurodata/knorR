@@ -20,12 +20,14 @@
 #include <Rcpp.h>
 
 #include <unordered_map>
-#include "binding/knori.hpp"
-#include "libkcommon/io.hpp"
+#include "cknor/binding/knori.hpp"
+#include "cknor/libkcommon/io.hpp"
 
 /**
   * Transform the C output to R
   **/
+namespace kpmbase = kpmeans::base;
+
 static void marshall_c_to_r(const kpmbase::kmeans_t& kret,
         Rcpp::List& ret) {
 

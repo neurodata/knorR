@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-rm -rf ..Rcheck/ \
+rm -rf ..Rcheck/\
     config.*\
     autom4te.cache\
     aclocal.m4\
@@ -10,4 +10,5 @@ rm -rf ..Rcheck/ \
     src/libkcommon/*.o\
     src/libman/*.o\
     knor*.tar.gz\
-    knor*.Rcheck
+    knor*.Rcheck\
+    configure
