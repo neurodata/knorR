@@ -1,3 +1,6 @@
+[![Build
+Status](https://travis-ci.org/flashxio/knorR.svg?branch=master)](https://travis-ci.org/flashxio/knorR)
+
 # knor
 
 R bindings for *k-means* NUMA optimized routines. This package runs on **Linux**
