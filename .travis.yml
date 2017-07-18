@@ -26,6 +26,7 @@ compiler:
 notifications:
   email: false
 install:
+  - sudo apt-get install libnuma-dbg libnuma-dev libnuma1
   - Rscript -e "install.packages('devtools', dependencies=TRUE, repos='http://cran.rstudio.com/')"
   - ./install.sh
   - cd tests && Rscript testthat.R
@@ -38,4 +39,3 @@ addons:
       - libssl-dev
       - libxml2-dev
       - libcurl4-openssl-dev
-      - libnuma-dbg libnuma-dev libnuma1
