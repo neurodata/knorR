@@ -5,3 +5,4 @@
 ^Dockerfile$
 ^knor_.*\.tar\.gz$
 ^.*\.sh$
+^.travis.yml$
