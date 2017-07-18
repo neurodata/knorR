@@ -6,22 +6,29 @@ Status](https://travis-ci.org/flashxio/knorR.svg?branch=master)](https://travis-
 R bindings for *k-means* NUMA optimized routines. This package runs on **Linux**
 and **Mac OSX** only!
 
+## Best Performance configuration
+
+For the best performance make sure the `numa` system package is installed via
+
+```
+apt-get install -y libnuma-dbg libnuma-dev libnuma1
+```
+
 # Installation
 
-The following packages must be installed as follows on the system in order to compile knor.
+The following packages are required to support and install R.
 
 ```
-libssl-dev libxml2-dev libcurl4-openssl-dev libnuma-dbg libnuma-dev libnuma1 libboost-all-dev r-base-core
+libssl-dev libxml2-dev libcurl4-openssl-dev r-base-core
 ```
 
-For Ubuntu 16.04 this can be done as follows:
+A one-liner for Ubuntu 14.04 - 16.04 is:
 
 ```
-apt install -y libssl-dev libxml2-dev libcurl4-openssl-dev libnuma-dbg libnuma-dev libnuma1 libboost-all-dev r-base-core
+apt-get install -y libssl-dev libxml2-dev libcurl4-openssl-dev libnuma-dbg libnuma-dev libnuma1 r-base-core
 ```
 
 ### Bleeding edge install
-
 
 Install directly from github
 
