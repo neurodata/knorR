@@ -31,7 +31,7 @@ install:
   - ./install.sh
   - cd tests && Rscript testthat.R
 script:
-- cd test && python test.py && cd -
+- cd test && python test.py
 
 addons:
   apt:
