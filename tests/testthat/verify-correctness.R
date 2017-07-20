@@ -23,7 +23,7 @@ verify.equivalent <- function(data, k) {
         stats::kmeans(data, k, iter.max=1, algorithm="Lloyd")$centers)
 
     kms <- stats::kmeans(data, centroids, iter.max=10, algorithm="Lloyd")
-    knor.kms <- knor::kmeans(data, centroids, max.iters=10, nthread=4)
+    knor.kms <- knor::kmeans(data, centroids, iter.max=10, nthread=4)
     test_that("Verify equivalent test",{
                   expect_equivalent(knor.kms$centers, kms$centers)
         })

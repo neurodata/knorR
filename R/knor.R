@@ -24,7 +24,7 @@
 #' @param data Data file name on disk or In memory data matrix
 #' @param nrow The number of samples in the dataset
 #' @param ncol The number of features in the dataset
-#' @param max.iters The maximum number of iteration of k-means to perform
+#' @param iter.max The maximum number of iteration of k-means to perform
 #' @param nthread The number of parallel thread to run
 #' @param centers Either (i) The number of centers (i.e., k), or
 #'  (ii) an In-memory data matrix, or (iii) A 2-Element \emph{list} with element 1
@@ -58,7 +58,7 @@
 #' @rdname kmeans
 
 kmeans <- function(data, centers, nrow=-1, ncol=-1,
-                   max.iters=.Machine$integer.max, nthread=-1,
+                   iter.max=.Machine$integer.max, nthread=-1,
                    init=c("kmeanspp", "random", "forgy", "none"),
                    tolerance=1E-6, dist.type=c("eucl", "cos"),
                    omp=FALSE, numa.opt=FALSE) {
@@ -68,7 +68,7 @@ kmeans <- function(data, centers, nrow=-1, ncol=-1,
             ret <- .Call("R_knor_kmeans", normalizePath(as.character(data)),
                          as.integer(centers), as.double(nrow),
                          as.double(ncol),
-                         as.double(max.iters), as.integer(nthread),
+                         as.double(iter.max), as.integer(nthread),
                          as.character(init), as.double(tolerance),
                          as.character(dist.type), as.logical(omp),
                          PACKAGE="knor")
@@ -76,7 +76,7 @@ kmeans <- function(data, centers, nrow=-1, ncol=-1,
             ret <- .Call("R_knor_kmeans_centroids_im",
                          normalizePath(as.character(data)),
                          as.matrix(centers), as.double(nrow),
-                         as.double(max.iters), as.integer(nthread),
+                         as.double(iter.max), as.integer(nthread),
                          as.double(tolerance),
                          as.character(dist.type), as.logical(omp),
                          PACKAGE="knor")
@@ -87,7 +87,7 @@ kmeans <- function(data, centers, nrow=-1, ncol=-1,
                          normalizePath(as.character(centers[1])),
                          as.integer(centers[2]),
                          as.double(nrow), as.double(ncol),
-                         as.double(max.iters), as.integer(nthread),
+                         as.double(iter.max), as.integer(nthread),
                          as.double(tolerance),
                          as.character(dist.type), as.logical(omp),
                          PACKAGE="knor")
@@ -98,7 +98,7 @@ kmeans <- function(data, centers, nrow=-1, ncol=-1,
         if (class(centers) == "numeric" || class(centers) == "integer") {
             ret <- .Call("R_knor_kmeans_data_im", as.matrix(data),
                          as.integer(centers),
-                         as.double(max.iters), as.integer(nthread),
+                         as.double(iter.max), as.integer(nthread),
                          as.character(init), as.double(tolerance),
                          as.character(dist.type), as.logical(omp),
                          as.logical(numa.opt),
@@ -106,7 +106,7 @@ kmeans <- function(data, centers, nrow=-1, ncol=-1,
         } else if (class(centers) == "matrix") {
             ret <- .Call("R_knor_kmeans_data_centroids_im", as.matrix(data),
                          as.matrix(centers),
-                         as.double(max.iters), as.integer(nthread),
+                         as.double(iter.max), as.integer(nthread),
                          as.double(tolerance),
                          as.character(dist.type), as.logical(omp),
                          as.logical(numa.opt),
@@ -114,7 +114,7 @@ kmeans <- function(data, centers, nrow=-1, ncol=-1,
         } else if (class(centers) == "character") {
             ret <- .Call("R_knor_kmeans_data_im_centroids_em", as.matrix(data),
                          normalizePath(centers),
-                         as.double(max.iters), as.integer(nthread),
+                         as.double(iter.max), as.integer(nthread),
                          as.double(tolerance),
                          as.character(dist.type), as.logical(omp),
                          as.logical(numa.opt),
