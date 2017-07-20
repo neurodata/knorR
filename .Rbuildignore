@@ -5,4 +5,6 @@
 ^Dockerfile$
 ^knor_.*\.tar\.gz$
 ^.*\.sh$
-^.travis.yml$
+^\..*$
+^src/cknor/\..*$
+^src/cknor/libsem/.*$

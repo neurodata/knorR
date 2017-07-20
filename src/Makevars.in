@@ -15,12 +15,13 @@ ifeq ($(UNAME_S), Linux)
 else
     PKG_CFLAGS=-DUSING_R -Icknor -Icknor/libman -Icknor/libkcommon \
                @CPPFLAGS@ @CFLAGS@ -DNDEBUG \
+               @NUMA_DEF@ \
                -DPACKAGE_VERSION=\"@PACKAGE_VERSION@\"
     PKG_CXXFLAGS=-DUSING_R -I. -Icknor/libman -Icknor/libkcommon \
                  @CPPFLAGS@ @CFLAGS@ -DNDEBUG \
                  -DPACKAGE_VERSION=\"@PACKAGE_VERSION@\" \
-                 -DOSX -DBIND
-    PKG_LIBS=@PTHREAD_LIB@
+                 @NUMA_DEF@ -DBIND
+    PKG_LIBS=@PTHREAD_LIB@ @NUMA_LIB@
 endif
 
 all: $(SHLIB)
