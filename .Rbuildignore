@@ -8,3 +8,4 @@
 ^\..*$
 ^src/cknor/\..*$
 ^src/cknor/libsem/.*$
+^src/cknor/utils/.*$
