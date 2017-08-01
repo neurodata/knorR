@@ -67,5 +67,5 @@ If you prefer to build the image yourself, you can use this
 Check the R docs
 
 ```
-?knor::kmeans
+?knor::Kmeans
 ```

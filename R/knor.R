@@ -50,14 +50,14 @@
 #' @examples
 #' iris.mat <- as.matrix(iris[,1:4])
 #' k <- length(unique(iris[, dim(iris)[2]])) # Number of unique classes
-#' kms <- kmeans(iris.mat, k)
+#' kms <- Kmeans(iris.mat, k)
 #'
 #' @export
-#' @name kmeans
+#' @name Kmeans
 #' @author Disa Mhembere <disa@@jhu.edu>
-#' @rdname kmeans
+#' @rdname Kmeans
 
-kmeans <- function(data, centers, nrow=-1, ncol=-1,
+Kmeans <- function(data, centers, nrow=-1, ncol=-1,
                    iter.max=.Machine$integer.max, nthread=-1,
                    init=c("kmeanspp", "random", "forgy", "none"),
                    tolerance=1E-6, dist.type=c("eucl", "cos"),

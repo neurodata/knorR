@@ -29,50 +29,50 @@ nthread <- 2
 # Data in memory, compute centroids
 test.data.in.mem <- function() {
     cat("Data ==> memory, centroids ==> compute\n\n")
-    print(kmeans(test_data, k, nrow, ncol, nthread=nthread))
+    print(Kmeans(test_data, k, nrow, ncol, nthread=nthread))
 }
 
 # Data on disk, compute centroids
 test.data.ex.mem <- function() {
     cat("Data ==> disk, centroids ==> compute\n\n")
-    print(kmeans(fn, k, nrow, ncol, nthread=nthread))
+    print(Kmeans(fn, k, nrow, ncol, nthread=nthread))
 }
 
 # Data on disk, centroids in memory
 test.centroids.in.mem <- function() {
     cat("Data ==> disk, centroids ==> memory\n\n")
-    print(kmeans(fn, test_centroids, nrow, nthread=nthread))
+    print(Kmeans(fn, test_centroids, nrow, nthread=nthread))
 }
 
 # Data in memory, centroids in memory
 test.data.centroids.in.mem <- function() {
     cat("Data ==> memory, centroids ==> memory\n\n")
-    kmeans(test_data, test_centroids, nthread=nthread)
+    Kmeans(test_data, test_centroids, nthread=nthread)
 }
 
 # Data in memory, centroids on disk
 test.data.in.mem.centroids.em <- function() {
     cat("Data ==> memory, centroids ==> disk\n\n")
-    kmeans(test_data, centroidfn, nthread=nthread)
+    Kmeans(test_data, centroidfn, nthread=nthread)
 }
 
 # Data on disk, centroids on disk
 test.data.centroids.em <- function() {
     cat("Data ==> disk, centroids ==> disk\n\n")
-    print(kmeans(fn, list(centroidfn, k), nrow=nrow,
+    print(Kmeans(fn, list(centroidfn, k), nrow=nrow,
                  ncol=ncol,nthread=nthread))
 }
 
 # Data in memory, centroids in memory, numa reorg
 test.data.centroids.in.mem.numa.reorg <- function() {
     cat("Data ==> memory, centroids ==> memory, NUMA reorg\n\n")
-    ret <- kmeans(test_data, test_centroids, nthread=nthread, numa.opt=TRUE)
+    ret <- Kmeans(test_data, test_centroids, nthread=nthread, numa.opt=TRUE)
 }
 
 # Data in memory, centroids on disk, numa reorg
 test.data.in.mem.centroids.em.numa.reorg <- function() {
     cat("Data ==> memory, centroids ==> disk, NUMA reorg\n\n")
-    kmeans(test_data, centroidfn, nthread=nthread, numa.opt=TRUE)
+    Kmeans(test_data, centroidfn, nthread=nthread, numa.opt=TRUE)
 }
 
 # Main

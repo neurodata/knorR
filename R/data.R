@@ -26,7 +26,7 @@
 #' @keywords datasets
 #' @examples
 #' ncenters <- 8
-#' kms <- kmeans(test_data, ncenters)
+#' kms <- Kmeans(test_data, ncenters)
 "test_data"
 
 #' A small example of centroids of dim: (8,5) used as for micro-benchmarks
@@ -39,5 +39,5 @@
 #' @keywords datasets
 #' @examples
 #' data(test_centroids)
-#' kms <- kmeans(test_data, test_centroids)
+#' kms <- Kmeans(test_data, test_centroids)
 "test_centroids"

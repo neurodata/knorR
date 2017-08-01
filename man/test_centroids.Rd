@@ -15,6 +15,6 @@ of the knor package. The data are randomly generated.
 }
 \examples{
 data(test_centroids)
-kms <- kmeans(test_data, test_centroids)
+kms <- Kmeans(test_data, test_centroids)
 }
 \keyword{datasets}

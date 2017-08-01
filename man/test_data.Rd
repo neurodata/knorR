@@ -17,6 +17,6 @@ will be hard to find.
 }
 \examples{
 ncenters <- 8
-kms <- kmeans(test_data, ncenters)
+kms <- Kmeans(test_data, ncenters)
 }
 \keyword{datasets}
