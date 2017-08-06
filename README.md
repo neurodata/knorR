@@ -3,51 +3,41 @@ Status](https://travis-ci.org/flashxio/knorR.svg?branch=master)](https://travis-
 
 # knor
 
-R bindings for *k-means* NUMA optimized routines. This package runs on **Linux**
-and **Mac OSX** only!
+R bindings for *k-means* NUMA optimized routines. This package is supported for **Linux** and **Mac OSX** only!
 
 ## Best Performance configuration
 
-For the best performance make sure the `numa` system package is installed via
+For the best performance on **Linux** make sure the `numa` system package is installed via
 
 ```
 apt-get install -y libnuma-dbg libnuma-dev libnuma1
 ```
 
-# Installation
+#### `R` Dependencies
 
-The following packages are required to support and install R.
+We require a recent version of `Rcpp`
 
-```
-libssl-dev libxml2-dev libcurl4-openssl-dev r-base-core
-```
-
-A one-liner for Ubuntu 14.04 - 16.04 is:
-
-```
-apt-get install -y libssl-dev libxml2-dev libcurl4-openssl-dev libnuma-dbg libnuma-dev libnuma1 r-base-core
-```
-
-### Bleeding edge install
-
-Install directly from github
-
-```
-# Install dependencies if you don't have them
-install.packages("devtools", dependencies=TRUE)
-
-# Load and install the package
-require(devtools)
-install_github("flashxio/knorR")
-```
-
-### Stable builds (NOT yet available)
+### Stable builds
 
 Install from CRAN directly.
 
 ```
 install.packages("knor")
 ```
+
+### Bleeding edge install
+
+Install directly from Github. This has dependency on the following system packages:
+- git
+- autoconf
+
+```
+git clone --recursive https://github.com/flashxio/knorR.git
+cd knorR
+./install.sh
+```
+
+**NOTE:** The command may require administrator privileges (i.e., `sudo`)
 
 # Docker
 
@@ -57,13 +47,33 @@ A Docker images with all dependencies installed can be obtained by:
 docker pull flashxio/knorr-base
 ```
 
-**NOTE**: The knor package must still be installed on this image via:
+**NOTE**: The knor `R` package must still be installed on this image via:
 `install.packages("knor")`
 
 If you prefer to build the image yourself, you can use this
 [Dockerfile](https://github.com/flashxio/knor/tree/dev/R/Dockerfile)
 
-### Help
+# Examples:
+
+## Work with data already in-memory
+```
+iris.mat <- as.matrix(iris[,1:4])
+k <- length(unique(iris[, dim(iris)[2]])) # Number of unique classes
+kms <- Kmeans(iris.mat, k)
+```
+## Work with data from disk
+
+To work with data from disk simply use binary row-major data. Please see [this link](TODO) for a detailed description.
+
+```
+fn <- "/path/to/file.bin" # Use real file
+k <- 2 # The number of clusters
+nrow <- 50 # The number of rows
+ncol <- 5 # The number of columns
+kms <-Kmeans(fn, nrow, ncol, k, init="kmeanspp", nthread=2)
+```
+
+## Help
 Check the R docs
 
 ```
