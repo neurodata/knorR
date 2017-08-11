@@ -1,6 +1,6 @@
-UNAME_S=$(shell uname -s)
 CXX_STD = CXX11
 
+UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S), Linux)
     PKG_CFLAGS=-DUSING_R -Icknor -Icknor/libauto -Icknor/libman -Icknor/libkcommon \
                @CPPFLAGS@ @CFLAGS@ -DNDEBUG\
@@ -12,7 +12,9 @@ ifeq ($(UNAME_S), Linux)
                  @NUMA_DEF@ $(SHLIB_OPENMP_CXXFLAGS) -DLINUX -DBIND\
                  -DPACKAGE_VERSION=\"@PACKAGE_VERSION@\"
     PKG_LIBS=@PTHREAD_LIB@ @NUMA_LIB@
-else
+endif
+
+ifeq ($(UNAME_S), Darwin)
     PKG_CFLAGS=-DUSING_R -Icknor -Icknor/libman -Icknor/libkcommon \
                @CPPFLAGS@ @CFLAGS@ -DNDEBUG \
                @NUMA_DEF@ \

@@ -9,10 +9,9 @@ LinkingTo: Rcpp
 Depends:
     R (>= 3.0),
     Rcpp
-OS_type: unix
 License: Apache License 2.0
 URL: https://github.com/flashxio/knor
-SystemRequirements: GNU make C++11
+SystemRequirements: GNU make C++11, pthreads
 BugReports: https://github.com/flashxio/knor/issues
 RoxygenNote: 6.0.1
 LazyData: true
