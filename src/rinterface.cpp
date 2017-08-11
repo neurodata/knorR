@@ -37,7 +37,10 @@ static void marshall_c_to_r(const kpmbase::kmeans_t& kret,
     ret["k"] = kret.k;
 
 	Rcpp::NumericMatrix centers = Rcpp::NumericMatrix(kret.k, kret.ncol);
+
+#ifdef _OPENMP
 #pragma omp parallel for shared(centers)
+#endif
     for (unsigned row = 0; row < kret.k; row++)
         for (size_t col = 0; col < kret.ncol; col++)
             centers(row, col) = kret.centroids[row*kret.ncol + col];
@@ -84,12 +87,16 @@ RcppExport SEXP R_knor_kmeans_data_centroids_im(SEXP rdata, SEXP rk,
     unsigned nnodes = kpmbase::get_num_nodes();
 
 // TODO: Slow transpose
+#ifdef _OPENMP
 #pragma omp parallel for firstprivate(data) shared (cdata)
+#endif
 	for (size_t row = 0; row < nrow; row++)
 		for (size_t col = 0; col < ncol; col++)
 			cdata[row*ncol + col] = data(row, col);
 
+#ifdef _OPENMP
 #pragma omp parallel for firstprivate(centroids) shared (ccentroids)
+#endif
 	for (size_t row = 0; row < k; row++)
 		for (size_t col = 0; col < ncol; col++)
 			ccentroids[row*ncol + col] = centroids(row, col);
@@ -129,7 +136,9 @@ RcppExport SEXP R_knor_kmeans_data_im(SEXP rdata, SEXP rk,
     unsigned nnodes = kpmbase::get_num_nodes();
 
 // TODO: Slow transpose
+#ifdef _OPENMP
 #pragma omp parallel for firstprivate(data) shared (cdata)
+#endif
 	for (size_t row = 0; row < nrow; row++)
 		for (size_t col = 0; col < ncol; col++)
 			cdata[row*ncol + col] = data(row, col);
@@ -168,7 +177,9 @@ RcppExport SEXP R_knor_kmeans_centroids_im(SEXP rdata, SEXP rk,
 
     unsigned nnodes = kpmbase::get_num_nodes();
 
+#ifdef _OPENMP
 #pragma omp parallel for firstprivate(centroids) shared (ccentroids)
+#endif
 	for (size_t row = 0; row < k; row++)
 		for (size_t col = 0; col < ncol; col++)
 			ccentroids[row*ncol + col] = centroids(row, col);
@@ -249,7 +260,9 @@ RcppExport SEXP R_knor_kmeans_data_im_centroids_em(
     unsigned nnodes = kpmbase::get_num_nodes();
 
 // TODO: Slow transpose
+#ifdef _OPENMP
 #pragma omp parallel for firstprivate(data) shared (cdata)
+#endif
 	for (size_t row = 0; row < nrow; row++)
 		for (size_t col = 0; col < ncol; col++)
 			cdata[row*ncol + col] = data(row, col);
