@@ -3,7 +3,7 @@ Status](https://travis-ci.org/flashxio/knorR.svg?branch=master)](https://travis-
 
 # knor
 
-R bindings for *k-means* NUMA optimized routines. This package is supported for **Linux** and **Mac OSX** only!
+R bindings for *k-means* NUMA optimized routines. This package is supported for **Linux**, **Mac OSX** and **Windows**
 
 ## Best Performance configuration
 
@@ -15,7 +15,8 @@ apt-get install -y libnuma-dbg libnuma-dev libnuma1
 
 #### `R` Dependencies
 
-We require a recent version of `Rcpp`
+- We require a recent version of `Rcpp` (`install.packages("Rcpp")`)
+- We recommend the `testthat` package if you want to run unit-tests (`install.packages("testthat")`)
 
 ### Stable builds
 
