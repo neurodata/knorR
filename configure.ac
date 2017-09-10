@@ -11,11 +11,7 @@ fi
 CC=`"${R_HOME}/bin/R" CMD config CC`
 CXX=`"${R_HOME}/bin/R" CMD config CXX`
 FC=`"${R_HOME}/bin/R" CMD config FC`
-CFLAGS=`"${R_HOME}/bin/R" CMD config CFLAGS`
-CXXFLAGS=`"${R_HOME}/bin/R" CMD config CXXFLAGS`
 CPPFLAGS=`"${R_HOME}/bin/R" CMD config CPPFLAGS`
-FCFLAGS=`"${R_HOME}/bin/R" CMD config FCFLAGS`
-FLIBS=`"${R_HOME}/bin/R" CMD config FLIBS`
 
 AC_LANG(C)
 AC_PROG_CC
