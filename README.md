@@ -157,7 +157,7 @@ $size
 ```
 
 ## Help
-Check the R docs
+Check the R docs provided:
 
 ```
 ?knor::Kmeans
