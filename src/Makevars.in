@@ -13,13 +13,13 @@ ifeq ($(UNAME_S), Darwin)
     PKG_LIBS=@PTHREAD_LIB@ @NUMA_LIB@
 else
     PKG_CFLAGS=-DUSING_R -Icknor -Icknor/libauto -Icknor/libman -Icknor/libkcommon \
-               @CPPFLAGS@ @CFLAGS@ -DNDEBUG\
-               @NUMA_DEF@ \
+               @CPPFLAGS@ @CFLAGS@ -DNDEBUG \
+               @NUMA_DEF@ $(SHLIB_OPENMP_CFLAGS) \
                -DPACKAGE_VERSION=\"@PACKAGE_VERSION@\"
     PKG_CXXFLAGS=-DUSING_R -Icknor/ -Icknor/libauto -Icknor/libman \
                  -Icknor/libkcommon \
-                 @CPPFLAGS@ @CFLAGS@ -DNDEBUG\
-                 @NUMA_DEF@ $(SHLIB_OPENMP_CXXFLAGS) -DLINUX -DBIND\
+                 @CPPFLAGS@ @CFLAGS@ -DNDEBUG \
+                 @NUMA_DEF@ $(SHLIB_OPENMP_CXXFLAGS) -DLINUX -DBIND \
                  -DPACKAGE_VERSION=\"@PACKAGE_VERSION@\"
     PKG_LIBS=@PTHREAD_LIB@ @NUMA_LIB@
 endif
