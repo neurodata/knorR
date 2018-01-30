@@ -62,14 +62,19 @@ install.packages("knor")
 ### Bleeding edge install
 
 Install directly from Github. This has dependency on the following system packages:
-- git
-- autoconf
+
+- `git`
+- `autoconf`
 
 ```
 git clone --recursive https://github.com/flashxio/knorR.git
 cd knorR
 ./install.sh
 ```
+
+**Mac:** Install via `brew install autoconf`
+
+**Ubuntu:** Install via `apt-get install autoconf`
 
 **NOTE:** The command may require administrator privileges (i.e., `sudo`)
 

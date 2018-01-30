@@ -1,12 +1,12 @@
 CXX_STD = CXX11
 
 PKG_CFLAGS=-DUSING_R -Icknor -Icknor/libman -Icknor/libkcommon \
-           -DNDEBUG \
+           -DNDEBUG $(SHLIB_OPENMP_CFLAGS) \
            -DPACKAGE_VERSION=\"@PACKAGE_VERSION@\"
 PKG_CXXFLAGS=-DUSING_R -I. -Icknor/libman -Icknor/libkcommon \
              -DNDEBUG \
              -DPACKAGE_VERSION=\"@PACKAGE_VERSION@\" \
-             -DBIND $(SHLIB_PTHREAD_FLAGS)
+             -DBIND $(SHLIB_PTHREAD_FLAGS) $(SHLIB_OPENMP_CXXFLAGS)
 PKG_LIBS=$(SHLIB_PTHREAD_FLAGS)
 
 OBJECTS=rinterface.o cknor/libman/base_kmeans_thread.o cknor/libkcommon/thd_safe_bool_vector.o cknor/libkcommon/util.o cknor/libman/base_kmeans_coordinator.o cknor/libman/kmeans_coordinator.o cknor/libman/kmeans_task_coordinator.o cknor/libkcommon/clusters.o cknor/libman/kmeans_task_thread.o cknor/libkcommon/dist_matrix.o cknor/libman/kmeans_thread.o cknor/libkcommon/io.o cknor/libkcommon/kmeans_types.o cknor/libkcommon/prune_stats.o package_init.o

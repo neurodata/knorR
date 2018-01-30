@@ -1,17 +1,19 @@
 Package: knor
-Version: 0.0-2
-Date: 2017-09-09
+Version: 0.0-4
+Date: 2018-01-28
 Title: Non-Uniform Memory Access ('NUMA') Optimized, Parallel K-Means
 Authors@R: c(person("Disa", "Mhembere", role = c("aut", "cre"), email = "disa@jhu.edu"))
 Description: The k-means 'NUMA' Optimized Routine library or 'knor' is a highly optimized and fast library for computing k-means in parallel with accelerations for Non-Uniform Memory Access ('NUMA') architectures.
 LinkingTo: Rcpp
 Depends:
     R (>= 3.0),
-    Rcpp
+    Rcpp (>= 0.12.8)
 License: Apache License 2.0
-URL: https://github.com/flashxio/knorR
+URL: https://github.com/neurodata/knorR
 SystemRequirements: GNU make C++11, pthreads
 BugReports: https://github.com/flashxio/knor/issues
 RoxygenNote: 6.0.1
+Encoding: UTF-8
 LazyData: true
+NeedsCompilation: yes
 Suggests: testthat
