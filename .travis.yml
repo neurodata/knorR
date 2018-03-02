@@ -15,7 +15,7 @@
 language: r
 cache: packages
 dist: xenial
-sudo: required
+sudo: false
 r:
   - release
 
