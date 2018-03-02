@@ -1,10 +1,10 @@
 CXX_STD = CXX11
 
 PKG_CFLAGS=-DUSING_R -Icknor -Icknor/libman -Icknor/libkcommon \
-           -DNDEBUG \
+           @CXXFLAGS@ -DNDEBUG \
            -DPACKAGE_VERSION=\"@PACKAGE_VERSION@\"
 PKG_CXXFLAGS=-DUSING_R -I. -Icknor/libman -Icknor/libkcommon \
-             -DNDEBUG \
+             @CXXFLAGS@ -DNDEBUG \
              -DPACKAGE_VERSION=\"@PACKAGE_VERSION@\" \
              -DBIND $(SHLIB_PTHREAD_FLAGS) $(SHLIB_OPENMP_CXXFLAGS)
 PKG_LIBS=$(SHLIB_PTHREAD_FLAGS) $(SHLIB_OPENMP_CXXFLAGS)

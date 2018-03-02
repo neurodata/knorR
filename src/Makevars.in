@@ -3,22 +3,22 @@ CXX_STD = CXX11
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S), Darwin)
     PKG_CFLAGS=-DUSING_R -Icknor -Icknor/libman -Icknor/libkcommon \
-               @CPPFLAGS@ @CFLAGS@ -DNDEBUG \
+               @CXXFLAGS@ -DNDEBUG \
                @NUMA_DEF@ \
                -DPACKAGE_VERSION=\"@PACKAGE_VERSION@\"
     PKG_CXXFLAGS=-DUSING_R -I. -Icknor/libman -Icknor/libkcommon \
-                 @CPPFLAGS@ @CFLAGS@ -DNDEBUG \
+                 @CXXFLAGS@ -DNDEBUG \
                  -DPACKAGE_VERSION=\"@PACKAGE_VERSION@\" \
                  @NUMA_DEF@ -DBIND
     PKG_LIBS=@PTHREAD_LIB@ @NUMA_LIB@
 else
     PKG_CFLAGS=-DUSING_R -Icknor -Icknor/libauto -Icknor/libman -Icknor/libkcommon \
-               @CPPFLAGS@ @CFLAGS@ -DNDEBUG \
+               @CXXFLAGS@ -DNDEBUG \
                @NUMA_DEF@ $(SHLIB_OPENMP_CFLAGS) \
                -DPACKAGE_VERSION=\"@PACKAGE_VERSION@\"
     PKG_CXXFLAGS=-DUSING_R -Icknor/ -Icknor/libauto -Icknor/libman \
                  -Icknor/libkcommon \
-                 @CPPFLAGS@ @CFLAGS@ -DNDEBUG \
+                 @CXXFLAGS@ -DNDEBUG \
                  @NUMA_DEF@ $(SHLIB_OPENMP_CXXFLAGS) -DLINUX -DBIND \
                  -DPACKAGE_VERSION=\"@PACKAGE_VERSION@\"
     PKG_LIBS=@PTHREAD_LIB@ @NUMA_LIB@
