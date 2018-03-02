@@ -16,21 +16,27 @@ language: r
 cache: packages
 dist: xenial
 sudo: required
-python:
-  - "2.7"
+r:
+  - release
+
 before_install:
 - test -n $CC  && unset CC
 - test -n $CXX && unset CXX
 compiler:
 - gcc
+
 notifications:
   email: false
+
 install:
   - sudo apt-get install libnuma-dbg libnuma-dev libnuma1
   - Rscript -e "install.packages('devtools', dependencies=TRUE, repos='http://cran.rstudio.com/')"
   - ./install.sh
 script:
 - cd tests && Rscript testthat.R
+
+repos:
+  CRAN: https://cloud.r-project.org
 
 addons:
   apt:
