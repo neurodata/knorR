@@ -126,7 +126,7 @@ kms <- Kmeans(knor::test_data, knor::test_centroids)
 
 **Expected output**:
 
-Runtime for this actions should be nearly **instantaneous** on any machine:
+Runtime for this action should be nearly **instantaneous** on any machine:
 
 ```
 > kms
@@ -162,7 +162,7 @@ $size
 ```
 
 ## Help
-Check the R docs
+Check the R docs provided:
 
 ```
 ?knor::Kmeans
