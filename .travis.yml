@@ -29,8 +29,8 @@ notifications:
 
 install:
   - sudo apt-get install libnuma-dbg libnuma-dev libnuma1
-  - Rscript -e "install.packages('devtools', dependencies=TRUE, repos='http://cran.rstudio.com/')"
-  - ./install.sh
+  - sudo Rscript -e "install.packages('devtools', dependencies=TRUE, repos='http://cran.rstudio.com/')"
+  - sudo ./install.sh
 script:
 - cd tests && Rscript testthat.R
 
