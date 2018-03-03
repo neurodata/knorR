@@ -14,7 +14,7 @@
 
 language: r
 dist: xenial
-sudo: false
+sudo: required
 r:
   - release
 
