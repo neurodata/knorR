@@ -13,14 +13,14 @@
 #
 
 language: r
-dist: xenial
+dist: trusty
 sudo: required
 r:
   - release
 
 before_install:
-- test -n $CC  && unset CC
-- test -n $CXX && unset CXX
+- sudo apt-get update
+
 compiler:
 - gcc
 
@@ -28,8 +28,8 @@ notifications:
   email: false
 
 install:
-  - sudo apt-get install libnuma-dbg libnuma-dev libnuma1
-  - sudo Rscript -e "install.packages('devtools', dependencies=TRUE, repos='http://cran.rstudio.com/')"
+  - sudo apt-get autoconf install libnuma-dbg libnuma-dev libnuma1
+  - Rscript -e "install.packages('devtools', dependencies=TRUE, repos='http://cran.rstudio.com/')"
   - sudo ./install.sh
 script:
 - cd tests && Rscript testthat.R
