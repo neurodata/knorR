@@ -13,24 +13,37 @@
 #
 
 language: r
-cache: packages
-dist: xenial
+dist: trusty
 sudo: required
-python:
-  - "2.7"
+r:
+  - release
+
 before_install:
-- test -n $CC  && unset CC
-- test -n $CXX && unset CXX
+- sudo apt-get update
+
 compiler:
 - gcc
+
 notifications:
   email: false
+
+before_install:
+- sudo sh -c 'echo "deb http://cran.rstudio.com/bin/linux/ubuntu trusty/" >> /etc/apt/sources.list'
+- gpg --keyserver keyserver.ubuntu.com --recv-key E084DAB9
+- gpg -a --export E084DAB9 | sudo apt-key add -
+- sudo apt-get update
+- sudo apt-get install autoconf libnuma-dbg libnuma-dev libnuma1 zlib1g-dev
+- sudo apt-get install -y r-base-core
+- sudo R -e "install.packages(c('Rcpp', 'RSpectra', 'testthat'), repos = 'http://cran.rstudio.com/')"
+
 install:
-  - sudo apt-get install libnuma-dbg libnuma-dev libnuma1
-  - Rscript -e "install.packages('devtools', dependencies=TRUE, repos='http://cran.rstudio.com/')"
-  - ./install.sh
+  - sudo ./install.sh
+
 script:
 - cd tests && Rscript testthat.R
+
+repos:
+  CRAN: https://cloud.r-project.org
 
 addons:
   apt:
