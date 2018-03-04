@@ -28,7 +28,7 @@ notifications:
   email: false
 
 install:
-  - sudo apt-get autoconf install libnuma-dbg libnuma-dev libnuma1
+  - sudo apt-get install autoconf libnuma-dbg libnuma-dev libnuma1
   - Rscript -e "install.packages('devtools', dependencies=TRUE, repos='http://cran.rstudio.com/')"
   - sudo ./install.sh
 script:
