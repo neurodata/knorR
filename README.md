@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/neurodata/knorR.svg?branch=master)](https://travis-ci.org/neurodata/knorR)[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/ggplot2)](https://cran.r-project.org/package=knor)[![Downloads](http://cranlogs.r-pkg.org/badges/Rcpp?color=brightgreen)](http://www.r-pkg.org/pkg/knor)
+[![Build Status](https://travis-ci.org/neurodata/knorR.svg?branch=master)](https://travis-ci.org/neurodata/knorR)[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/ggplot2)](https://cran.r-project.org/package=knor)[![Downloads](http://cranlogs.r-pkg.org/badges/knor?color=brightgreen)](http://www.r-pkg.org/pkg/knor)
 
 # knor (K-means NUMA optimized routines)
 
