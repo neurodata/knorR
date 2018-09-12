@@ -18,8 +18,4 @@ endif
 
 all: $(SHLIB)
 
-OBJECTS=rinterface.o cknor/libman/base_kmeans_thread.o cknor/libkcommon/thd_safe_bool_vector.o cknor/libkcommon/util.o cknor/libman/base_kmeans_coordinator.o cknor/libman/kmeans_coordinator.o cknor/libman/kmeans_task_coordinator.o cknor/libkcommon/clusters.o cknor/libman/kmeans_task_thread.o cknor/libkcommon/dist_matrix.o cknor/libman/kmeans_thread.o cknor/libkcommon/io.o cknor/libkcommon/kmeans_types.o cknor/libkcommon/prune_stats.o package_init.o
-
-ifneq ($(UNAME_S), Darwin)
-    OBJECTS+=cknor/libauto/kmeans.o cknor/libauto/min-tri-kmeans.o
-endif
+OBJECTS=rinterface.o cknor/libman/base_kmeans_thread.o cknor/libkcommon/thd_safe_bool_vector.o cknor/libkcommon/util.o cknor/libman/base_kmeans_coordinator.o cknor/libman/kmeans_coordinator.o cknor/libman/kmeans_task_coordinator.o cknor/libkcommon/clusters.o cknor/libman/kmeans_task_thread.o cknor/libkcommon/dist_matrix.o cknor/libman/kmeans_thread.o cknor/libkcommon/io.o cknor/libkcommon/kmeans_types.o cknor/libkcommon/prune_stats.o package_init.o cknor/libauto/kmeans.o cknor/libauto/min-tri-kmeans.o
