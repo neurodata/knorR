@@ -26,7 +26,7 @@
 /**
   * Transform the C output to R
   **/
-namespace kpmbase = kpmeans::base;
+namespace kpmbase = knor::base;
 
 static void marshall_c_to_r(const kpmbase::kmeans_t& kret,
         Rcpp::List& ret) {
@@ -82,7 +82,7 @@ RcppExport SEXP R_knor_kmeans_data_centroids_im(SEXP rdata, SEXP rk,
     std::vector<double> ccentroids(k*ncol);
 
     if (nthread == -1)
-        nthread = kpmeans::base::get_num_omp_threads();
+        nthread = knor::base::get_num_omp_threads();
 
     unsigned nnodes = kpmbase::get_num_nodes();
 
@@ -101,7 +101,7 @@ RcppExport SEXP R_knor_kmeans_data_centroids_im(SEXP rdata, SEXP rk,
 		for (size_t col = 0; col < ncol; col++)
 			ccentroids[row*ncol + col] = centroids(row, col);
 
-    kpmeans::base::kmeans_t kret = kpmeans::base::kmeans(&cdata[0],
+    knor::base::kmeans_t kret = knor::base::kmeans(&cdata[0],
             nrow, ncol, k, max_iters, nnodes, nthread,
             &ccentroids[0], "none", tolerance, dist_type, omp, numa_opt);
 
@@ -131,7 +131,7 @@ RcppExport SEXP R_knor_kmeans_data_im(SEXP rdata, SEXP rk,
     std::vector<double> cdata(nrow*ncol);
 
     if (nthread == -1)
-        nthread = kpmeans::base::get_num_omp_threads();
+        nthread = knor::base::get_num_omp_threads();
 
     unsigned nnodes = kpmbase::get_num_nodes();
 
@@ -143,7 +143,7 @@ RcppExport SEXP R_knor_kmeans_data_im(SEXP rdata, SEXP rk,
 		for (size_t col = 0; col < ncol; col++)
 			cdata[row*ncol + col] = data(row, col);
 
-    kpmeans::base::kmeans_t kret = kpmeans::base::kmeans(&cdata[0],
+    knor::base::kmeans_t kret = knor::base::kmeans(&cdata[0],
             nrow, ncol, k, max_iters, nnodes, nthread, NULL,
             init, tolerance, dist_type, omp);
 
@@ -173,7 +173,7 @@ RcppExport SEXP R_knor_kmeans_centroids_im(SEXP rdata, SEXP rk,
     std::vector<double> ccentroids(k*ncol);
 
     if (nthread == -1)
-        nthread = kpmeans::base::get_num_omp_threads();
+        nthread = knor::base::get_num_omp_threads();
 
     unsigned nnodes = kpmbase::get_num_nodes();
 
@@ -184,7 +184,7 @@ RcppExport SEXP R_knor_kmeans_centroids_im(SEXP rdata, SEXP rk,
 		for (size_t col = 0; col < ncol; col++)
 			ccentroids[row*ncol + col] = centroids(row, col);
 
-    kpmeans::base::kmeans_t kret = kpmeans::base::kmeans(data,
+    knor::base::kmeans_t kret = knor::base::kmeans(data,
             nrow, ncol, k, max_iters, nnodes, nthread,
             &ccentroids[0], "none", tolerance, dist_type, omp);
 
@@ -214,11 +214,11 @@ RcppExport SEXP R_knor_kmeans(SEXP rdata, SEXP rk,
     bool omp = INTEGER(romp)[0];
 
     if (nthread == -1)
-        nthread = kpmeans::base::get_num_omp_threads();
+        nthread = knor::base::get_num_omp_threads();
 
     unsigned nnodes = kpmbase::get_num_nodes();
 
-    kpmeans::base::kmeans_t kret = kpmeans::base::kmeans(data,
+    knor::base::kmeans_t kret = knor::base::kmeans(data,
             nrow, ncol, k, max_iters, nnodes, nthread, NULL,
             init, tolerance, dist_type, omp);
 
@@ -255,7 +255,7 @@ RcppExport SEXP R_knor_kmeans_data_im_centroids_em(
     br.read(ccentroids);
 
     if (nthread == -1)
-        nthread = kpmeans::base::get_num_omp_threads();
+        nthread = knor::base::get_num_omp_threads();
 
     unsigned nnodes = kpmbase::get_num_nodes();
 
@@ -267,7 +267,7 @@ RcppExport SEXP R_knor_kmeans_data_im_centroids_em(
 		for (size_t col = 0; col < ncol; col++)
 			cdata[row*ncol + col] = data(row, col);
 
-    kpmeans::base::kmeans_t kret = kpmeans::base::kmeans(&cdata[0],
+    knor::base::kmeans_t kret = knor::base::kmeans(&cdata[0],
             nrow, ncol, k, max_iters, nnodes, nthread,
             &ccentroids[0], "none", tolerance, dist_type, omp);
 
@@ -307,11 +307,11 @@ RcppExport SEXP R_knor_kmeans_data_centroids_em(
     br.read(ccentroids);
 
     if (nthread == -1)
-        nthread = kpmeans::base::get_num_omp_threads();
+        nthread = knor::base::get_num_omp_threads();
 
     unsigned nnodes = kpmbase::get_num_nodes();
 
-    kpmeans::base::kmeans_t kret = kpmeans::base::kmeans(data,
+    knor::base::kmeans_t kret = knor::base::kmeans(data,
             nrow, ncol, k, max_iters, nnodes, nthread,
             &ccentroids[0], "none", tolerance, dist_type, omp);
 
