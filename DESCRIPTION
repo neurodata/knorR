@@ -1,5 +1,5 @@
 Package: knor
-Version: 0.0-6
+Version: 0.0-6.1
 Date: 2018-10-09
 Title: Non-Uniform Memory Access ('NUMA') Optimized, Parallel K-Means
 Authors@R: c(person("Disa", "Mhembere", role = c("aut", "cre"), email = "disa@jhu.edu"), person("Neurodata (https://neurodata.io)", role="cph"))

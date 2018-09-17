@@ -26,9 +26,8 @@
 /**
   * Transform the C output to R
   **/
-namespace kpmbase = knor::base;
 
-static void marshall_c_to_r(const kpmbase::kmeans_t& kret,
+static void marshall_c_to_r(const knor::base::kmeans_t& kret,
         Rcpp::List& ret) {
 
     ret["nrow"] = kret.nrow;
@@ -84,7 +83,7 @@ RcppExport SEXP R_knor_kmeans_data_centroids_im(SEXP rdata, SEXP rk,
     if (nthread == -1)
         nthread = knor::base::get_num_omp_threads();
 
-    unsigned nnodes = kpmbase::get_num_nodes();
+    unsigned nnodes = knor::base::get_num_nodes();
 
 // TODO: Slow transpose
 #ifdef _OPENMP
@@ -133,7 +132,7 @@ RcppExport SEXP R_knor_kmeans_data_im(SEXP rdata, SEXP rk,
     if (nthread == -1)
         nthread = knor::base::get_num_omp_threads();
 
-    unsigned nnodes = kpmbase::get_num_nodes();
+    unsigned nnodes = knor::base::get_num_nodes();
 
 // TODO: Slow transpose
 #ifdef _OPENMP
@@ -175,7 +174,7 @@ RcppExport SEXP R_knor_kmeans_centroids_im(SEXP rdata, SEXP rk,
     if (nthread == -1)
         nthread = knor::base::get_num_omp_threads();
 
-    unsigned nnodes = kpmbase::get_num_nodes();
+    unsigned nnodes = knor::base::get_num_nodes();
 
 #ifdef _OPENMP
 #pragma omp parallel for firstprivate(centroids) shared (ccentroids)
@@ -216,7 +215,7 @@ RcppExport SEXP R_knor_kmeans(SEXP rdata, SEXP rk,
     if (nthread == -1)
         nthread = knor::base::get_num_omp_threads();
 
-    unsigned nnodes = kpmbase::get_num_nodes();
+    unsigned nnodes = knor::base::get_num_nodes();
 
     knor::base::kmeans_t kret = knor::base::kmeans(data,
             nrow, ncol, k, max_iters, nnodes, nthread, NULL,
@@ -251,13 +250,13 @@ RcppExport SEXP R_knor_kmeans_data_im_centroids_em(
     std::ifstream in(centroidfn, std::ifstream::ate | std::ifstream::binary);
     size_t k = in.tellg()/(sizeof(double)*ncol);
     std::vector<double> ccentroids(k*ncol);
-    kpmbase::bin_rm_reader<double> br(centroidfn);
+    knor::base::bin_rm_reader<double> br(centroidfn);
     br.read(ccentroids);
 
     if (nthread == -1)
         nthread = knor::base::get_num_omp_threads();
 
-    unsigned nnodes = kpmbase::get_num_nodes();
+    unsigned nnodes = knor::base::get_num_nodes();
 
 // TODO: Slow transpose
 #ifdef _OPENMP
@@ -303,13 +302,13 @@ RcppExport SEXP R_knor_kmeans_data_centroids_em(
 	unsigned k = INTEGER(rk)[0];
 
     std::vector<double> ccentroids(k*ncol);
-    kpmbase::bin_rm_reader<double> br(centroidfn);
+    knor::base::bin_rm_reader<double> br(centroidfn);
     br.read(ccentroids);
 
     if (nthread == -1)
         nthread = knor::base::get_num_omp_threads();
 
-    unsigned nnodes = kpmbase::get_num_nodes();
+    unsigned nnodes = knor::base::get_num_nodes();
 
     knor::base::kmeans_t kret = knor::base::kmeans(data,
             nrow, ncol, k, max_iters, nnodes, nthread,
