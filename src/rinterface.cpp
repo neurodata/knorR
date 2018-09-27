@@ -22,6 +22,7 @@
 #include <unordered_map>
 #include "cknor/binding/knori.hpp"
 #include "cknor/libkcommon/io.hpp"
+#include "cknor/binding/kmedoids.hpp"
 
 /**
   * Transform the C output to R
@@ -313,6 +314,96 @@ RcppExport SEXP R_knor_kmeans_data_centroids_em(
     knor::base::cluster_t kret = knor::base::kmeans(data,
             nrow, ncol, k, max_iters, nnodes, nthread,
             &ccentroids[0], "none", tolerance, dist_type, omp);
+
+	Rcpp::List ret;
+    marshall_c_to_r(kret, ret);
+	return ret;
+}
+
+// KMEDOIDS
+/**
+  * Data in memory
+**/
+RcppExport SEXP R_knor_kmedoids_data_im(SEXP rdata, SEXP rk,
+        SEXP rmax_iters, SEXP rnthread,
+        SEXP rinit, SEXP rtolerance,
+        SEXP rdist_type) {
+
+    Rcpp::NumericMatrix data = Rcpp::NumericMatrix(rdata);
+	unsigned k = INTEGER(rk)[0];
+	size_t max_iters = static_cast<size_t>(REAL(rmax_iters)[0]);
+	int nthread = INTEGER(rnthread)[0];
+	std::string init = CHAR(STRING_ELT(rinit,0));
+	double tolerance = REAL(rtolerance)[0];
+	std::string dist_type = CHAR(STRING_ELT(rdist_type,0));
+	const size_t nrow = data.nrow();
+	const size_t ncol = data.ncol();
+    std::vector<double> cdata(nrow*ncol);
+
+    if (nthread == -1)
+        nthread = knor::base::get_num_omp_threads();
+
+    unsigned nnodes = knor::base::get_num_nodes();
+
+#ifdef _OPENMP
+#pragma omp parallel for firstprivate(data) shared (cdata)
+#endif
+	for (size_t row = 0; row < nrow; row++)
+		for (size_t col = 0; col < ncol; col++)
+			cdata[row*ncol + col] = data(row, col);
+
+    knor::base::cluster_t kret = knor::base::kmedoids(&cdata[0],
+            nrow, ncol, k, max_iters, nnodes, nthread, NULL,
+            init, tolerance, dist_type);
+
+	Rcpp::List ret;
+    marshall_c_to_r(kret, ret);
+	return ret;
+}
+
+/**
+  * Data and centroids in-memory
+**/
+RcppExport SEXP R_knor_kmedoids_data_centroids_im(SEXP rdata, SEXP rk,
+        SEXP rmax_iters, SEXP rnthread,
+        SEXP rtolerance, SEXP rdist_type) {
+
+    Rcpp::NumericMatrix data = Rcpp::NumericMatrix(rdata);
+    Rcpp::NumericMatrix centroids = Rcpp::NumericMatrix(rk);
+
+	size_t max_iters = static_cast<size_t>(REAL(rmax_iters)[0]);
+	int nthread = INTEGER(rnthread)[0];
+	double tolerance = REAL(rtolerance)[0];
+	std::string dist_type = CHAR(STRING_ELT(rdist_type,0));
+	unsigned k = centroids.nrow();
+	const size_t nrow = data.nrow();
+	const size_t ncol = data.ncol();
+
+    std::vector<double> cdata(nrow*ncol);
+    std::vector<double> ccentroids(k*ncol);
+
+    if (nthread == -1)
+        nthread = knor::base::get_num_omp_threads();
+
+    unsigned nnodes = knor::base::get_num_nodes();
+
+#ifdef _OPENMP
+#pragma omp parallel for firstprivate(data) shared (cdata)
+#endif
+	for (size_t row = 0; row < nrow; row++)
+		for (size_t col = 0; col < ncol; col++)
+			cdata[row*ncol + col] = data(row, col);
+
+#ifdef _OPENMP
+#pragma omp parallel for firstprivate(centroids) shared (ccentroids)
+#endif
+	for (size_t row = 0; row < k; row++)
+		for (size_t col = 0; col < ncol; col++)
+			ccentroids[row*ncol + col] = centroids(row, col);
+
+    knor::base::cluster_t kret = knor::base::kmedoids(&cdata[0],
+            nrow, ncol, k, max_iters, nnodes, nthread,
+            &ccentroids[0], "none", tolerance, dist_type);
 
 	Rcpp::List ret;
     marshall_c_to_r(kret, ret);

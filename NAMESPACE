@@ -2,3 +2,4 @@ useDynLib(knor, .registration = TRUE)
 
 import(Rcpp)
 export(Kmeans)
+export(Kmedoids)
