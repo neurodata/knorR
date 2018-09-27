@@ -27,7 +27,7 @@
   * Transform the C output to R
   **/
 
-static void marshall_c_to_r(const knor::base::kmeans_t& kret,
+static void marshall_c_to_r(const knor::base::cluster_t& kret,
         Rcpp::List& ret) {
 
     ret["nrow"] = kret.nrow;
@@ -100,7 +100,7 @@ RcppExport SEXP R_knor_kmeans_data_centroids_im(SEXP rdata, SEXP rk,
 		for (size_t col = 0; col < ncol; col++)
 			ccentroids[row*ncol + col] = centroids(row, col);
 
-    knor::base::kmeans_t kret = knor::base::kmeans(&cdata[0],
+    knor::base::cluster_t kret = knor::base::kmeans(&cdata[0],
             nrow, ncol, k, max_iters, nnodes, nthread,
             &ccentroids[0], "none", tolerance, dist_type, omp, numa_opt);
 
@@ -142,7 +142,7 @@ RcppExport SEXP R_knor_kmeans_data_im(SEXP rdata, SEXP rk,
 		for (size_t col = 0; col < ncol; col++)
 			cdata[row*ncol + col] = data(row, col);
 
-    knor::base::kmeans_t kret = knor::base::kmeans(&cdata[0],
+    knor::base::cluster_t kret = knor::base::kmeans(&cdata[0],
             nrow, ncol, k, max_iters, nnodes, nthread, NULL,
             init, tolerance, dist_type, omp);
 
@@ -183,7 +183,7 @@ RcppExport SEXP R_knor_kmeans_centroids_im(SEXP rdata, SEXP rk,
 		for (size_t col = 0; col < ncol; col++)
 			ccentroids[row*ncol + col] = centroids(row, col);
 
-    knor::base::kmeans_t kret = knor::base::kmeans(data,
+    knor::base::cluster_t kret = knor::base::kmeans(data,
             nrow, ncol, k, max_iters, nnodes, nthread,
             &ccentroids[0], "none", tolerance, dist_type, omp);
 
@@ -217,7 +217,7 @@ RcppExport SEXP R_knor_kmeans(SEXP rdata, SEXP rk,
 
     unsigned nnodes = knor::base::get_num_nodes();
 
-    knor::base::kmeans_t kret = knor::base::kmeans(data,
+    knor::base::cluster_t kret = knor::base::kmeans(data,
             nrow, ncol, k, max_iters, nnodes, nthread, NULL,
             init, tolerance, dist_type, omp);
 
@@ -266,7 +266,7 @@ RcppExport SEXP R_knor_kmeans_data_im_centroids_em(
 		for (size_t col = 0; col < ncol; col++)
 			cdata[row*ncol + col] = data(row, col);
 
-    knor::base::kmeans_t kret = knor::base::kmeans(&cdata[0],
+    knor::base::cluster_t kret = knor::base::kmeans(&cdata[0],
             nrow, ncol, k, max_iters, nnodes, nthread,
             &ccentroids[0], "none", tolerance, dist_type, omp);
 
@@ -310,7 +310,7 @@ RcppExport SEXP R_knor_kmeans_data_centroids_em(
 
     unsigned nnodes = knor::base::get_num_nodes();
 
-    knor::base::kmeans_t kret = knor::base::kmeans(data,
+    knor::base::cluster_t kret = knor::base::kmeans(data,
             nrow, ncol, k, max_iters, nnodes, nthread,
             &ccentroids[0], "none", tolerance, dist_type, omp);
 
