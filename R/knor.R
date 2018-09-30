@@ -181,6 +181,25 @@ Kmedoids <- function(data, centers, nrow=-1, ncol=-1,
         } else {
             stop(paste("Cannot handle centers of type", class(centers), "\n"))
         }
+    } else if (class(data) == "character") {
+        if (class(centers) == "numeric" || class(centers) == "integer") {
+            ret <- .Call("R_knor_kmedoids_data_em",
+                         normalizePath(as.character(data)),
+                         as.integer(centers), as.double(nrow),
+                         as.double(ncol),
+                         as.double(iter.max), as.integer(nthread),
+                         as.character(init), as.double(tolerance),
+                         as.character(dist.type),
+                         PACKAGE="knor")
+        } else if (class(centers) == "matrix") {
+            ret <- .Call("R_knor_kmedoids_centroids_im(",
+                         normalizePath(as.character(data)),
+                         as.matrix(centers), as.double(nrow),
+                         as.double(iter.max), as.integer(nthread),
+                         as.double(tolerance),
+                         as.character(dist.type),
+                         PACKAGE="knor")
+        }
     } else {
         stop(paste("Cannot handle data of type", class(data), "\n"))
     }

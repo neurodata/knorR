@@ -320,7 +320,7 @@ RcppExport SEXP R_knor_kmeans_data_centroids_em(
 	return ret;
 }
 
-// KMEDOIDS
+////////////////////////////////// KMEDOIDS ///////////////////////////////////
 /**
   * Data in memory
 **/
@@ -404,6 +404,79 @@ RcppExport SEXP R_knor_kmedoids_data_centroids_im(SEXP rdata, SEXP rk,
     knor::base::cluster_t kret = knor::base::kmedoids(&cdata[0],
             nrow, ncol, k, max_iters, nnodes, nthread,
             &ccentroids[0], "none", tolerance, dist_type);
+
+	Rcpp::List ret;
+    marshall_c_to_r(kret, ret);
+	return ret;
+}
+
+/**
+  * Centroids only in-memory
+  */
+RcppExport SEXP R_knor_kmedoids_centroids_im(SEXP rdata, SEXP rk,
+        SEXP rnrow, SEXP rmax_iters, SEXP rnthread, SEXP rtolerance,
+        SEXP rdist_type) {
+
+    std::string data = CHAR(STRING_ELT(rdata,0));
+	size_t nrow = static_cast<size_t>(REAL(rnrow)[0]);
+	size_t max_iters = static_cast<size_t>(REAL(rmax_iters)[0]);
+	int nthread = INTEGER(rnthread)[0];
+	double tolerance = REAL(rtolerance)[0];
+	std::string dist_type = CHAR(STRING_ELT(rdist_type,0));
+
+    Rcpp::NumericMatrix centroids = Rcpp::NumericMatrix(rk);
+	unsigned k = centroids.nrow();
+	const size_t ncol = centroids.ncol();
+    std::vector<double> ccentroids(k*ncol);
+
+    if (nthread == -1)
+        nthread = knor::base::get_num_omp_threads();
+
+    unsigned nnodes = knor::base::get_num_nodes();
+
+#ifdef _OPENMP
+#pragma omp parallel for firstprivate(centroids) shared (ccentroids)
+#endif
+	for (size_t row = 0; row < k; row++)
+		for (size_t col = 0; col < ncol; col++)
+			ccentroids[row*ncol + col] = centroids(row, col);
+
+    knor::base::cluster_t kret = knor::base::kmedoids(data,
+            nrow, ncol, k, max_iters, nnodes, nthread,
+            &ccentroids[0], "none", tolerance, dist_type);
+
+	Rcpp::List ret;
+    marshall_c_to_r(kret, ret);
+	return ret;
+}
+
+/**
+  * Data on disk, centroids computed by init method
+  */
+RcppExport SEXP R_knor_kmedoids_data_em(SEXP rdata, SEXP rk,
+        SEXP rnrow, SEXP rncol,
+        SEXP rmax_iters, SEXP rnthread,
+        SEXP rinit, SEXP rtolerance,
+        SEXP rdist_type) {
+
+    std::string data = CHAR(STRING_ELT(rdata,0));
+	unsigned k = INTEGER(rk)[0];
+	size_t nrow = static_cast<size_t>(REAL(rnrow)[0]);
+	size_t ncol = static_cast<size_t>(REAL(rncol)[0]);
+	size_t max_iters = static_cast<size_t>(REAL(rmax_iters)[0]);
+	int nthread = INTEGER(rnthread)[0];
+	std::string init = CHAR(STRING_ELT(rinit,0));
+	double tolerance = REAL(rtolerance)[0];
+	std::string dist_type = CHAR(STRING_ELT(rdist_type,0));
+
+    if (nthread == -1)
+        nthread = knor::base::get_num_omp_threads();
+
+    unsigned nnodes = knor::base::get_num_nodes();
+
+    knor::base::cluster_t kret = knor::base::kmedoids(data,
+            nrow, ncol, k, max_iters, nnodes, nthread, NULL,
+            init, tolerance, dist_type);
 
 	Rcpp::List ret;
     marshall_c_to_r(kret, ret);
