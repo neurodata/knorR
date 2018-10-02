@@ -54,13 +54,13 @@
 #'
 #' @export
 #' @name Kmeans
-#' @author Disa Mhembere <disa@@jhu.edu>
+#' @author Disa Mhembere <disa@@cs.jhu.edu>
 #' @rdname Kmeans
 
 Kmeans <- function(data, centers, nrow=-1, ncol=-1,
                    iter.max=.Machine$integer.max, nthread=-1,
                    init=c("kmeanspp", "random", "forgy", "none"),
-                   tolerance=1E-6, dist.type=c("eucl", "cos"),
+                   tolerance=1E-6, dist.type=c("eucl", "cos", "taxi"),
                    omp=FALSE, numa.opt=FALSE) {
 
     if (class(data) == "character") {
@@ -128,7 +128,10 @@ Kmeans <- function(data, centers, nrow=-1, ncol=-1,
 }
 
 #' Perform k-medoids clustering on a data matrix.
-#' TODO: Detailed description
+#' After initialization the k-medoids algorithm partitions data by testing which
+#'  data member of a cluster Ci may make a better candidate as medoid (centroid)
+#'  by reducing the sum of distance (usually taxi), then running a reclustering
+#'  step with updated medoids.
 #'
 #' @param data Data file name on disk or In memory data matrix
 #' @param nrow The number of samples in the dataset
@@ -199,6 +202,208 @@ Kmedoids <- function(data, centers, nrow=-1, ncol=-1,
                          as.double(tolerance),
                          as.character(dist.type),
                          PACKAGE="knor")
+        }
+    } else {
+        stop(paste("Cannot handle data of type", class(data), "\n"))
+    }
+}
+
+#' Perform spherical k-means clustering on a data matrix.
+#' Similar to the k-means algorithm differing only in that data features are
+#'  min-max normalized the dissimilarity metric is Cosine distance.
+#'
+#' @param data Data file name on disk (NUMA optmized) or In-memory data matrix
+#' @param nrow The number of samples in the dataset
+#' @param ncol The number of features in the dataset
+#' @param iter.max The maximum number of iteration of k-means to perform
+#' @param nthread The number of parallel thread to run
+#' @param centers Either (i) The number of centers (i.e., k), or
+#'  (ii) an In-memory data matrix
+#' @param init The type of initialization to use c("kmeanspp",
+#'  "random", "forgy", "none")
+#' @param tolerance The convergence tolerance
+#'
+#' @return A list containing the attributes of the output of kmedoids.
+#'  cluster: A vector of integers (from 1:\strong{k}) indicating the cluster to
+#'          which each point is allocated.
+#'  centers: A matrix of cluster centres.
+#'  size: The number of points in each cluster.
+#'  iter: The number of (outer) iterations.
+#'
+#' @examples
+#' iris.mat <- as.matrix(iris[,1:4])
+#' k <- length(unique(iris[, dim(iris)[2]])) # Number of unique classes
+#' km <- Skmeans(iris.mat, k)
+#'
+#' @export
+#' @name Skmeans
+#' @author Disa Mhembere <disa@@cs.jhu.edu>
+#' @rdname Skmeans
+
+Skmeans <- function(data, centers, nrow=-1, ncol=-1,
+                   iter.max=.Machine$integer.max, nthread=-1,
+                   init=c("kmeanspp", "random", "forgy", "none"),
+                   tolerance=1E-6) {
+
+    if (class(data) == "matrix") {
+        if (class(centers) == "numeric" || class(centers) == "integer") {
+            ret <- .Call("R_knor_skmeans_data_im", as.matrix(data),
+                         as.integer(centers),
+                         as.double(iter.max), as.integer(nthread),
+                         as.character(init), as.double(tolerance),
+                         PACKAGE="knor")
+        } else if (class(centers) == "matrix") {
+            ret <- .Call("R_knor_skmeans_data_centroids_im", as.matrix(data),
+                         as.matrix(centers),
+                         as.double(iter.max), as.integer(nthread),
+                         as.character(init), as.double(tolerance),
+                         PACKAGE="knor")
+        } else {
+            stop(paste("Cannot handle centers of type", class(centers), "\n"))
+        }
+    } else if (class(data) == "character") {
+        if (class(centers) == "numeric" || class(centers) == "integer") {
+            ret <- .Call("R_knor_skmeans_data_em",
+                         normalizePath(as.character(data)),
+                         as.integer(centers), as.double(nrow),
+                         as.double(ncol),
+                         as.double(iter.max), as.integer(nthread),
+                         as.character(init), as.double(tolerance),
+                         PACKAGE="knor")
+            stop(paste("Cannot handle data of type", class(data), "\n"))
+        } else if (class(centers) == "matrix") {
+            ret <- .Call("R_knor_skmeans_centroids_im(",
+                         normalizePath(as.character(data)),
+                         as.matrix(centers), as.double(nrow),
+                         as.double(iter.max), as.integer(nthread),
+                         as.double(tolerance),
+                         PACKAGE="knor")
+            stop(paste("Cannot handle data of type", class(data), "\n"))
+        }
+    } else {
+        stop(paste("Cannot handle data of type", class(data), "\n"))
+    }
+}
+
+#' Perform the k-means++ clustering algorithm on a data matrix.
+#'
+#' A parallel and scalable implementation of the algorithm described in
+#' Ostrovsky, Rafail, et al. "The effectiveness of Lloyd-type methods for
+#'  the k-means problem." Journal of the ACM (JACM) 59.6 (2012): 28.
+#'
+#' @param data Data file name on disk or In memory data matrix
+#' @param nrow The number of samples in the dataset
+#' @param ncol The number of features in the dataset
+#' @param centers The number of centers (i.e., k)
+#' @param nstart The convergence tolerance
+#' @param nthread The number of parallel thread to run
+#'
+#' @return A list containing the attributes of the output of kmedoids.
+#'  cluster: A vector of integers (from 1:\strong{k}) indicating the cluster to
+#'          which each point is allocated.
+#'  centers: A matrix of cluster centres.
+#'  size: The number of points in each cluster.
+#'
+#' @examples
+#' iris.mat <- as.matrix(iris[,1:4])
+#' k <- length(unique(iris[, dim(iris)[2]])) # Number of unique classes
+#' nstart <- 2
+#' km <- KmeansPP(iris.mat, k, nstart)
+#'
+#' @export
+#' @name KmeansPP
+#' @author Disa Mhembere <disa@@cs.jhu.edu>
+#' @rdname KmeansPP
+
+KmeansPP <- function(data, centers, nrow=-1, ncol=-1, nstart=1, nthread=-1) {
+    if (class(data) == "matrix") {
+        if (class(centers) == "numeric" || class(centers) == "integer") {
+            ret <- NULL
+            if (nstart == 1) {
+                Kmeans(data, centers, nrow, ncol, iter.max=1, init=c("kmeanspp"))
+            } else {
+                ret <- Kmeans(data, centers, nrow, ncol,
+                              iter.max=1, init=c("kmeanspp"))
+
+                for (starts in 2:nstart) {
+                    # Seed kmeans++
+                    ret <- Kmeans(data, ret$centers, init=c("kmeanspp"))
+                }
+            }
+            ret # return this
+        } else {
+            stop(paste("Cannot handle centers of type", class(centers), "\n"))
+        }
+    } else if (class(data) == "character") {
+        if (class(centers) == "numeric" || class(centers) == "integer") {
+            # TODO
+            stop(paste("Cannot handle data of type", class(data), "\n"))
+        }
+    } else {
+        stop(paste("Cannot handle data of type", class(data), "\n"))
+    }
+}
+
+#' Perform parallel hierarchical clustering on a data matrix.
+#'
+#' A recursive (not acutally implemented as recursion) partitioning of data into
+#'  two disjoint sets at every level as described in
+#'  https://en.wikipedia.org/wiki/Hierarchical_clustering
+#'
+#' @param data Data file name on disk or In memory data matrix
+#' @param nrow The number of samples in the dataset
+#' @param ncol The number of features in the dataset
+#' @param iter.max The maximum number of iteration of k-means to perform
+#' @param level.max Maximmum
+#' @param init The type of initialization to use c("kmeanspp", "random",
+#'  "forgy", "none")
+#' @param tolerance The convergence tolerance
+#' @param dist.type What dissimilarity metric to use
+#' @param algo What algorithm to use c("kmeans")
+#' @param nthread The number of parallel thread to run
+#'
+#' @return A list of lists containing the attributes of the output of kmeans.
+#'  cluster: A vector of integers (from 1:\strong{k}) indicating the cluster to
+#'          which each point is allocated.
+#'  centers: A matrix of cluster centres.
+#'  size: The number of points in each cluster.
+#'  iter: The number of (outer) iterations.
+#'
+#' @examples
+#' iris.mat <- as.matrix(iris[,1:4])
+#' k <- length(unique(iris[, dim(iris)[2]])) # Number of unique classes
+#' kms <- Hclust(iris.mat, k, level.max=2)
+#'
+#' @export
+#' @name Hclust
+#' @author Disa Mhembere <disa@@cs.jhu.edu>
+#' @rdname Hclust
+
+Hclust <- function(data, centers, nrow=-1, ncol=-1,
+                   iter.max=.Machine$integer.max, nthread=-1,
+                   init=c("kmeanspp", "random", "forgy", "none"),
+                   tolerance=1E-6, dist.type=c("eucl", "cos", "taxi")) {
+
+    if (class(data) == "character") {
+        if (class(centers) == "numeric" || class(centers) == "integer") {
+            # TODO
+        } else if (class(centers) == "matrix") {
+            # TODO
+        }
+        else if (class(centers) == "list") {
+            # TODO
+        } else {
+            stop(paste("Cannot handle centers of type", class(centers), "\n"))
+        }
+    } else if (class(data) == "matrix") {
+        if (class(centers) == "numeric" || class(centers) == "integer") {
+            # TODO
+        } else if (class(centers) == "matrix") {
+            # TODO
+        } else if (class(centers) == "character") {
+            # TODO
+        } else {
+            stop(paste("Cannot handle centers of type", class(centers), "\n"))
         }
     } else {
         stop(paste("Cannot handle data of type", class(data), "\n"))
