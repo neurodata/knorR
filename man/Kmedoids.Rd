@@ -3,7 +3,10 @@
 \name{Kmedoids}
 \alias{Kmedoids}
 \title{Perform k-medoids clustering on a data matrix.
-TODO: Detailed description}
+After initialization the k-medoids algorithm partitions data by testing which
+ data member of a cluster Ci may make a better candidate as medoid (centroid)
+ by reducing the sum of distance (usually taxi), then running a reclustering
+ step with updated medoids.}
 \usage{
 Kmedoids(data, centers, nrow = -1, ncol = -1,
   iter.max = .Machine$integer.max, nthread = -1, init = c("forgy",
@@ -39,7 +42,10 @@ A list containing the attributes of the output of kmedoids.
 }
 \description{
 Perform k-medoids clustering on a data matrix.
-TODO: Detailed description
+After initialization the k-medoids algorithm partitions data by testing which
+ data member of a cluster Ci may make a better candidate as medoid (centroid)
+ by reducing the sum of distance (usually taxi), then running a reclustering
+ step with updated medoids.
 }
 \examples{
 iris.mat <- as.matrix(iris[,1:4])
