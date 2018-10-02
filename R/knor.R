@@ -270,7 +270,6 @@ Skmeans <- function(data, centers, nrow=-1, ncol=-1,
                          as.double(iter.max), as.integer(nthread),
                          as.character(init), as.double(tolerance),
                          PACKAGE="knor")
-            stop(paste("Cannot handle data of type", class(data), "\n"))
         } else if (class(centers) == "matrix") {
             ret <- .Call("R_knor_skmeans_centroids_im(",
                          normalizePath(as.character(data)),
@@ -278,7 +277,6 @@ Skmeans <- function(data, centers, nrow=-1, ncol=-1,
                          as.double(iter.max), as.integer(nthread),
                          as.double(tolerance),
                          PACKAGE="knor")
-            stop(paste("Cannot handle data of type", class(data), "\n"))
         }
     } else {
         stop(paste("Cannot handle data of type", class(data), "\n"))
