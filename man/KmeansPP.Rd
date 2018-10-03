@@ -5,10 +5,10 @@
 \title{Perform the k-means++ clustering algorithm on a data matrix.}
 \usage{
 KmeansPP(data, centers, nrow = -1, ncol = -1, nstart = 1,
-  nthread = -1)
+  nthread = -1, dist.type = c("taxi", "eucl", "cos"))
 }
 \arguments{
-\item{data}{Data file name on disk or In memory data matrix}
+\item{data}{Data file name on disk (NUMA optimized) or In memory data matrix}
 
 \item{centers}{The number of centers (i.e., k)}
 
@@ -16,7 +16,7 @@ KmeansPP(data, centers, nrow = -1, ncol = -1, nstart = 1,
 
 \item{ncol}{The number of features in the dataset}
 
-\item{nstart}{The convergence tolerance}
+\item{nstart}{The number of iterations of kmeans++ to run}
 
 \item{nthread}{The number of parallel thread to run}
 }
@@ -26,6 +26,8 @@ A list containing the attributes of the output of kmedoids.
          which each point is allocated.
  centers: A matrix of cluster centres.
  size: The number of points in each cluster.
+ energy: The sum of distances for each sample from it's closest cluster.
+ best.start: The sum of distances for each sample from it's closest cluster.
 }
 \description{
 A parallel and scalable implementation of the algorithm described in
@@ -35,8 +37,8 @@ Ostrovsky, Rafail, et al. "The effectiveness of Lloyd-type methods for
 \examples{
 iris.mat <- as.matrix(iris[,1:4])
 k <- length(unique(iris[, dim(iris)[2]])) # Number of unique classes
-nstart <- 2
-km <- KmeansPP(iris.mat, k, nstart)
+nstart <- 3
+km <- KmeansPP(iris.mat, k, nstart=nstart)
 
 }
 \author{

@@ -10,7 +10,7 @@ Hclust(data, centers, nrow = -1, ncol = -1,
   "cos", "taxi"))
 }
 \arguments{
-\item{data}{Data file name on disk or In memory data matrix}
+\item{data}{Data file name on disk (NUMA optmized) or In memory data matrix}
 
 \item{nrow}{The number of samples in the dataset}
 

@@ -21,7 +21,7 @@
 #' NUMA optimized version of Lloyd's algorithm. The details of which are found
 #' in this paper https://arxiv.org/pdf/1606.08905.pdf.
 #'
-#' @param data Data file name on disk or In memory data matrix
+#' @param data Data file name on disk (NUMA optimized) or In memory data matrix
 #' @param nrow The number of samples in the dataset
 #' @param ncol The number of features in the dataset
 #' @param iter.max The maximum number of iteration of k-means to perform
@@ -34,11 +34,6 @@
 #'  "forgy", "none")
 #' @param tolerance The convergence tolerance
 #' @param dist.type What dissimilarity metric to use
-#' @param omp Use (slower) OpenMP threads rather than pthreads
-#' @param numa.opt When passing \emph{data} as an in-memory data matrix you can
-#'  optimize memory placement for Linux NUMA machines. \strong{NOTE:}
-#'  performance may degrade with very large data & it requires
-#'  2*memory of that without this.
 #'
 #' @return A list containing the attributes of the output of kmeans.
 #'  cluster: A vector of integers (from 1:\strong{k}) indicating the cluster to
@@ -60,25 +55,22 @@
 Kmeans <- function(data, centers, nrow=-1, ncol=-1,
                    iter.max=.Machine$integer.max, nthread=-1,
                    init=c("kmeanspp", "random", "forgy", "none"),
-                   tolerance=1E-6, dist.type=c("eucl", "cos", "taxi"),
-                   omp=FALSE, numa.opt=FALSE) {
+                   tolerance=1E-6, dist.type=c("eucl", "cos", "taxi")) {
 
     if (class(data) == "character") {
         if (class(centers) == "numeric" || class(centers) == "integer") {
             ret <- .Call("R_knor_kmeans", normalizePath(as.character(data)),
                          as.integer(centers), as.double(nrow),
-                         as.double(ncol),
-                         as.double(iter.max), as.integer(nthread),
-                         as.character(init), as.double(tolerance),
-                         as.character(dist.type), as.logical(omp),
+                         as.double(ncol), as.double(iter.max),
+                         as.integer(nthread), as.character(init),
+                         as.double(tolerance), as.character(dist.type),
                          PACKAGE="knor")
         } else if (class(centers) == "matrix") {
             ret <- .Call("R_knor_kmeans_centroids_im",
                          normalizePath(as.character(data)),
                          as.matrix(centers), as.double(nrow),
                          as.double(iter.max), as.integer(nthread),
-                         as.double(tolerance),
-                         as.character(dist.type), as.logical(omp),
+                         as.double(tolerance), as.character(dist.type),
                          PACKAGE="knor")
         }
         else if (class(centers) == "list") {
@@ -88,8 +80,7 @@ Kmeans <- function(data, centers, nrow=-1, ncol=-1,
                          as.integer(centers[2]),
                          as.double(nrow), as.double(ncol),
                          as.double(iter.max), as.integer(nthread),
-                         as.double(tolerance),
-                         as.character(dist.type), as.logical(omp),
+                         as.double(tolerance), as.character(dist.type),
                          PACKAGE="knor")
         } else {
             stop(paste("Cannot handle centers of type", class(centers), "\n"))
@@ -97,27 +88,21 @@ Kmeans <- function(data, centers, nrow=-1, ncol=-1,
     } else if (class(data) == "matrix") {
         if (class(centers) == "numeric" || class(centers) == "integer") {
             ret <- .Call("R_knor_kmeans_data_im", as.matrix(data),
-                         as.integer(centers),
-                         as.double(iter.max), as.integer(nthread),
-                         as.character(init), as.double(tolerance),
-                         as.character(dist.type), as.logical(omp),
-                         as.logical(numa.opt),
+                         as.integer(centers), as.double(iter.max),
+                         as.integer(nthread), as.character(init),
+                         as.double(tolerance), as.character(dist.type),
                          PACKAGE="knor")
         } else if (class(centers) == "matrix") {
             ret <- .Call("R_knor_kmeans_data_centroids_im", as.matrix(data),
                          as.matrix(centers),
                          as.double(iter.max), as.integer(nthread),
-                         as.double(tolerance),
-                         as.character(dist.type), as.logical(omp),
-                         as.logical(numa.opt),
+                         as.double(tolerance), as.character(dist.type),
                          PACKAGE="knor")
         } else if (class(centers) == "character") {
             ret <- .Call("R_knor_kmeans_data_im_centroids_em", as.matrix(data),
                          normalizePath(centers),
                          as.double(iter.max), as.integer(nthread),
-                         as.double(tolerance),
-                         as.character(dist.type), as.logical(omp),
-                         as.logical(numa.opt),
+                         as.double(tolerance), as.character(dist.type),
                          PACKAGE="knor")
         } else {
             stop(paste("Cannot handle centers of type", class(centers), "\n"))
@@ -289,11 +274,11 @@ Skmeans <- function(data, centers, nrow=-1, ncol=-1,
 #' Ostrovsky, Rafail, et al. "The effectiveness of Lloyd-type methods for
 #'  the k-means problem." Journal of the ACM (JACM) 59.6 (2012): 28.
 #'
-#' @param data Data file name on disk or In memory data matrix
+#' @param data Data file name on disk (NUMA optimized) or In memory data matrix
 #' @param nrow The number of samples in the dataset
 #' @param ncol The number of features in the dataset
 #' @param centers The number of centers (i.e., k)
-#' @param nstart The convergence tolerance
+#' @param nstart The number of iterations of kmeans++ to run
 #' @param nthread The number of parallel thread to run
 #'
 #' @return A list containing the attributes of the output of kmedoids.
@@ -301,41 +286,45 @@ Skmeans <- function(data, centers, nrow=-1, ncol=-1,
 #'          which each point is allocated.
 #'  centers: A matrix of cluster centres.
 #'  size: The number of points in each cluster.
+#'  energy: The sum of distances for each sample from it's closest cluster.
+#'  best.start: The sum of distances for each sample from it's closest cluster.
 #'
 #' @examples
 #' iris.mat <- as.matrix(iris[,1:4])
 #' k <- length(unique(iris[, dim(iris)[2]])) # Number of unique classes
-#' nstart <- 2
-#' km <- KmeansPP(iris.mat, k, nstart)
+#' nstart <- 3
+#' km <- KmeansPP(iris.mat, k, nstart=nstart)
 #'
 #' @export
 #' @name KmeansPP
 #' @author Disa Mhembere <disa@@cs.jhu.edu>
 #' @rdname KmeansPP
 
-KmeansPP <- function(data, centers, nrow=-1, ncol=-1, nstart=1, nthread=-1) {
+KmeansPP <- function(data, centers, nrow=-1, ncol=-1,
+                     nstart=1, nthread=-1, dist.type=c("taxi", "eucl", "cos")) {
     if (class(data) == "matrix") {
         if (class(centers) == "numeric" || class(centers) == "integer") {
-            ret <- NULL
-            if (nstart == 1) {
-                Kmeans(data, centers, nrow, ncol, iter.max=1, init=c("kmeanspp"))
-            } else {
-                ret <- Kmeans(data, centers, nrow, ncol,
-                              iter.max=1, init=c("kmeanspp"))
-
-                for (starts in 2:nstart) {
-                    # Seed kmeans++
-                    ret <- Kmeans(data, ret$centers, init=c("kmeanspp"))
-                }
-            }
-            ret # return this
+            ret <- .Call("R_knor_kmeanspp_data_im", as.matrix(data),
+                          as.integer(centers), as.integer(nstart),
+                          as.integer(nthread), as.character(dist.type),
+                          PACKAGE="knor")
+            ret$iters <- NULL
+            ret
         } else {
             stop(paste("Cannot handle centers of type", class(centers), "\n"))
         }
     } else if (class(data) == "character") {
         if (class(centers) == "numeric" || class(centers) == "integer") {
-            # TODO
-            stop(paste("Cannot handle data of type", class(data), "\n"))
+            ret <- .Call("R_knor_kmeanspp_data_em",
+                         normalizePath(as.character(data)),
+                         as.integer(centers), as.double(nrow),
+                         as.double(ncol), as.integer(nstart),
+                         as.integer(nthread), as.character(dist.type),
+                         PACKAGE="knor")
+            ret$iters <- NULL
+            ret
+        } else {
+            stop(paste("Cannot handle centers of type", class(centers), "\n"))
         }
     } else {
         stop(paste("Cannot handle data of type", class(data), "\n"))
@@ -348,7 +337,7 @@ KmeansPP <- function(data, centers, nrow=-1, ncol=-1, nstart=1, nthread=-1) {
 #'  two disjoint sets at every level as described in
 #'  https://en.wikipedia.org/wiki/Hierarchical_clustering
 #'
-#' @param data Data file name on disk or In memory data matrix
+#' @param data Data file name on disk (NUMA optmized) or In memory data matrix
 #' @param nrow The number of samples in the dataset
 #' @param ncol The number of features in the dataset
 #' @param iter.max The maximum number of iteration of k-means to perform

@@ -23,12 +23,12 @@
 #include <R_ext/Rdynload.h>
 
 /* .Call calls */
-extern SEXP R_knor_kmeans(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
-extern SEXP R_knor_kmeans_centroids_im(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
-extern SEXP R_knor_kmeans_data_centroids_em(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
-extern SEXP R_knor_kmeans_data_centroids_im(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
-extern SEXP R_knor_kmeans_data_im(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
-extern SEXP R_knor_kmeans_data_im_centroids_em(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP R_knor_kmeans(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP R_knor_kmeans_centroids_im(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP R_knor_kmeans_data_centroids_em(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP R_knor_kmeans_data_centroids_im(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP R_knor_kmeans_data_im(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP R_knor_kmeans_data_im_centroids_em(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 
 // kmedoids
 extern SEXP R_knor_kmedoids_data_im(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
@@ -42,13 +42,17 @@ extern SEXP R_knor_skmeans_data_centroids_im(SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP R_knor_skmeans_data_em(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP R_knor_skmeans_centroids_im(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 
+// kmeansPP
+extern SEXP R_knor_kmeanspp_data_em(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP R_knor_kmeanspp_data_im(SEXP, SEXP, SEXP, SEXP, SEXP);
+
 static const R_CallMethodDef CallEntries[] = {
-    {"R_knor_kmeans",                      (DL_FUNC) &R_knor_kmeans,                      10},
-    {"R_knor_kmeans_centroids_im",         (DL_FUNC) &R_knor_kmeans_centroids_im,          8},
-    {"R_knor_kmeans_data_centroids_em",    (DL_FUNC) &R_knor_kmeans_data_centroids_em,    10},
-    {"R_knor_kmeans_data_centroids_im",    (DL_FUNC) &R_knor_kmeans_data_centroids_im,     8},
-    {"R_knor_kmeans_data_im",              (DL_FUNC) &R_knor_kmeans_data_im,               9},
-    {"R_knor_kmeans_data_im_centroids_em", (DL_FUNC) &R_knor_kmeans_data_im_centroids_em,  8},
+    {"R_knor_kmeans",                      (DL_FUNC) &R_knor_kmeans,                       9},
+    {"R_knor_kmeans_centroids_im",         (DL_FUNC) &R_knor_kmeans_centroids_im,          7},
+    {"R_knor_kmeans_data_centroids_em",    (DL_FUNC) &R_knor_kmeans_data_centroids_em,     9},
+    {"R_knor_kmeans_data_centroids_im",    (DL_FUNC) &R_knor_kmeans_data_centroids_im,     6},
+    {"R_knor_kmeans_data_im",              (DL_FUNC) &R_knor_kmeans_data_im,               7},
+    {"R_knor_kmeans_data_im_centroids_em", (DL_FUNC) &R_knor_kmeans_data_im_centroids_em,  6},
 
     {"R_knor_kmedoids_data_im",            (DL_FUNC) &R_knor_kmedoids_data_im,             7},
     {"R_knor_kmedoids_data_centroids_im",  (DL_FUNC) &R_knor_kmedoids_data_centroids_im,   6},
@@ -59,11 +63,13 @@ static const R_CallMethodDef CallEntries[] = {
     {"R_knor_skmeans_data_centroids_im",   (DL_FUNC) &R_knor_skmeans_data_centroids_im,    5},
     {"R_knor_skmeans_data_em",             (DL_FUNC) &R_knor_skmeans_data_em,              8},
     {"R_knor_skmeans_centroids_im",        (DL_FUNC) &R_knor_skmeans_centroids_im,         6},
+
+    {"R_knor_kmeanspp_data_em",            (DL_FUNC) &R_knor_kmeanspp_data_em,             7},
+    {"R_knor_kmeanspp_data_im",            (DL_FUNC) &R_knor_kmeanspp_data_im,             5},
     {NULL, NULL, 0}
 };
 
-void R_init_knor(DllInfo *dll)
-{
+void R_init_knor(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
 }

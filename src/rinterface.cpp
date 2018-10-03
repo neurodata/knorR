@@ -31,7 +31,6 @@
 
 static void marshall_c_to_r(const knor::base::cluster_t& kret,
         Rcpp::List& ret) {
-
     ret["nrow"] = kret.nrow;
     ret["ncol"] = kret.ncol;
     ret["iters"] = kret.iters;
@@ -62,9 +61,7 @@ static void marshall_c_to_r(const knor::base::cluster_t& kret,
   * Data and centroids in-memory
   **/
 RcppExport SEXP R_knor_kmeans_data_centroids_im(SEXP rdata, SEXP rk,
-        SEXP rmax_iters, SEXP rnthread,
-        SEXP rtolerance,
-        SEXP rdist_type, SEXP romp, SEXP rnuma_opt) {
+        SEXP rmax_iters, SEXP rnthread, SEXP rtolerance, SEXP rdist_type) {
 
     Rcpp::NumericMatrix data = Rcpp::NumericMatrix(rdata);
     Rcpp::NumericMatrix centroids = Rcpp::NumericMatrix(rk);
@@ -73,11 +70,9 @@ RcppExport SEXP R_knor_kmeans_data_centroids_im(SEXP rdata, SEXP rk,
 	int nthread = INTEGER(rnthread)[0];
 	double tolerance = REAL(rtolerance)[0];
 	std::string dist_type = CHAR(STRING_ELT(rdist_type,0));
-    bool omp = INTEGER(romp)[0];
 	unsigned k = centroids.nrow();
 	const size_t nrow = data.nrow();
 	const size_t ncol = data.ncol();
-    bool numa_opt = INTEGER(rnuma_opt)[0];
 
     std::vector<double> cdata(nrow*ncol);
     std::vector<double> ccentroids(k*ncol);
@@ -104,7 +99,7 @@ RcppExport SEXP R_knor_kmeans_data_centroids_im(SEXP rdata, SEXP rk,
 
     knor::base::cluster_t kret = knor::base::kmeans(&cdata[0],
             nrow, ncol, k, max_iters, nnodes, nthread,
-            &ccentroids[0], "none", tolerance, dist_type, omp, numa_opt);
+            &ccentroids[0], "none", tolerance, dist_type);
 
 	Rcpp::List ret;
     marshall_c_to_r(kret, ret);
@@ -117,7 +112,7 @@ RcppExport SEXP R_knor_kmeans_data_centroids_im(SEXP rdata, SEXP rk,
 RcppExport SEXP R_knor_kmeans_data_im(SEXP rdata, SEXP rk,
         SEXP rmax_iters, SEXP rnthread,
         SEXP rinit, SEXP rtolerance,
-        SEXP rdist_type, SEXP romp) {
+        SEXP rdist_type) {
 
     Rcpp::NumericMatrix data = Rcpp::NumericMatrix(rdata);
 	unsigned k = INTEGER(rk)[0];
@@ -126,7 +121,6 @@ RcppExport SEXP R_knor_kmeans_data_im(SEXP rdata, SEXP rk,
 	std::string init = CHAR(STRING_ELT(rinit,0));
 	double tolerance = REAL(rtolerance)[0];
 	std::string dist_type = CHAR(STRING_ELT(rdist_type,0));
-    bool omp = INTEGER(romp)[0];
 	const size_t nrow = data.nrow();
 	const size_t ncol = data.ncol();
     std::vector<double> cdata(nrow*ncol);
@@ -146,7 +140,7 @@ RcppExport SEXP R_knor_kmeans_data_im(SEXP rdata, SEXP rk,
 
     knor::base::cluster_t kret = knor::base::kmeans(&cdata[0],
             nrow, ncol, k, max_iters, nnodes, nthread, NULL,
-            init, tolerance, dist_type, omp);
+            init, tolerance, dist_type);
 
 	Rcpp::List ret;
     marshall_c_to_r(kret, ret);
@@ -158,7 +152,7 @@ RcppExport SEXP R_knor_kmeans_data_im(SEXP rdata, SEXP rk,
   */
 RcppExport SEXP R_knor_kmeans_centroids_im(SEXP rdata, SEXP rk,
         SEXP rnrow, SEXP rmax_iters, SEXP rnthread, SEXP rtolerance,
-        SEXP rdist_type, SEXP romp) {
+        SEXP rdist_type) {
 
     std::string data = CHAR(STRING_ELT(rdata,0));
 	size_t nrow = static_cast<size_t>(REAL(rnrow)[0]);
@@ -166,7 +160,6 @@ RcppExport SEXP R_knor_kmeans_centroids_im(SEXP rdata, SEXP rk,
 	int nthread = INTEGER(rnthread)[0];
 	double tolerance = REAL(rtolerance)[0];
 	std::string dist_type = CHAR(STRING_ELT(rdist_type,0));
-    bool omp = INTEGER(romp)[0];
 
     Rcpp::NumericMatrix centroids = Rcpp::NumericMatrix(rk);
 	unsigned k = centroids.nrow();
@@ -187,7 +180,7 @@ RcppExport SEXP R_knor_kmeans_centroids_im(SEXP rdata, SEXP rk,
 
     knor::base::cluster_t kret = knor::base::kmeans(data,
             nrow, ncol, k, max_iters, nnodes, nthread,
-            &ccentroids[0], "none", tolerance, dist_type, omp);
+            &ccentroids[0], "none", tolerance, dist_type);
 
 	Rcpp::List ret;
     marshall_c_to_r(kret, ret);
@@ -201,7 +194,7 @@ RcppExport SEXP R_knor_kmeans(SEXP rdata, SEXP rk,
         SEXP rnrow, SEXP rncol,
         SEXP rmax_iters, SEXP rnthread,
         SEXP rinit, SEXP rtolerance,
-        SEXP rdist_type, SEXP romp) {
+        SEXP rdist_type) {
 
     std::string data = CHAR(STRING_ELT(rdata,0));
 	unsigned k = INTEGER(rk)[0];
@@ -212,7 +205,6 @@ RcppExport SEXP R_knor_kmeans(SEXP rdata, SEXP rk,
 	std::string init = CHAR(STRING_ELT(rinit,0));
 	double tolerance = REAL(rtolerance)[0];
 	std::string dist_type = CHAR(STRING_ELT(rdist_type,0));
-    bool omp = INTEGER(romp)[0];
 
     if (nthread == -1)
         nthread = knor::base::get_num_omp_threads();
@@ -221,7 +213,7 @@ RcppExport SEXP R_knor_kmeans(SEXP rdata, SEXP rk,
 
     knor::base::cluster_t kret = knor::base::kmeans(data,
             nrow, ncol, k, max_iters, nnodes, nthread, NULL,
-            init, tolerance, dist_type, omp);
+            init, tolerance, dist_type);
 
 	Rcpp::List ret;
     marshall_c_to_r(kret, ret);
@@ -235,14 +227,13 @@ RcppExport SEXP R_knor_kmeans_data_im_centroids_em(
         SEXP rdata, SEXP rk,
         SEXP rmax_iters, SEXP rnthread,
         SEXP rtolerance,
-        SEXP rdist_type, SEXP romp) {
+        SEXP rdist_type) {
 
     Rcpp::NumericMatrix data = Rcpp::NumericMatrix(rdata);
 	size_t max_iters = static_cast<size_t>(REAL(rmax_iters)[0]);
 	int nthread = INTEGER(rnthread)[0];
 	double tolerance = REAL(rtolerance)[0];
 	std::string dist_type = CHAR(STRING_ELT(rdist_type,0));
-    bool omp = INTEGER(romp)[0];
 	const size_t nrow = data.nrow();
 	const size_t ncol = data.ncol();
     std::vector<double> cdata(nrow*ncol);
@@ -270,7 +261,7 @@ RcppExport SEXP R_knor_kmeans_data_im_centroids_em(
 
     knor::base::cluster_t kret = knor::base::kmeans(&cdata[0],
             nrow, ncol, k, max_iters, nnodes, nthread,
-            &ccentroids[0], "none", tolerance, dist_type, omp);
+            &ccentroids[0], "none", tolerance, dist_type);
 
 	Rcpp::List ret;
     marshall_c_to_r(kret, ret);
@@ -284,8 +275,7 @@ RcppExport SEXP R_knor_kmeans_data_centroids_em(
         SEXP rdata, SEXP rcentroids, SEXP rk,
         SEXP rnrow, SEXP rncol,
         SEXP rmax_iters, SEXP rnthread,
-        SEXP rtolerance,
-        SEXP rdist_type, SEXP romp) {
+        SEXP rtolerance, SEXP rdist_type) {
 
     std::string data = CHAR(STRING_ELT(rdata,0));
 	size_t nrow = static_cast<size_t>(REAL(rnrow)[0]);
@@ -295,7 +285,6 @@ RcppExport SEXP R_knor_kmeans_data_centroids_em(
 	int nthread = INTEGER(rnthread)[0];
 	double tolerance = REAL(rtolerance)[0];
 	std::string dist_type = CHAR(STRING_ELT(rdist_type,0));
-    bool omp = INTEGER(romp)[0];
 
     std::vector<double> cdata(nrow*ncol);
 
@@ -314,7 +303,7 @@ RcppExport SEXP R_knor_kmeans_data_centroids_em(
 
     knor::base::cluster_t kret = knor::base::kmeans(data,
             nrow, ncol, k, max_iters, nnodes, nthread,
-            &ccentroids[0], "none", tolerance, dist_type, omp);
+            &ccentroids[0], "none", tolerance, dist_type);
 
 	Rcpp::List ret;
     marshall_c_to_r(kret, ret);
@@ -638,5 +627,71 @@ RcppExport SEXP R_knor_skmeans_centroids_im(SEXP rdata, SEXP rk,
     marshall_c_to_r(kret, ret);
 	return ret;
 }
-
 /////////////////////////////// END SKMEANS ////////////////////////////////////
+
+///////////////////////////////// KMEANSPP /////////////////////////////////////
+/**
+  * Data on disk
+  */
+RcppExport SEXP R_knor_kmeanspp_data_em(SEXP rdata, SEXP rk,
+        SEXP rnrow, SEXP rncol, SEXP rnstart, SEXP rnthread, SEXP rdist_type) {
+
+    std::string data = CHAR(STRING_ELT(rdata,0));
+    unsigned k = INTEGER(rk)[0];
+    size_t nrow = static_cast<size_t>(REAL(rnrow)[0]);
+    size_t ncol = static_cast<size_t>(REAL(rncol)[0]);
+    unsigned nstart = INTEGER(rnstart)[0];
+    int nthread = INTEGER(rnthread)[0];
+    std::string dist_type = CHAR(STRING_ELT(rdist_type,0));
+
+    if (nthread == -1)
+        nthread = knor::base::get_num_omp_threads();
+
+    std::pair<std::pair<unsigned, double>, knor::base::cluster_t> kret =
+        knor::base::kmeansPP(data,
+                nrow, ncol, k, nstart, nthread, dist_type);
+
+    Rcpp::List ret;
+    marshall_c_to_r(kret.second, ret);
+    ret["best.start"] = kret.first.first;
+    ret["energy"] = kret.first.second;
+    return ret;
+}
+
+/**
+  * Data in memory
+  */
+RcppExport SEXP R_knor_kmeanspp_data_im(SEXP rdata, SEXP rk,
+        SEXP rnstart, SEXP rnthread, SEXP rdist_type) {
+
+    Rcpp::NumericMatrix data = Rcpp::NumericMatrix(rdata);
+	unsigned k = INTEGER(rk)[0];
+	const size_t nrow = data.nrow();
+	const size_t ncol = data.ncol();
+	const unsigned nstart = INTEGER(rnstart)[0];
+	int nthread = INTEGER(rnthread)[0];
+	std::string dist_type = CHAR(STRING_ELT(rdist_type,0));
+
+    if (nthread == -1)
+        nthread = knor::base::get_num_omp_threads();
+
+    // Convert R matrix to vector
+    std::vector<double> cdata(nrow*ncol);
+#ifdef _OPENMP
+#pragma omp parallel for firstprivate(data) shared (cdata)
+#endif
+	for (size_t row = 0; row < nrow; row++)
+		for (size_t col = 0; col < ncol; col++)
+			cdata[row*ncol + col] = data(row, col);
+
+    std::pair<std::pair<unsigned, double>, knor::base::cluster_t> kret =
+        knor::base::kmeansPP(
+                &cdata[0], nrow, ncol, k, nstart, nthread, dist_type);
+
+	Rcpp::List ret;
+    marshall_c_to_r(kret.second, ret);
+    ret["best.start"] = kret.first.first;
+    ret["energy"] = kret.first.second;
+	return ret;
+}
+/////////////////////////////// END KMEANSPP ///////////////////////////////////
