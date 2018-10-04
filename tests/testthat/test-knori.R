@@ -63,18 +63,6 @@ test.data.centroids.em <- function() {
                  ncol=ncol,nthread=nthread))
 }
 
-# Data in memory, centroids in memory, numa reorg
-test.data.centroids.in.mem.numa.reorg <- function() {
-    cat("Data ==> memory, centroids ==> memory, NUMA reorg\n\n")
-    ret <- Kmeans(test_data, test_centroids, nthread=nthread, numa.opt=TRUE)
-}
-
-# Data in memory, centroids on disk, numa reorg
-test.data.in.mem.centroids.em.numa.reorg <- function() {
-    cat("Data ==> memory, centroids ==> disk, NUMA reorg\n\n")
-    Kmeans(test_data, centroidfn, nthread=nthread, numa.opt=TRUE)
-}
-
 # Main
 test.data.in.mem()
 test.data.ex.mem()
@@ -83,14 +71,14 @@ test.centroids.in.mem()
 test.data.centroids.em()
 
 ret1 <- test.data.centroids.in.mem()
-ret2 <- test.data.centroids.in.mem.numa.reorg()
-test_that("Data in-mem compared to numa reorg", {
+ret2 <- test.data.centroids.in.mem()
+test_that("Data in-mem compared to same", {
               expect_identical(ret1, ret2)
 })
 
 ret1 <- test.data.in.mem.centroids.em()
-ret2 <- test.data.in.mem.centroids.em.numa.reorg()
-test_that("centroids EM compared to numa reorg", {
+ret2 <- test.data.in.mem.centroids.em()
+test_that("centroids EM compared to same", {
               expect_identical(ret1, ret2)
 })
 
