@@ -24,10 +24,13 @@
 #include "cknor/libkcommon/io.hpp"
 #include "cknor/binding/kmedoids.hpp"
 #include "cknor/binding/skmeans.hpp"
+#include "cknor/libman/kmeans_task_coordinator.hpp"
+#include "cknor/libman/fcm_coordinator.hpp"
 
 /**
   * Transform the C output to R
   **/
+namespace kprune = knor::prune;
 
 static void marshall_c_to_r(const knor::base::cluster_t& kret,
         Rcpp::List& ret) {
@@ -515,8 +518,7 @@ RcppExport SEXP R_knor_skmeans_data_im(SEXP rdata, SEXP rk,
   * Data and centroids in-memory
   **/
 RcppExport SEXP R_knor_skmeans_data_centroids_im(SEXP rdata, SEXP rk,
-        SEXP rmax_iters, SEXP rnthread,
-        SEXP rtolerance) {
+        SEXP rmax_iters, SEXP rnthread, SEXP rtolerance) {
 
     Rcpp::NumericMatrix data = Rcpp::NumericMatrix(rdata);
     Rcpp::NumericMatrix centroids = Rcpp::NumericMatrix(rk);
@@ -695,3 +697,231 @@ RcppExport SEXP R_knor_kmeanspp_data_im(SEXP rdata, SEXP rk,
 	return ret;
 }
 /////////////////////////////// END KMEANSPP ///////////////////////////////////
+
+/////////////////////////////// MINIBATCH KMEANS ///////////////////////////////
+/**
+  * Data only in-memory
+  **/
+RcppExport SEXP R_knor_mbkmeans_data_im(SEXP rdata, SEXP rk,
+        SEXP rmb_size, SEXP rmax_iters, SEXP rnthread,
+        SEXP rinit, SEXP rtolerance,
+        SEXP rdist_type) {
+
+    Rcpp::NumericMatrix data = Rcpp::NumericMatrix(rdata);
+	unsigned k = INTEGER(rk)[0];
+	unsigned mb_size = INTEGER(rmb_size)[0];
+	size_t max_iters = static_cast<size_t>(REAL(rmax_iters)[0]);
+	int nthread = INTEGER(rnthread)[0];
+	std::string init = CHAR(STRING_ELT(rinit,0));
+	double tolerance = REAL(rtolerance)[0];
+	std::string dist_type = CHAR(STRING_ELT(rdist_type,0));
+	const size_t nrow = data.nrow();
+	const size_t ncol = data.ncol();
+    std::vector<double> cdata(nrow*ncol);
+
+    if (nthread == -1)
+        nthread = knor::base::get_num_omp_threads();
+
+    unsigned nnodes = knor::base::get_num_nodes();
+
+#ifdef _OPENMP
+#pragma omp parallel for firstprivate(data) shared (cdata)
+#endif
+	for (size_t row = 0; row < nrow; row++)
+		for (size_t col = 0; col < ncol; col++)
+			cdata[row*ncol + col] = data(row, col);
+
+
+    knor::coordinator::ptr coord = kprune::kmeans_task_coordinator::create(
+            "", nrow, ncol, k, max_iters, nnodes,
+            nthread, NULL, init, tolerance, dist_type);
+    auto kc = std::static_pointer_cast<kprune::kmeans_task_coordinator>(coord);
+    kc->set_mini_batch_size(mb_size);
+
+    knor::base::cluster_t kret = kc->mb_run(&cdata[0]);
+
+	Rcpp::List ret;
+    marshall_c_to_r(kret, ret);
+	return ret;
+}
+///////////////////////////// END MINIBATCH KMEANS /////////////////////////////
+
+////////////////////////////// FUZZY C-MEANS ///////////////////////////////////
+/**
+  * Data in memory
+**/
+RcppExport SEXP R_knor_fcm_data_im(SEXP rdata, SEXP rk,
+        SEXP rmax_iters, SEXP rnthread, SEXP rfuzzindex,
+        SEXP rinit, SEXP rtolerance, SEXP rdist_type) {
+
+    Rcpp::NumericMatrix data = Rcpp::NumericMatrix(rdata);
+	unsigned k = INTEGER(rk)[0];
+	size_t max_iters = static_cast<size_t>(REAL(rmax_iters)[0]);
+	int nthread = INTEGER(rnthread)[0];
+	const unsigned fuzzindex = INTEGER(rfuzzindex)[0];
+	std::string init = CHAR(STRING_ELT(rinit,0));
+	double tolerance = REAL(rtolerance)[0];
+	std::string dist_type = CHAR(STRING_ELT(rdist_type,0));
+	const size_t nrow = data.nrow();
+	const size_t ncol = data.ncol();
+    std::vector<double> cdata(nrow*ncol);
+
+    if (nthread == -1)
+        nthread = knor::base::get_num_omp_threads();
+
+    unsigned nnodes = knor::base::get_num_nodes();
+
+#ifdef _OPENMP
+#pragma omp parallel for firstprivate(data) shared (cdata)
+#endif
+	for (size_t row = 0; row < nrow; row++)
+		for (size_t col = 0; col < ncol; col++)
+			cdata[row*ncol + col] = data(row, col);
+
+     auto coord = knor::fcm_coordinator::create("",
+            nrow, ncol, k, max_iters, nnodes, nthread, NULL,
+            init, tolerance, dist_type, fuzzindex);
+
+     knor::base::cluster_t kret =
+         std::static_pointer_cast<knor::fcm_coordinator>(
+                                     coord)->soft_run(&cdata[0]);
+
+	Rcpp::List ret;
+    marshall_c_to_r(kret, ret);
+	return ret;
+}
+
+/**
+  * Data and centroids in-memory
+  **/
+RcppExport SEXP R_knor_fcm_data_centroids_im(SEXP rdata, SEXP rk,
+        SEXP rmax_iters, SEXP rnthread, SEXP rfuzzindex,
+        SEXP rtolerance, SEXP rdist_type) {
+
+    Rcpp::NumericMatrix data = Rcpp::NumericMatrix(rdata);
+    Rcpp::NumericMatrix centroids = Rcpp::NumericMatrix(rk);
+
+	size_t max_iters = static_cast<size_t>(REAL(rmax_iters)[0]);
+	int nthread = INTEGER(rnthread)[0];
+	double tolerance = REAL(rtolerance)[0];
+	unsigned k = centroids.nrow();
+	const size_t nrow = data.nrow();
+	const size_t ncol = data.ncol();
+	const unsigned fuzzindex = INTEGER(rfuzzindex)[0];
+	std::string dist_type = CHAR(STRING_ELT(rdist_type,0));
+
+    std::vector<double> cdata(nrow*ncol);
+    std::vector<double> ccentroids(k*ncol);
+
+    if (nthread == -1)
+        nthread = knor::base::get_num_omp_threads();
+
+    unsigned nnodes = knor::base::get_num_nodes();
+
+#ifdef _OPENMP
+#pragma omp parallel for firstprivate(data) shared (cdata)
+#endif
+	for (size_t row = 0; row < nrow; row++)
+		for (size_t col = 0; col < ncol; col++)
+			cdata[row*ncol + col] = data(row, col);
+
+#ifdef _OPENMP
+#pragma omp parallel for firstprivate(centroids) shared (ccentroids)
+#endif
+	for (size_t row = 0; row < k; row++)
+		for (size_t col = 0; col < ncol; col++)
+			ccentroids[row*ncol + col] = centroids(row, col);
+
+     auto coord = knor::fcm_coordinator::create("",
+            nrow, ncol, k, max_iters, nnodes, nthread, &ccentroids[0],
+            "none", tolerance, dist_type, fuzzindex);
+
+     knor::base::cluster_t kret =
+         std::static_pointer_cast<knor::fcm_coordinator>(
+                                     coord)->soft_run(&cdata[0]);
+
+	Rcpp::List ret;
+    marshall_c_to_r(kret, ret);
+	return ret;
+}
+
+/**
+  * Data on disk, centroids computed by init method
+  */
+RcppExport SEXP R_knor_fcm_data_em(SEXP rdata, SEXP rk,
+        SEXP rnrow, SEXP rncol,
+        SEXP rmax_iters, SEXP rnthread, SEXP rfuzzindex,
+        SEXP rinit, SEXP rtolerance, SEXP rdist_type) {
+
+    std::string data = CHAR(STRING_ELT(rdata,0));
+	unsigned k = INTEGER(rk)[0];
+	size_t nrow = static_cast<size_t>(REAL(rnrow)[0]);
+	size_t ncol = static_cast<size_t>(REAL(rncol)[0]);
+	size_t max_iters = static_cast<size_t>(REAL(rmax_iters)[0]);
+	int nthread = INTEGER(rnthread)[0];
+	std::string init = CHAR(STRING_ELT(rinit,0));
+	double tolerance = REAL(rtolerance)[0];
+	const unsigned fuzzindex = INTEGER(rfuzzindex)[0];
+	std::string dist_type = CHAR(STRING_ELT(rdist_type,0));
+
+    if (nthread == -1)
+        nthread = knor::base::get_num_omp_threads();
+
+    unsigned nnodes = knor::base::get_num_nodes();
+
+    auto coord = knor::fcm_coordinator::create(data,
+            nrow, ncol, k, max_iters, nnodes, nthread, NULL,
+            init, tolerance, dist_type, fuzzindex);
+
+     knor::base::cluster_t kret =
+         std::static_pointer_cast<knor::fcm_coordinator>(coord)->soft_run();
+
+	Rcpp::List ret;
+    marshall_c_to_r(kret, ret);
+	return ret;
+}
+
+/**
+  * Data on disk, centroids in memory
+  */
+RcppExport SEXP R_knor_fcm_data_em_centroids_im(SEXP rdata, SEXP rk,
+        SEXP rnrow, SEXP rncol,
+        SEXP rmax_iters, SEXP rnthread, SEXP rfuzzindex,
+        SEXP rtolerance, SEXP rdist_type) {
+
+    Rcpp::NumericMatrix centroids = Rcpp::NumericMatrix(rk);
+    std::string data = CHAR(STRING_ELT(rdata,0));
+	unsigned k = centroids.nrow();
+	size_t nrow = static_cast<size_t>(REAL(rnrow)[0]);
+	size_t ncol = static_cast<size_t>(REAL(rncol)[0]);
+	size_t max_iters = static_cast<size_t>(REAL(rmax_iters)[0]);
+	int nthread = INTEGER(rnthread)[0];
+	double tolerance = REAL(rtolerance)[0];
+	const unsigned fuzzindex = INTEGER(rfuzzindex)[0];
+	std::string dist_type = CHAR(STRING_ELT(rdist_type,0));
+
+    if (nthread == -1)
+        nthread = knor::base::get_num_omp_threads();
+
+    unsigned nnodes = knor::base::get_num_nodes();
+
+    std::vector<double> ccentroids(k*ncol);
+#ifdef _OPENMP
+#pragma omp parallel for firstprivate(centroids) shared (ccentroids)
+#endif
+	for (size_t row = 0; row < k; row++)
+		for (size_t col = 0; col < ncol; col++)
+			ccentroids[row*ncol + col] = centroids(row, col);
+
+    auto coord = knor::fcm_coordinator::create(data,
+            nrow, ncol, k, max_iters, nnodes, nthread, &ccentroids[0],
+            "none", tolerance, dist_type, fuzzindex);
+
+     knor::base::cluster_t kret =
+         std::static_pointer_cast<knor::fcm_coordinator>(coord)->soft_run();
+
+	Rcpp::List ret;
+    marshall_c_to_r(kret, ret);
+	return ret;
+}
+////////////////////////////// END FUZZY C-MEANS ///////////////////////////////

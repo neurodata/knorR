@@ -46,6 +46,15 @@ extern SEXP R_knor_skmeans_centroids_im(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP R_knor_kmeanspp_data_em(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP R_knor_kmeanspp_data_im(SEXP, SEXP, SEXP, SEXP, SEXP);
 
+// Mini-batch
+extern SEXP R_knor_mbkmeans_data_im(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+
+// Fuzzy C-means
+extern SEXP R_knor_fcm_data_im(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP R_knor_fcm_data_centroids_im(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP R_knor_fcm_data_em_centroids_im(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP R_knor_fcm_data_em(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+
 static const R_CallMethodDef CallEntries[] = {
     {"R_knor_kmeans",                      (DL_FUNC) &R_knor_kmeans,                       9},
     {"R_knor_kmeans_centroids_im",         (DL_FUNC) &R_knor_kmeans_centroids_im,          7},
@@ -66,6 +75,13 @@ static const R_CallMethodDef CallEntries[] = {
 
     {"R_knor_kmeanspp_data_em",            (DL_FUNC) &R_knor_kmeanspp_data_em,             7},
     {"R_knor_kmeanspp_data_im",            (DL_FUNC) &R_knor_kmeanspp_data_im,             5},
+
+    {"R_knor_mbkmeans_data_im",            (DL_FUNC) &R_knor_mbkmeans_data_im,             8},
+
+    {"R_knor_fcm_data_im",                 (DL_FUNC) &R_knor_fcm_data_im,                  8},
+    {"R_knor_fcm_data_centroids_im",       (DL_FUNC) &R_knor_fcm_data_centroids_im,        7},
+    {"R_knor_fcm_data_em_centroids_im",    (DL_FUNC) &R_knor_fcm_data_em_centroids_im,     9},
+    {"R_knor_fcm_data_em",                 (DL_FUNC) &R_knor_fcm_data_em,                 10},
     {NULL, NULL, 0}
 };
 
