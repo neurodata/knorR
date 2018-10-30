@@ -4,32 +4,29 @@
 \alias{Hclust}
 \title{Perform parallel hierarchical clustering on a data matrix.}
 \usage{
-Hclust(data, centers, nrow = -1, ncol = -1,
-  iter.max = .Machine$integer.max, nthread = -1, init = c("kmeanspp",
-  "random", "forgy", "none"), tolerance = 1e-06, dist.type = c("eucl",
-  "cos", "taxi"))
+Hclust(data, centers, nrow = -1, ncol = -1, dist.type = c("eucl",
+  "cos", "taxi"), algo = c("kmeans"), min.clust.size = 1,
+  init = c("kmeanspp", "random", "forgy", "none"), nthread = -1)
 }
 \arguments{
 \item{data}{Data file name on disk (NUMA optmized) or In memory data matrix}
+
+\item{centers}{The number of centers (i.e., k)}
 
 \item{nrow}{The number of samples in the dataset}
 
 \item{ncol}{The number of features in the dataset}
 
-\item{iter.max}{The maximum number of iteration of k-means to perform}
+\item{dist.type}{What dissimilarity metric to use}
 
-\item{nthread}{The number of parallel thread to run}
+\item{algo}{What splitting algorithm to use c("kmeans")}
+
+\item{min.clust.size}{The minimum size of a cluster when it cannot be split}
 
 \item{init}{The type of initialization to use c("kmeanspp", "random",
 "forgy", "none")}
 
-\item{tolerance}{The convergence tolerance}
-
-\item{dist.type}{What dissimilarity metric to use}
-
-\item{level.max}{Maximmum}
-
-\item{algo}{What algorithm to use c("kmeans")}
+\item{nthread}{The number of parallel thread to run}
 }
 \value{
 A list of lists containing the attributes of the output of kmeans.
@@ -47,7 +44,7 @@ A recursive (not acutally implemented as recursion) partitioning of data into
 \examples{
 iris.mat <- as.matrix(iris[,1:4])
 k <- length(unique(iris[, dim(iris)[2]])) # Number of unique classes
-kms <- Hclust(iris.mat, k, level.max=2)
+kms <- Hclust(iris.mat, k)
 
 }
 \author{
