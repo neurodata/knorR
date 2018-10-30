@@ -1,9 +1,9 @@
 Package: knor
-Version: 0.0-6.1
-Date: 2018-09-28
-Title: Non-Uniform Memory Access ('NUMA') Optimized, Parallel K-Means
+Version: 0.0-7
+Date: 2018-11-01
+Title: Non-Uniform Memory Access ('NUMA') Optimized, Parallel clustering library
 Authors@R: c(person("Disa", "Mhembere", role = c("aut", "cre"), email = "disa@jhu.edu"), person("Neurodata (https://neurodata.io)", role="cph"))
-Description: The k-means 'NUMA' Optimized Routine library or 'knor' is a highly optimized and fast library for computing k-means in parallel with accelerations for Non-Uniform Memory Access ('NUMA') architectures.
+Description: The 'k' 'NUMA' Optimized Routine library or 'knor' is a highly optimized and fast library for performing clustering in parallel with accelerations for the majority of multi-core machines which are Non-Uniform Memory Access ('NUMA') architectures.
 LinkingTo: Rcpp
 Depends:
     R (>= 3.0),

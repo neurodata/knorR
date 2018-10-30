@@ -1,7 +1,7 @@
 [![Build
 Status](https://travis-ci.org/flashxio/knorR.svg?branch=master)](https://travis-ci.org/flashxio/knorR)
 
-# knor (K-means NUMA optimized routines)
+# knor ('K' NUMA optimized routines library for clustering)
 
 - [Repo contents](#repo-contents)
 - [Best Performance configuration](#best-performance-configuration)
@@ -21,7 +21,7 @@ Status](https://travis-ci.org/flashxio/knorR.svg?branch=master)](https://travis-
 - [**src**](https://github.com/flashxio/knorR/tree/master/src): `R` bindings interface and C++ submodule to base repo.
 - [**tests**](https://github.com/flashxio/knorR/tree/master/tests): `R` unit tests written using the `testthat` package.
 
-R bindings for *k-means* NUMA optimized routines. This package is supported for **Linux**, **Mac OSX** and **Windows**.
+R bindings for *`k`* NUMA optimized routines. This package is supported for **Linux**, **Mac OSX** and **Windows**.
 
 **NOTE**: This is a package from C++ source that will compile using your
 `gcc` compiler.
@@ -166,4 +166,8 @@ Check the R docs provided:
 
 ```
 ?knor::Kmeans
+?knor::Skmeans
+?knor::KmeansPP
+?knor::Kmedoids
+?knor::Hclust
 ```
