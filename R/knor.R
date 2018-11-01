@@ -440,37 +440,27 @@ MiniBatchKmeans <- function(data, centers, nrow=-1, ncol=-1,
                             batch.size=100,
                    iter.max=.Machine$integer.max, nthread=-1,
                    init=c("kmeanspp", "random", "forgy", "none"),
-                   tolerance=1E-6, dist.type=c("eucl", "cos", "taxi"),
+                   tolerance=1E-2, dist.type=c("eucl", "cos", "taxi"),
                    max.no.improvement=3) {
 
+    # TODO: Use a batch size of .2 if not provided
     if (class(data) == "character") {
         if (class(centers) == "numeric" || class(centers) == "integer") {
-            #ret <- .Call("R_knor_kmeans", normalizePath(as.character(data)),
-                         #as.integer(centers), as.double(nrow),
-                         #as.double(ncol), as.double(iter.max),
-                         #as.integer(nthread), as.character(init),
-                         #as.double(tolerance), as.character(dist.type),
-                         #PACKAGE="knor")
-            stop(paste("Cannot handle centers of type", class(centers), "\n"))
+            ret <- .Call("R_knor_mbkmeans", normalizePath(as.character(data)),
+                         as.integer(centers), as.double(nrow),
+                         as.double(ncol), as.integer(batch.size),
+                         as.double(iter.max),
+                         as.integer(nthread), as.character(init),
+                         as.double(tolerance), as.character(dist.type),
+                         PACKAGE="knor")
         } else if (class(centers) == "matrix") {
-            #ret <- .Call("R_knor_kmeans_centroids_im",
-                         #normalizePath(as.character(data)),
-                         #as.matrix(centers), as.double(nrow),
-                         #as.double(iter.max), as.integer(nthread),
-                         #as.double(tolerance), as.character(dist.type),
-                         #PACKAGE="knor")
-            stop(paste("Cannot handle centers of type", class(centers), "\n"))
-        }
-        else if (class(centers) == "list") {
-            #ret <- .Call("R_knor_kmeans_data_centroids_em",
-                         #normalizePath(as.character(data)),
-                         #normalizePath(as.character(centers[1])),
-                         #as.integer(centers[2]),
-                         #as.double(nrow), as.double(ncol),
-                         #as.double(iter.max), as.integer(nthread),
-                         #as.double(tolerance), as.character(dist.type),
-                         #PACKAGE="knor")
-            stop(paste("Cannot handle centers of type", class(centers), "\n"))
+            ret <- .Call("R_knor_mbkmeans_centroids_im",
+                         normalizePath(as.character(data)),
+                         as.matrix(centers), as.double(nrow),
+                         as.integer(batch.size),
+                         as.double(iter.max), as.integer(nthread),
+                         as.double(tolerance), as.character(dist.type),
+                         PACKAGE="knor")
         } else {
             stop(paste("Cannot handle centers of type", class(centers), "\n"))
         }
@@ -483,19 +473,17 @@ MiniBatchKmeans <- function(data, centers, nrow=-1, ncol=-1,
                          as.character(dist.type),
                          PACKAGE="knor")
         } else if (class(centers) == "matrix") {
-            #ret <- .Call("R_knor_kmeans_data_centroids_im", as.matrix(data),
-                         #as.matrix(centers),
-                         #as.double(iter.max), as.integer(nthread),
-                         #as.double(tolerance), as.character(dist.type),
-                         #PACKAGE="knor")
-            stop(paste("Cannot handle centers of type", class(centers), "\n"))
+            ret <- .Call("R_knor_mbkmeans_data_centroids_im", as.matrix(data),
+                         as.matrix(centers), as.integer(batch.size),
+                         as.double(iter.max), as.integer(nthread),
+                         as.double(tolerance), as.character(dist.type),
+                         PACKAGE="knor")
         } else if (class(centers) == "character") {
-            #ret <- .Call("R_knor_kmeans_data_im_centroids_em", as.matrix(data),
-                         #normalizePath(centers),
-                         #as.double(iter.max), as.integer(nthread),
-                         #as.double(tolerance), as.character(dist.type),
-                         #PACKAGE="knor")
-            stop(paste("Cannot handle centers of type", class(centers), "\n"))
+            ret <- .Call("R_knor_mbkmeans_data_im_centroids_em", as.matrix(data),
+                         normalizePath(centers), as.integer(batch.size),
+                         as.double(iter.max), as.integer(nthread),
+                         as.double(tolerance), as.character(dist.type),
+                         PACKAGE="knor")
         } else {
             stop(paste("Cannot handle centers of type", class(centers), "\n"))
         }
