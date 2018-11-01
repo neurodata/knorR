@@ -343,7 +343,6 @@ KmeansPP <- function(data, centers, nrow=-1, ncol=-1,
 #' @param nrow The number of samples in the dataset
 #' @param ncol The number of features in the dataset
 #' @param dist.type What dissimilarity metric to use
-#' @param algo What splitting algorithm to use c("kmeans")
 #' @param min.clust.size The minimum size of a cluster when it cannot be split
 #' @param init The type of initialization to use c("kmeanspp", "random",
 #'  "forgy", "none")
@@ -366,34 +365,38 @@ KmeansPP <- function(data, centers, nrow=-1, ncol=-1,
 #' @author Disa Mhembere <disa@@cs.jhu.edu>
 #' @rdname Hclust
 
-Hclust <- function(data, centers, nrow=-1, ncol=-1,
-                   dist.type=c("eucl", "cos", "taxi"), algo=c("kmeans"),
-                   min.clust.size=1,
-                   init=c("kmeanspp", "random", "forgy", "none"), nthread=-1) {
+Hclust <- function(data, nrow=-1, ncol=-1,
+                   centers=0, min.clust.size=1,
+                   init=c("kmeanspp", "random", "forgy", "none"),
+                   dist.type=c("eucl", "cos", "taxi"),
+                   nthread=-1) {
 
     if (class(data) == "character") {
-        if (class(centers) == "numeric" || class(centers) == "integer") {
-            # TODO
-        } else if (class(centers) == "matrix") {
-            # TODO
-        }
-        else if (class(centers) == "list") {
-            # TODO
+        if (centers > 0) {
+            ret <- .Call("R_knor_hclust_data_em_k", as.matrix(data),
+                         as.double(nrow), as.double(ncol),
+                         as.integer(centers), as.character(init),
+                         as.character(dist.type), as.integer(nthread),
+                         PACKAGE="knor")
         } else {
-            stop(paste("Cannot handle centers of type", class(centers), "\n"))
+            ret <- .Call("R_knor_hclust_data_em_mcs", as.matrix(data),
+                         as.double(nrow), as.double(ncol),
+                         as.integer(min.clust.size), as.character(init),
+                         as.character(dist.type), as.integer(nthread),
+                         PACKAGE="knor")
         }
     } else if (class(data) == "matrix") {
-        if (class(centers) == "numeric" || class(centers) == "integer") {
-            # TODO
-        } else if (class(centers) == "matrix") {
-            # TODO
-        } else if (class(centers) == "character") {
-            # TODO
+        if (centers > 0) {
+            ret <- .Call("R_knor_hclust_data_im_k", as.matrix(data),
+                         as.integer(centers), as.character(init),
+                         as.integer(nthread), as.character(dist.type),
+                         PACKAGE="knor")
         } else {
-            stop(paste("Cannot handle centers of type", class(centers), "\n"))
+            ret <- .Call("R_knor_hclust_data_im_mcs", as.matrix(data),
+                         as.integer(min.clust.size), as.character(init),
+                         as.character(dist.type), as.integer(nthread),
+                         PACKAGE="knor")
         }
-    } else {
-        stop(paste("Cannot handle data of type", class(data), "\n"))
     }
 }
 

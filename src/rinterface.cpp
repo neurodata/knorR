@@ -1103,8 +1103,167 @@ RcppExport SEXP R_knor_fcm_data_em_centroids_im(SEXP rdata, SEXP rk,
      knor::base::cluster_t kret =
          std::static_pointer_cast<knor::fcm_coordinator>(coord)->soft_run();
 
-	Rcpp::List ret;
-    marshall_c_to_r(kret, ret);
+	Rcpp::List ret; marshall_c_to_r(kret, ret);
 	return ret;
 }
 ////////////////////////////// END FUZZY C-MEANS ///////////////////////////////
+
+////////////////////////////////// HCLUST //////////////////////////////////////
+/**
+  * Data in memory and predefined k
+**/
+RcppExport SEXP R_knor_hclust_data_im_k(SEXP rdata, SEXP rk,
+        SEXP rinit, SEXP rdist_type, SEXP rnthread) {
+
+    Rcpp::NumericMatrix data = Rcpp::NumericMatrix(rdata);
+	unsigned k = INTEGER(rk)[0];
+	int nthread = INTEGER(rnthread)[0];
+	std::string dist_type = CHAR(STRING_ELT(rdist_type,0));
+	const size_t nrow = data.nrow();
+	const size_t ncol = data.ncol();
+    std::vector<double> cdata(nrow*ncol);
+	std::string init = CHAR(STRING_ELT(rinit,0));
+
+    if (nthread == -1)
+        nthread = knor::base::get_num_omp_threads();
+
+    unsigned nnodes = knor::base::get_num_nodes();
+
+#ifdef _OPENMP
+#pragma omp parallel for firstprivate(data) shared (cdata)
+#endif
+	for (size_t row = 0; row < nrow; row++)
+		for (size_t col = 0; col < ncol; col++)
+			cdata[row*ncol + col] = data(row, col);
+
+#if 0
+     auto coord = knor::fcm_coordinator::create("",
+            nrow, ncol, k, max_iters, nnodes, nthread, NULL,
+            init, tolerance, dist_type, fuzzindex);
+
+     knor::base::cluster_t kret =
+         std::static_pointer_cast<knor::fcm_coordinator>(
+                                     coord)->soft_run(&cdata[0]);
+
+	Rcpp::List ret;
+    marshall_c_to_r(kret, ret);
+	return ret;
+#else
+    return NULL;
+#endif
+}
+
+/**
+  * Data in memory and predefined cluster size
+**/
+RcppExport SEXP R_knor_hclust_data_im_mcs(SEXP rdata,
+        SEXP rmin_clust_size, SEXP rinit, SEXP rdist_type, SEXP rnthread) {
+
+    Rcpp::NumericMatrix data = Rcpp::NumericMatrix(rdata);
+	unsigned min_clust_size = INTEGER(rmin_clust_size)[0];
+	int nthread = INTEGER(rnthread)[0];
+	std::string dist_type = CHAR(STRING_ELT(rdist_type,0));
+	const size_t nrow = data.nrow();
+	const size_t ncol = data.ncol();
+    std::vector<double> cdata(nrow*ncol);
+	std::string init = CHAR(STRING_ELT(rinit,0));
+
+    if (nthread == -1)
+        nthread = knor::base::get_num_omp_threads();
+
+    unsigned nnodes = knor::base::get_num_nodes();
+
+#ifdef _OPENMP
+#pragma omp parallel for firstprivate(data) shared (cdata)
+#endif
+	for (size_t row = 0; row < nrow; row++)
+		for (size_t col = 0; col < ncol; col++)
+			cdata[row*ncol + col] = data(row, col);
+
+#if 0
+     auto coord = knor::fcm_coordinator::create("",
+            nrow, ncol, k, max_iters, nnodes, nthread, NULL,
+            init, tolerance, dist_type, fuzzindex);
+
+     knor::base::cluster_t kret =
+         std::static_pointer_cast<knor::fcm_coordinator>(
+                                     coord)->soft_run(&cdata[0]);
+
+	Rcpp::List ret;
+    marshall_c_to_r(kret, ret);
+	return ret;
+#else
+    return NULL;
+#endif
+}
+
+/**
+  * Data on disk predefined k
+  */
+RcppExport SEXP R_knor_hclust_data_em_k(SEXP rdata, SEXP rnrow, SEXP rncol,
+        SEXP rk, SEXP rinit, SEXP rdist_type, SEXP rnthread) {
+
+    std::string data = CHAR(STRING_ELT(rdata,0));
+	unsigned k = INTEGER(rk)[0];
+	size_t nrow = static_cast<size_t>(REAL(rnrow)[0]);
+	size_t ncol = static_cast<size_t>(REAL(rncol)[0]);
+	int nthread = INTEGER(rnthread)[0];
+	std::string dist_type = CHAR(STRING_ELT(rdist_type,0));
+	std::string init = CHAR(STRING_ELT(rinit,0));
+
+    if (nthread == -1)
+        nthread = knor::base::get_num_omp_threads();
+    unsigned nnodes = knor::base::get_num_nodes();
+
+#if 0
+    auto coord = knor::fcm_coordinator::create(data,
+            nrow, ncol, k, max_iters, nnodes, nthread, NULL,
+            init, tolerance, dist_type, fuzzindex);
+
+     knor::base::cluster_t kret =
+         std::static_pointer_cast<knor::fcm_coordinator>(coord)->soft_run();
+
+	Rcpp::List ret;
+    marshall_c_to_r(kret, ret);
+	return ret;
+#else
+    return NULL;
+#endif
+}
+
+/**
+  * Data on disk and predefined cluster size
+  */
+RcppExport SEXP R_knor_hclust_data_mcs(SEXP rdata,
+        SEXP rnrow, SEXP rncol, SEXP rmin_clust_size,
+        SEXP rinit, SEXP rdist_type, SEXP rnthread) {
+
+    std::string data = CHAR(STRING_ELT(rdata,0));
+	size_t nrow = static_cast<size_t>(REAL(rnrow)[0]);
+	size_t ncol = static_cast<size_t>(REAL(rncol)[0]);
+	unsigned min_clust_size = INTEGER(rmin_clust_size)[0];
+	int nthread = INTEGER(rnthread)[0];
+	std::string dist_type = CHAR(STRING_ELT(rdist_type,0));
+	std::string init = CHAR(STRING_ELT(rinit,0));
+
+    if (nthread == -1)
+        nthread = knor::base::get_num_omp_threads();
+
+    unsigned nnodes = knor::base::get_num_nodes();
+
+#if 0
+    auto coord = knor::fcm_coordinator::create(data,
+            nrow, ncol, k, max_iters, nnodes, nthread, &ccentroids[0],
+            "none", tolerance, dist_type, fuzzindex);
+
+     knor::base::cluster_t kret =
+         std::static_pointer_cast<knor::fcm_coordinator>(coord)->soft_run();
+
+	Rcpp::List ret;
+    marshall_c_to_r(kret, ret);
+	return ret;
+#else
+    return NULL;
+#endif
+}
+////////////////////////////// END HCLUST //////////////////////////////////////
