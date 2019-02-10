@@ -18,7 +18,7 @@ KmeansPP(data, centers, nrow = -1, ncol = -1, nstart = 1,
 
 \item{nstart}{The number of iterations of kmeans++ to run}
 
-\item{nthread}{The number of parallel thread to run}
+\item{nthread}{The number of parallel threads to run}
 
 \item{dist.type}{What dissimilarity metric to use c("taxi", "eucl", "cos")}
 }

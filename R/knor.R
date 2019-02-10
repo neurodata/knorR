@@ -25,7 +25,7 @@
 #' @param nrow The number of samples in the dataset
 #' @param ncol The number of features in the dataset
 #' @param iter.max The maximum number of iteration of k-means to perform
-#' @param nthread The number of parallel thread to run
+#' @param nthread The number of parallel threads to run
 #' @param centers Either (i) The number of centers (i.e., k), or
 #'  (ii) an In-memory data matrix, or (iii) A 2-Element \emph{list} with element 1
 #'  being a filename for precomputed centers, and element 2
@@ -122,7 +122,7 @@ Kmeans <- function(data, centers, nrow=-1, ncol=-1,
 #' @param nrow The number of samples in the dataset
 #' @param ncol The number of features in the dataset
 #' @param iter.max The maximum number of iteration of k-means to perform
-#' @param nthread The number of parallel thread to run
+#' @param nthread The number of parallel threads to run
 #' @param centers Either (i) The number of centers (i.e., k), or
 #'  (ii) an In-memory data matrix
 #' @param init The type of initialization to use c("forgy", "none")
@@ -201,7 +201,7 @@ Kmedoids <- function(data, centers, nrow=-1, ncol=-1,
 #' @param nrow The number of samples in the dataset
 #' @param ncol The number of features in the dataset
 #' @param iter.max The maximum number of iteration of k-means to perform
-#' @param nthread The number of parallel thread to run
+#' @param nthread The number of parallel threads to run
 #' @param centers Either (i) The number of centers (i.e., k), or
 #'  (ii) an In-memory data matrix
 #' @param init The type of initialization to use c("kmeanspp",
@@ -279,7 +279,7 @@ Skmeans <- function(data, centers, nrow=-1, ncol=-1,
 #' @param nrow The number of samples in the dataset
 #' @param ncol The number of features in the dataset
 #' @param nstart The number of iterations of kmeans++ to run
-#' @param nthread The number of parallel thread to run
+#' @param nthread The number of parallel threads to run
 #' @param dist.type What dissimilarity metric to use c("taxi", "eucl", "cos")
 #'
 #' @return A list containing the attributes of the output of kmedoids.
@@ -339,14 +339,15 @@ KmeansPP <- function(data, centers, nrow=-1, ncol=-1,
 #'  https://en.wikipedia.org/wiki/Hierarchical_clustering
 #'
 #' @param data Data file name on disk (NUMA optmized) or In memory data matrix
-#' @param centers The number of centers (i.e., k)
 #' @param nrow The number of samples in the dataset
 #' @param ncol The number of features in the dataset
+#' @param centers The number of centers (i.e., k)
+#' @param iter.max The maximum number of iteration of k-means to perform
+#' @param nthread The number of parallel threads to run
+#' @param init The type of initialization to use c("forgy", "none")
+#' @param tolerance The convergence tolerance for k-means at each hierarchical split
 #' @param dist.type What dissimilarity metric to use
 #' @param min.clust.size The minimum size of a cluster when it cannot be split
-#' @param init The type of initialization to use c("kmeanspp", "random",
-#'  "forgy", "none")
-#' @param nthread The number of parallel thread to run
 #'
 #' @return A list of lists containing the attributes of the output of kmeans.
 #'  cluster: A vector of integers (from 1:\strong{k}) indicating the cluster to
@@ -358,14 +359,101 @@ KmeansPP <- function(data, centers, nrow=-1, ncol=-1,
 #' @examples
 #' iris.mat <- as.matrix(iris[,1:4])
 #' k <- length(unique(iris[, dim(iris)[2]])) # Number of unique classes
-#' kms <- Hclust(iris.mat, k)
+#' kms <- Hmeans(iris.mat, k)
 #'
 #' @export
-#' @name Hclust
+#' @name Hmeans
 #' @author Disa Mhembere <disa@@cs.jhu.edu>
-#' @rdname Hclust
+#' @rdname Hmeans
 
-Hclust <- function(data, nrow=-1, ncol=-1,
+Hmeans <- function(data, nrow=-1, ncol=-1, centers=0, iter.max=20,
+                   nthread=-1, init=c("forgy", "none"), tolerance=1E-6,
+                   dist.type=c("eucl", "cos", "taxi"), min.clust.size=1) {
+
+    if (class(data) == "character") {
+        if (class(centers) == "numeric" || class(centers) == "integer") {
+
+            if (as.integer(centers) < 2 ||  as.integer(centers) > nrow)
+                stop("centers must be greater than 1 and less than nrow ")
+
+            ret <- .Call("R_knor_hmeans_data_em_k", as.character(data),
+                         as.double(nrow), as.double(ncol),
+                         as.integer(centers), as.integer(iter.max),
+                         as.integer(nthread), as.character(init),
+                         as.double(tolerance), as.character(dist.type),
+                         as.integer(min.clust.size),
+                         PACKAGE="knor")
+        } else if (class(centers) == "matrix") {
+            ret <- .Call("R_knor_hmeans_data_em_centers", as.character(data),
+                         as.double(nrow), as.double(ncol),
+                         as.matrix(centers), as.integer(iter.max),
+                         as.integer(nthread),
+                         as.double(tolerance), as.character(dist.type),
+                         as.integer(min.clust.size),
+                         PACKAGE="knor")
+        } else {
+            stop(paste("Cannot handle centers of type", class(centers), "\n"))
+        }
+    } else if (class(data) == "matrix") {
+        if (class(centers) == "numeric" || class(centers) == "integer") {
+
+            if (as.integer(centers) < 2 ||  as.integer(centers) > nrow)
+                stop("centers must be greater than 1 and less than nrow ")
+
+            ret <- .Call("R_knor_hmeans_data_im_k", as.matrix(data),
+                         as.integer(centers), as.integer(iter.max),
+                         as.integer(nthread), as.character(init),
+                         as.double(tolerance), as.character(dist.type),
+                         as.integer(min.clust.size),
+                         PACKAGE="knor")
+        } else if (class(centers) == "matrix") {
+            ret <- .Call("R_knor_hmeans_data_im_centers", as.matrix(data),
+                         as.integer(iter.max),
+                         as.integer(nthread), as.character(init),
+                         as.double(tolerance), as.character(dist.type),
+                         as.integer(min.clust.size),
+                         PACKAGE="knor")
+        } else {
+            stop(paste("Cannot handle centers of type", class(centers), "\n"))
+        }
+    }
+}
+
+#' Perform a parallel hierarchical clustering using the x-means algorithm
+#'
+#' A recursive (not acutally implemented as recursion) partitioning of data into
+#'  two disjoint sets at every level as described in:
+#'  http://cs.uef.fi/~zhao/Courses/Clustering2012/Xmeans.pdf
+#'
+#' @param data Data file name on disk (NUMA optmized) or In memory data matrix
+#' @param kmin The minimum number of clusters
+#' @param kmax The maximun number of number of centers
+#' @param nrow The number of samples in the dataset
+#' @param ncol The number of features in the dataset
+#' @param dist.type What dissimilarity metric to use
+#' @param k.max The maximum number of clusters.
+#' @param init The type of initialization to use c("kmeanspp", "random",
+#'  "forgy", "none")
+#' @param nthread The number of parallel threads to run
+#'
+#' @return A list of lists containing the attributes of the output of kmeans.
+#'  cluster: A vector of integers (from 1:\strong{k}) indicating the cluster to
+#'          which each point is allocated.
+#'  centers: A matrix of cluster centres.
+#'  size: The number of points in each cluster.
+#'  iter: The number of (outer) iterations.
+#'
+#' @examples
+#' iris.mat <- as.matrix(iris[,1:4])
+#' k <- length(unique(iris[, dim(iris)[2]])) # Number of unique classes
+#' xms <- Xmeans(iris.mat, k)
+#'
+#' @export
+#' @name Xmeans
+#' @author Disa Mhembere <disa@@cs.jhu.edu>
+#' @rdname Xmeans
+
+Xmeans <- function(data, nrow=-1, ncol=-1,
                    centers=0, min.clust.size=1,
                    init=c("kmeanspp", "random", "forgy", "none"),
                    dist.type=c("eucl", "cos", "taxi"),
@@ -373,13 +461,13 @@ Hclust <- function(data, nrow=-1, ncol=-1,
 
     if (class(data) == "character") {
         if (centers > 0) {
-            ret <- .Call("R_knor_hclust_data_em_k", as.matrix(data),
+            ret <- .Call("R_knor_hmeans_data_em_k", as.matrix(data),
                          as.double(nrow), as.double(ncol),
                          as.integer(centers), as.character(init),
                          as.character(dist.type), as.integer(nthread),
                          PACKAGE="knor")
         } else {
-            ret <- .Call("R_knor_hclust_data_em_mcs", as.matrix(data),
+            ret <- .Call("R_knor_hmeans_data_em_mcs", as.matrix(data),
                          as.double(nrow), as.double(ncol),
                          as.integer(min.clust.size), as.character(init),
                          as.character(dist.type), as.integer(nthread),
@@ -387,12 +475,12 @@ Hclust <- function(data, nrow=-1, ncol=-1,
         }
     } else if (class(data) == "matrix") {
         if (centers > 0) {
-            ret <- .Call("R_knor_hclust_data_im_k", as.matrix(data),
+            ret <- .Call("R_knor_hmeans_data_im_k", as.matrix(data),
                          as.integer(centers), as.character(init),
                          as.integer(nthread), as.character(dist.type),
                          PACKAGE="knor")
         } else {
-            ret <- .Call("R_knor_hclust_data_im_mcs", as.matrix(data),
+            ret <- .Call("R_knor_hmeans_data_im_mcs", as.matrix(data),
                          as.integer(min.clust.size), as.character(init),
                          as.character(dist.type), as.integer(nthread),
                          PACKAGE="knor")
@@ -413,7 +501,7 @@ Hclust <- function(data, nrow=-1, ncol=-1,
 #' @param ncol The number of features in the dataset
 #' @param batch.size Size of the mini batches
 #' @param iter.max The maximum number of iteration of k-means to perform
-#' @param nthread The number of parallel thread to run
+#' @param nthread The number of parallel threads to run
 #' @param init The type of initialization to use c("kmeanspp", "random",
 #'  "forgy", "none")
 #' @param tolerance The convergence tolerance
@@ -495,59 +583,6 @@ MiniBatchKmeans <- function(data, centers, nrow=-1, ncol=-1,
     }
 }
 
-#' Fit a mixture of Gaussians distribution to the data.
-#'
-#'
-#' @param data Data file name on disk (NUMA optimized) or In memory data matrix
-#' @param nrow The number of samples in the dataset
-#' @param ncol The number of features in the dataset
-#' @param k The number of gaussians to estimate
-#' @param reg.covar The covariance matrix regularization term
-#' @param iter.max The maximum number of iteration of k-means to perform
-#' @param nthread The number of parallel thread to run
-#' @param tolerance The convergence tolerance
-#' @param cov.type is the type of covariance matrix. It can be
-#'       one of {"full", "tied", "diag", "spherical"}.
-#'       \itemize{
-#'       \item{"full"}{each component has its own general covariance matrix.}
-#'       \item{"tied"}{all components share the same general covariance matrix.}
-#'       \item{"diag"}{each component has its own diagonal covariance matrix.}
-#'       \item{"spherical"}{each component has its own single variance.}
-#'       }
-#'
-#' @return A list containing the attributes of the output of GMM.
-#'       \itemize{
-#'        \item{loglik}{a n x k matrix, whose \code{[i, k]}th entry is
-#'                the conditional probability of the ith observation
-#'                belonging to the kth component of the mixture.}
-#'        \item{iter}{the number of iterations}
-#'        \item{parameters}{parameters of the mixture of Gaussian distribution.
-#'             \itemize{
-#'             \item{weights}{a vector of k elements. Each element is
-#'              the weight of the Gaussian distribution in the mixture.}
-#'             \item{means}{a k x d matrix. Each row is the mean of a
-#'               Gaussian distribution.}
-#'             \item{covs}{a list of matrices, a matrix or a vector,
-#'               depending on \code{cov.type}}}
-#'        }
-#'      }
-#'
-#' @examples
-#' iris.mat <- as.matrix(iris[,1:4])
-#' k <- length(unique(iris[, dim(iris)[2]])) # Number of unique classes
-#' kms <- GMM(iris.mat, k, cov=c("full"))
-#'
-#' @export
-#' @name GMM
-#' @author Disa Mhembere <disa@@cs.jhu.edu>
-#' @rdname  GMM
-
-GMM <- function(data, nrow=-1, ncol=-1, k, reg.covar=1E-6,
-                iter.max=100, nthread=-1, tolerance=1E-6,
-                cov.type=c("full", "tied", "diag", "spherical")) {
-
-}
-
 #' Perform Fuzzy C-means clustering on a data matrix.
 #' A soft variant of the kmeans algorithm where each data point are assigned a
 #'  contribution weight to each cluster
@@ -558,7 +593,7 @@ GMM <- function(data, nrow=-1, ncol=-1, k, reg.covar=1E-6,
 #' @param nrow The number of samples in the dataset
 #' @param ncol The number of features in the dataset
 #' @param iter.max The maximum number of iteration of k-means to perform
-#' @param nthread The number of parallel thread to run
+#' @param nthread The number of parallel threads to run
 #' @param centers Either (i) The number of centers (i.e., k), or
 #'  (ii) an In-memory data matrix
 #' @param init The type of initialization to use c("kmeanspp", "random",

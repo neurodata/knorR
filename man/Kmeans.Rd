@@ -23,7 +23,7 @@ the number of centroids.}
 
 \item{iter.max}{The maximum number of iteration of k-means to perform}
 
-\item{nthread}{The number of parallel thread to run}
+\item{nthread}{The number of parallel threads to run}
 
 \item{init}{The type of initialization to use c("kmeanspp", "random",
 "forgy", "none")}

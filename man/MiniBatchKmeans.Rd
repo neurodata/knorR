@@ -7,7 +7,7 @@
 \usage{
 MiniBatchKmeans(data, centers, nrow = -1, ncol = -1,
   batch.size = 100, iter.max = .Machine$integer.max, nthread = -1,
-  init = c("kmeanspp", "random", "forgy", "none"), tolerance = 1e-06,
+  init = c("kmeanspp", "random", "forgy", "none"), tolerance = 0.01,
   dist.type = c("eucl", "cos", "taxi"), max.no.improvement = 3)
 }
 \arguments{
@@ -26,7 +26,7 @@ the number of centroids.}
 
 \item{iter.max}{The maximum number of iteration of k-means to perform}
 
-\item{nthread}{The number of parallel thread to run}
+\item{nthread}{The number of parallel threads to run}
 
 \item{init}{The type of initialization to use c("kmeanspp", "random",
 "forgy", "none")}
