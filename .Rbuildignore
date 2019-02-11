@@ -6,7 +6,6 @@
 ^knor_.*\.tar\.gz$
 ^.*\.sh$
 ^\..*$
-^src/cknor/\..*$
 ^src/cknor/libsem/.*$
 ^src/cknor/utils/.*$
 ^src/cknor/libkcommon/cxxopts/*$
