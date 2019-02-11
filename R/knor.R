@@ -434,15 +434,14 @@ MiniBatchKmeans <- function(data, centers, nrow=-1, ncol=-1,
 #' See: https://en.wikipedia.org/wiki/Fuzzy_clustering#Fuzzy_C-means_clustering
 #'
 #' @param data Data file name on disk (NUMA optimized) or In memory data matrix
+#' @param centers Either (i) The number of centers (i.e., k), or
+#'  (ii) an In-memory data matrix
 #' @param nrow The number of samples in the dataset
 #' @param ncol The number of features in the dataset
 #' @param iter.max The maximum number of iteration of k-means to perform
 #' @param nthread The number of parallel threads to run
-#' @param centers Either (i) The number of centers (i.e., k), or
-#'  (ii) an In-memory data matrix
-#' @param init The type of initialization to use c("kmeanspp", "random",
-#'  "forgy", "none")
-#' @param fuzziness.index The fuzziness coefficient/index (> 1 and < inf)
+#' @param fuzz.index The fuzziness coefficient/index (> 1 and < inf)
+#' @param init The type of initialization to use c("forgy", "none")
 #' @param tolerance The convergence tolerance
 #' @param dist.type What dissimilarity metric to use
 #'
@@ -466,8 +465,8 @@ MiniBatchKmeans <- function(data, centers, nrow=-1, ncol=-1,
 
 FuzzyCMeans <- function(data, centers, nrow=-1, ncol=-1,
                    iter.max=.Machine$integer.max, nthread=-1,
-                   fuzz.index=2, init=c("forgy", "kmeanspp", "none"),
-                   tolerance=1E-6, dist.type=c("eucl", "cos", "taxi")) {
+                   fuzz.index=2, init=c("forgy"), tolerance=1E-6,
+                   dist.type=c("sqeucl", "eucl","cos", "taxi")) {
 
     if (class(data) == "character") {
         if (class(centers) == "numeric" || class(centers) == "integer") {

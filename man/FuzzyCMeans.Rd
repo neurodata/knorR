@@ -8,8 +8,8 @@ A soft variant of the kmeans algorithm where each data point are assigned a
 \usage{
 FuzzyCMeans(data, centers, nrow = -1, ncol = -1,
   iter.max = .Machine$integer.max, nthread = -1, fuzz.index = 2,
-  init = c("forgy", "kmeanspp", "none"), tolerance = 1e-06,
-  dist.type = c("eucl", "cos", "taxi"))
+  init = c("forgy"), tolerance = 1e-06, dist.type = c("sqeucl",
+  "eucl", "cos", "taxi"))
 }
 \arguments{
 \item{data}{Data file name on disk (NUMA optimized) or In memory data matrix}
@@ -25,14 +25,13 @@ FuzzyCMeans(data, centers, nrow = -1, ncol = -1,
 
 \item{nthread}{The number of parallel threads to run}
 
-\item{init}{The type of initialization to use c("kmeanspp", "random",
-"forgy", "none")}
+\item{fuzz.index}{The fuzziness coefficient/index (> 1 and < inf)}
+
+\item{init}{The type of initialization to use c("forgy", "none")}
 
 \item{tolerance}{The convergence tolerance}
 
 \item{dist.type}{What dissimilarity metric to use}
-
-\item{fuzziness.index}{The fuzziness coefficient/index (> 1 and < inf)}
 }
 \value{
 A list containing the attributes of the output of kmeans.

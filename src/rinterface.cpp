@@ -975,13 +975,9 @@ RcppExport SEXP R_knor_fcm_data_im(SEXP rdata, SEXP rk,
 		for (size_t col = 0; col < ncol; col++)
 			cdata[row*ncol + col] = data(row, col);
 
-     auto coord = knor::fcm_coordinator::create("",
+     auto kret  = knor::fcm_coordinator::create("",
             nrow, ncol, k, max_iters, nnodes, nthread, NULL,
-            init, tolerance, dist_type, fuzzindex);
-
-     kbase::cluster_t kret =
-         std::static_pointer_cast<knor::fcm_coordinator>(
-                                     coord)->soft_run(&cdata[0]);
+            init, tolerance, dist_type, fuzzindex)->run(&cdata[0]);
 
 	Rcpp::List ret;
     marshall_c_to_r(kret, ret);
@@ -1029,13 +1025,9 @@ RcppExport SEXP R_knor_fcm_data_centroids_im(SEXP rdata, SEXP rk,
 		for (size_t col = 0; col < ncol; col++)
 			ccentroids[row*ncol + col] = centroids(row, col);
 
-     auto coord = knor::fcm_coordinator::create("",
+     auto kret = knor::fcm_coordinator::create("",
             nrow, ncol, k, max_iters, nnodes, nthread, &ccentroids[0],
-            "none", tolerance, dist_type, fuzzindex);
-
-     kbase::cluster_t kret =
-         std::static_pointer_cast<knor::fcm_coordinator>(
-                                     coord)->soft_run(&cdata[0]);
+            "none", tolerance, dist_type, fuzzindex)->run(&cdata[0]);
 
 	Rcpp::List ret;
     marshall_c_to_r(kret, ret);
@@ -1066,12 +1058,9 @@ RcppExport SEXP R_knor_fcm_data_em(SEXP rdata, SEXP rk,
 
     unsigned nnodes = kbase::get_num_nodes();
 
-    auto coord = knor::fcm_coordinator::create(data,
+    auto kret = knor::fcm_coordinator::create(data,
             nrow, ncol, k, max_iters, nnodes, nthread, NULL,
-            init, tolerance, dist_type, fuzzindex);
-
-     kbase::cluster_t kret =
-         std::static_pointer_cast<knor::fcm_coordinator>(coord)->soft_run();
+            init, tolerance, dist_type, fuzzindex)->run();
 
 	Rcpp::List ret;
     marshall_c_to_r(kret, ret);
@@ -1110,12 +1099,9 @@ RcppExport SEXP R_knor_fcm_data_em_centroids_im(SEXP rdata, SEXP rk,
 		for (size_t col = 0; col < ncol; col++)
 			ccentroids[row*ncol + col] = centroids(row, col);
 
-    auto coord = knor::fcm_coordinator::create(data,
+    auto kret = knor::fcm_coordinator::create(data,
             nrow, ncol, k, max_iters, nnodes, nthread, &ccentroids[0],
-            "none", tolerance, dist_type, fuzzindex);
-
-     kbase::cluster_t kret =
-         std::static_pointer_cast<knor::fcm_coordinator>(coord)->soft_run();
+            "none", tolerance, dist_type, fuzzindex)->run();
 
 	Rcpp::List ret; marshall_c_to_r(kret, ret);
 	return ret;
