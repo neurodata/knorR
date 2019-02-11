@@ -31,6 +31,7 @@
 #include "cknor/libman/medoid_coordinator.hpp"
 #include "cknor/libman/hclust_coordinator.hpp"
 #include "cknor/libman/xmeans_coordinator.hpp"
+#include "cknor/libman/gmeans_coordinator.hpp"
 
 /**
   * Transform the C output to R
@@ -70,6 +71,7 @@ static void marshall_c_to_r(const kbase::cluster_t& kret,
   * BEGIN ALGORITHMS
   */
 
+//////////////////////////////////// KMEANS ////////////////////////////////////
 /**
   * Data and centroids in-memory
   **/
@@ -321,6 +323,7 @@ RcppExport SEXP R_knor_kmeans_data_centroids_em(
     marshall_c_to_r(kret, ret);
 	return ret;
 }
+//////////////////////////////// END KMEANS ////////////////////////////////////
 
 ////////////////////////////////// KMEDOIDS ////////////////////////////////////
 /**
@@ -1442,7 +1445,7 @@ RcppExport SEXP R_knor_xmeans_data_im_centers(SEXP rdata, SEXP rkmax,
 			ccentroids[row*ncol + col] = centroids(row, col);
 
     kbase::cluster_t kret =
-        knor::hclust_coordinator::create("", nrow, ncol, kmax,
+        knor::xmeans_coordinator::create("", nrow, ncol, kmax,
                 max_iters, nnodes, nthread, &ccentroids[0], "none", tolerance,
                 dist_type, min_clust_size)->run(&cdata[0]);
 
@@ -1451,3 +1454,175 @@ RcppExport SEXP R_knor_xmeans_data_im_centers(SEXP rdata, SEXP rkmax,
 	return ret;
 }
 ////////////////////////////// END XMEANS //////////////////////////////////////
+
+////////////////////////////////// GMEANS //////////////////////////////////////
+/**
+  * Data on disk str init
+  */
+RcppExport SEXP R_knor_gmeans_data_em_init(SEXP rdata, SEXP rkmax,
+        SEXP rnrow, SEXP rncol, SEXP rmax_iters, SEXP rnthread, SEXP rinit,
+        SEXP rtolerance, SEXP rdist_type, SEXP rmin_clust_size,
+        SEXP rstrictness) {
+
+    std::string data = CHAR(STRING_ELT(rdata,0));
+	unsigned kmax = INTEGER(rkmax)[0];
+	size_t nrow = static_cast<size_t>(REAL(rnrow)[0]);
+	size_t ncol = static_cast<size_t>(REAL(rncol)[0]);
+	size_t max_iters = static_cast<size_t>(REAL(rmax_iters)[0]);
+	int nthread = INTEGER(rnthread)[0];
+	std::string init = CHAR(STRING_ELT(rinit,0));
+	double tolerance = REAL(rtolerance)[0];
+	std::string dist_type = CHAR(STRING_ELT(rdist_type,0));
+	unsigned min_clust_size = INTEGER(rmin_clust_size)[0];
+	unsigned strictness = INTEGER(rstrictness)[0];
+
+    if (nthread == -1)
+        nthread = kbase::get_num_omp_threads();
+    unsigned nnodes = kbase::get_num_nodes();
+
+    kbase::cluster_t kret =
+                knor::gmeans_coordinator::create(data, nrow, ncol, kmax,
+                max_iters, nnodes, nthread, NULL,
+                init, tolerance, dist_type, min_clust_size, strictness)->run();
+
+	Rcpp::List ret;
+    marshall_c_to_r(kret, ret);
+	return ret;
+}
+
+/**
+  * Data on disk centers provided
+  */
+RcppExport SEXP R_knor_gmeans_data_em_centers(SEXP rdata, SEXP rkmax,
+        SEXP rnrow, SEXP rncol, SEXP rmax_iters, SEXP rnthread,
+        SEXP rinit, SEXP rtolerance, SEXP rdist_type,
+        SEXP rmin_clust_size, SEXP rstrictness) {
+
+    std::string data = CHAR(STRING_ELT(rdata,0));
+	size_t nrow = static_cast<size_t>(REAL(rnrow)[0]);
+	size_t ncol = static_cast<size_t>(REAL(rncol)[0]);
+	size_t max_iters = static_cast<size_t>(REAL(rmax_iters)[0]);
+	int nthread = INTEGER(rnthread)[0];
+	int kmax = INTEGER(rkmax)[0];
+    Rcpp::NumericMatrix centroids = Rcpp::NumericMatrix(rinit);
+	double tolerance = REAL(rtolerance)[0];
+	std::string dist_type = CHAR(STRING_ELT(rdist_type,0));
+	unsigned min_clust_size = INTEGER(rmin_clust_size)[0];
+	unsigned strictness = INTEGER(rstrictness)[0];
+
+    std::vector<double> ccentroids(centroids.nrow()*ncol);
+#ifdef _OPENMP
+#pragma omp parallel for firstprivate(centroids) shared (ccentroids)
+#endif
+	for (size_t row = 0; row < centroids.nrow(); row++)
+		for (size_t col = 0; col < ncol; col++)
+			ccentroids[row*ncol + col] = centroids(row, col);
+
+    if (nthread == -1)
+        nthread = kbase::get_num_omp_threads();
+    unsigned nnodes = kbase::get_num_nodes();
+
+    kbase::cluster_t kret =
+        knor::gmeans_coordinator::create(data, nrow, ncol, kmax,
+                max_iters, nnodes, nthread, &ccentroids[0], "none",
+                tolerance, dist_type, min_clust_size, strictness)->run();
+
+	Rcpp::List ret;
+    marshall_c_to_r(kret, ret);
+	return ret;
+}
+
+/**
+  * Data in memory and str init
+**/
+RcppExport SEXP R_knor_gmeans_data_im_init(SEXP rdata, SEXP rkmax,
+        SEXP rmax_iters, SEXP rnthread,
+        SEXP rinit, SEXP rtolerance,
+        SEXP rdist_type, SEXP rmin_clust_size, SEXP rstrictness) {
+
+    Rcpp::NumericMatrix data = Rcpp::NumericMatrix(rdata);
+	unsigned kmax = INTEGER(rkmax)[0];
+	size_t max_iters = static_cast<size_t>(REAL(rmax_iters)[0]);
+	int nthread = INTEGER(rnthread)[0];
+	std::string init = CHAR(STRING_ELT(rinit,0));
+	double tolerance = REAL(rtolerance)[0];
+	std::string dist_type = CHAR(STRING_ELT(rdist_type,0));
+	unsigned min_clust_size = INTEGER(rmin_clust_size)[0];
+	unsigned strictness = INTEGER(rstrictness)[0];
+
+	const size_t nrow = data.nrow();
+	const size_t ncol = data.ncol();
+    std::vector<double> cdata(nrow*ncol);
+
+    if (nthread == -1)
+        nthread = kbase::get_num_omp_threads();
+
+    unsigned nnodes = kbase::get_num_nodes();
+
+#ifdef _OPENMP
+#pragma omp parallel for firstprivate(data) shared (cdata)
+#endif
+	for (size_t row = 0; row < nrow; row++)
+		for (size_t col = 0; col < ncol; col++)
+			cdata[row*ncol + col] = data(row, col);
+
+    kbase::cluster_t kret =
+        knor::gmeans_coordinator::create("", nrow, ncol, kmax,
+                max_iters, nnodes, nthread, NULL, init, tolerance,
+                dist_type, min_clust_size, strictness)->run(&cdata[0]);
+
+	Rcpp::List ret;
+    marshall_c_to_r(kret, ret);
+	return ret;
+}
+
+/**
+  * Data in memory and provided init centers
+**/
+RcppExport SEXP R_knor_gmeans_data_im_centers(SEXP rdata, SEXP rkmax,
+        SEXP rmax_iters, SEXP rnthread, SEXP rinit, SEXP rtolerance,
+        SEXP rdist_type, SEXP rmin_clust_size, SEXP rstrictness) {
+
+    Rcpp::NumericMatrix data = Rcpp::NumericMatrix(rdata);
+	unsigned kmax = INTEGER(rkmax)[0];
+	size_t max_iters = static_cast<size_t>(REAL(rmax_iters)[0]);
+	int nthread = INTEGER(rnthread)[0];
+    Rcpp::NumericMatrix centroids = Rcpp::NumericMatrix(rinit);
+	double tolerance = REAL(rtolerance)[0];
+	std::string dist_type = CHAR(STRING_ELT(rdist_type,0));
+	unsigned min_clust_size = INTEGER(rmin_clust_size)[0];
+	unsigned strictness = INTEGER(rstrictness)[0];
+
+	const size_t nrow = data.nrow();
+	const size_t ncol = data.ncol();
+
+    if (nthread == -1)
+        nthread = kbase::get_num_omp_threads();
+    unsigned nnodes = kbase::get_num_nodes();
+
+    std::vector<double> cdata(nrow*ncol);
+#ifdef _OPENMP
+#pragma omp parallel for firstprivate(data) shared (cdata)
+#endif
+	for (size_t row = 0; row < nrow; row++)
+		for (size_t col = 0; col < ncol; col++)
+			cdata[row*ncol + col] = data(row, col);
+
+    std::vector<double> ccentroids(centroids.nrow()*ncol);
+#ifdef _OPENMP
+#pragma omp parallel for firstprivate(centroids) shared (ccentroids)
+#endif
+	for (size_t row = 0; row < centroids.nrow(); row++)
+		for (size_t col = 0; col < ncol; col++)
+			ccentroids[row*ncol + col] = centroids(row, col);
+
+    kbase::cluster_t kret =
+        knor::gmeans_coordinator::create("", nrow, ncol, kmax,
+                max_iters, nnodes, nthread, &ccentroids[0], "none", tolerance,
+                dist_type, min_clust_size, strictness)->run(&cdata[0]);
+
+	Rcpp::List ret;
+    marshall_c_to_r(kret, ret);
+	return ret;
+}
+////////////////////////////// END GMEANS //////////////////////////////////////

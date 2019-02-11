@@ -74,6 +74,16 @@ extern SEXP R_knor_xmeans_data_im_init(
 extern SEXP R_knor_xmeans_data_im_centers(
         SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 
+// Gmeans
+extern SEXP R_knor_gmeans_data_em_init(
+        SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP R_knor_gmeans_data_em_centers(
+        SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP R_knor_gmeans_data_im_init(
+        SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP R_knor_gmeans_data_im_centers(
+        SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+
 
 static const R_CallMethodDef CallEntries[] = {
     {"R_knor_kmeans",                      (DL_FUNC) &R_knor_kmeans,                       9},
@@ -115,6 +125,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"R_knor_xmeans_data_em_centers",      (DL_FUNC) &R_knor_xmeans_data_em_centers,       10},
     {"R_knor_xmeans_data_im_init",         (DL_FUNC) &R_knor_xmeans_data_im_init,           8},
     {"R_knor_xmeans_data_im_centers",      (DL_FUNC) &R_knor_xmeans_data_im_centers,        8},
+
+    {"R_knor_gmeans_data_em_init",         (DL_FUNC) &R_knor_gmeans_data_em_init,          11},
+    {"R_knor_gmeans_data_em_centers",      (DL_FUNC) &R_knor_gmeans_data_em_centers,       11},
+    {"R_knor_gmeans_data_im_init",         (DL_FUNC) &R_knor_gmeans_data_im_init,           9},
+    {"R_knor_gmeans_data_im_centers",      (DL_FUNC) &R_knor_gmeans_data_im_centers,        9},
 
     {NULL, NULL, 0}
 };
