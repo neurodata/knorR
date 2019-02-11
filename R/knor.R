@@ -426,15 +426,15 @@ Hmeans <- function(data, nrow=-1, ncol=-1, centers=0, iter.max=20,
 #'  http://cs.uef.fi/~zhao/Courses/Clustering2012/Xmeans.pdf
 #'
 #' @param data Data file name on disk (NUMA optmized) or In memory data matrix
-#' @param kmin The minimum number of clusters
-#' @param kmax The maximun number of number of centers
 #' @param nrow The number of samples in the dataset
 #' @param ncol The number of features in the dataset
-#' @param dist.type What dissimilarity metric to use
-#' @param k.max The maximum number of clusters.
-#' @param init The type of initialization to use c("kmeanspp", "random",
-#'  "forgy", "none")
+#' @param kmax The maximum number of centers
+#' @param iter.max The maximum number of iteration of k-means to perform
 #' @param nthread The number of parallel threads to run
+#' @param init The type of initialization to use c("forgy") or initial centers
+#' @param tolerance The convergence tolerance for k-means at each hierarchical split
+#' @param dist.type What dissimilarity metric to use
+#' @param min.clust.size The minimum size of a cluster when it cannot be split
 #'
 #' @return A list of lists containing the attributes of the output of kmeans.
 #'  cluster: A vector of integers (from 1:\strong{k}) indicating the cluster to
@@ -453,37 +453,55 @@ Hmeans <- function(data, nrow=-1, ncol=-1, centers=0, iter.max=20,
 #' @author Disa Mhembere <disa@@cs.jhu.edu>
 #' @rdname Xmeans
 
-Xmeans <- function(data, nrow=-1, ncol=-1,
-                   centers=0, min.clust.size=1,
-                   init=c("kmeanspp", "random", "forgy", "none"),
-                   dist.type=c("eucl", "cos", "taxi"),
-                   nthread=-1) {
+Xmeans <- function(data, kmax, nrow=-1, ncol=-1, iter.max=20,
+                   nthread=-1, init=c("forgy"), tolerance=1E-6,
+                   dist.type=c("eucl", "cos", "taxi"), min.clust.size=1) {
 
     if (class(data) == "character") {
-        if (centers > 0) {
-            ret <- .Call("R_knor_hmeans_data_em_k", as.matrix(data),
+        if (class(init) == "character") {
+
+            ret <- .Call("R_knor_xmeans_data_em_init", as.character(data),
+                         as.integer(kmax),
                          as.double(nrow), as.double(ncol),
-                         as.integer(centers), as.character(init),
-                         as.character(dist.type), as.integer(nthread),
+                         as.integer(iter.max), as.integer(nthread),
+                         as.character(init), as.double(tolerance),
+                         as.character(dist.type), as.integer(min.clust.size),
+                         PACKAGE="knor")
+        } else if (class(init) == "matrix") {
+            if (!(all(dim(init) == c(2, ncol), TRUE)))
+                stop("init centers must have dim: `c(2, ncol)'")
+
+            ret <- .Call("R_knor_xmeans_data_em_centers", as.character(data),
+                         as.integer(kmax),
+                         as.double(nrow), as.double(ncol),
+                         as.integer(iter.max), as.integer(nthread),
+                         as.matrix(init), as.double(tolerance),
+                         as.character(dist.type), as.integer(min.clust.size),
                          PACKAGE="knor")
         } else {
-            ret <- .Call("R_knor_hmeans_data_em_mcs", as.matrix(data),
-                         as.double(nrow), as.double(ncol),
-                         as.integer(min.clust.size), as.character(init),
-                         as.character(dist.type), as.integer(nthread),
-                         PACKAGE="knor")
+            stop(paste("Cannot handle init of type", class(init), "\n"))
         }
     } else if (class(data) == "matrix") {
-        if (centers > 0) {
-            ret <- .Call("R_knor_hmeans_data_im_k", as.matrix(data),
-                         as.integer(centers), as.character(init),
-                         as.integer(nthread), as.character(dist.type),
+        if (class(init) == "character") {
+
+            ret <- .Call("R_knor_xmeans_data_im_init", as.matrix(data),
+                         as.integer(kmax), as.integer(iter.max),
+                         as.integer(nthread), as.character(init),
+                         as.double(tolerance), as.character(dist.type),
+                         as.integer(min.clust.size),
+                         PACKAGE="knor")
+        } else if (class(init) == "matrix") {
+            if (!(all(dim(init) == c(2, dim(data)[2]), TRUE)))
+                stop("init centers must have dim: `c(2, dim(data)[1])'")
+
+            ret <- .Call("R_knor_xmeans_data_im_centers", as.matrix(data),
+                         as.integer(kmax), as.integer(iter.max),
+                         as.integer(nthread), as.matrix(init),
+                         as.double(tolerance), as.character(dist.type),
+                         as.integer(min.clust.size),
                          PACKAGE="knor")
         } else {
-            ret <- .Call("R_knor_hmeans_data_im_mcs", as.matrix(data),
-                         as.integer(min.clust.size), as.character(init),
-                         as.character(dist.type), as.integer(nthread),
-                         PACKAGE="knor")
+            stop(paste("Cannot handle init of type", class(init), "\n"))
         }
     }
 }
