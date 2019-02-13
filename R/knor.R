@@ -123,9 +123,8 @@ Kmeans <- function(data, centers, nrow=-1, ncol=-1,
 #' @param ncol The number of features in the dataset
 #' @param iter.max The maximum number of iteration of k-means to perform
 #' @param nthread The number of parallel threads to run
-#' @param centers Either (i) The number of centers (i.e., k), or
-#'  (ii) an In-memory data matrix
-#' @param init The type of initialization to use c("forgy", "none")
+#' @param centers The number of centers (i.e., k)
+#' @param init The type of initialization to use c("forgy")
 #' @param tolerance The convergence tolerance
 #' @param dist.type What dissimilarity metric to use c("taxi", "eucl", "cos")
 #'
@@ -148,7 +147,7 @@ Kmeans <- function(data, centers, nrow=-1, ncol=-1,
 
 Kmedoids <- function(data, centers, nrow=-1, ncol=-1,
                    iter.max=.Machine$integer.max, nthread=-1,
-                   init=c("forgy", "none"), tolerance=1E-6,
+                   init=c("forgy"), tolerance=1E-6,
                    dist.type=c("taxi", "eucl", "cos")) {
 
     if (class(data) == "matrix") {
@@ -157,13 +156,6 @@ Kmedoids <- function(data, centers, nrow=-1, ncol=-1,
                          as.integer(centers),
                          as.double(iter.max), as.integer(nthread),
                          as.character(init), as.double(tolerance),
-                         as.character(dist.type),
-                         PACKAGE="knor")
-        } else if (class(centers) == "matrix") {
-            ret <- .Call("R_knor_kmedoids_data_centroids_im", as.matrix(data),
-                         as.matrix(centers),
-                         as.double(iter.max), as.integer(nthread),
-                         as.double(tolerance),
                          as.character(dist.type),
                          PACKAGE="knor")
         } else {
@@ -179,17 +171,9 @@ Kmedoids <- function(data, centers, nrow=-1, ncol=-1,
                          as.character(init), as.double(tolerance),
                          as.character(dist.type),
                          PACKAGE="knor")
-        } else if (class(centers) == "matrix") {
-            ret <- .Call("R_knor_kmedoids_centroids_im",
-                         normalizePath(as.character(data)),
-                         as.matrix(centers), as.double(nrow),
-                         as.double(iter.max), as.integer(nthread),
-                         as.double(tolerance),
-                         as.character(dist.type),
-                         PACKAGE="knor")
+        } else {
+            stop(paste("Cannot handle data of type", class(data), "\n"))
         }
-    } else {
-        stop(paste("Cannot handle data of type", class(data), "\n"))
     }
 }
 

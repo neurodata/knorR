@@ -477,11 +477,16 @@ RcppExport SEXP R_knor_kmedoids_data_em(SEXP rdata, SEXP rk,
     if (nthread == -1)
         nthread = kbase::get_num_omp_threads();
 
+    // It's just faster this way
     unsigned nnodes = kbase::get_num_nodes();
 
-    kbase::cluster_t kret = knor::medoid_coordinator::create(data,
+    std::vector<double> dv(nrow*ncol);
+    kbase::bin_io<double> br(data, nrow, ncol);
+    br.read(&dv);
+
+    kbase::cluster_t kret = knor::medoid_coordinator::create("",
             nrow, ncol, k, max_iters, nnodes, nthread, NULL,
-            init, tolerance, dist_type)->run();
+            init, tolerance, dist_type)->run(&dv[0]);
 
 	Rcpp::List ret;
     marshall_c_to_r(kret, ret);
