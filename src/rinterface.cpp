@@ -847,58 +847,6 @@ RcppExport SEXP R_knor_mbkmeans_data_centroids_im(SEXP rdata, SEXP rk,
 }
 
 /**
-  * Data in-memory and centroids on disk
-  **/
-RcppExport SEXP R_knor_mbkmeans_data_im_centroids_em(
-        SEXP rdata, SEXP rk, SEXP rmb_size,
-        SEXP rmax_iters, SEXP rnthread,
-        SEXP rtolerance,
-        SEXP rdist_type) {
-
-    Rcpp::NumericMatrix data = Rcpp::NumericMatrix(rdata);
-	size_t max_iters = static_cast<size_t>(REAL(rmax_iters)[0]);
-	int nthread = INTEGER(rnthread)[0];
-	double tolerance = REAL(rtolerance)[0];
-	std::string dist_type = CHAR(STRING_ELT(rdist_type,0));
-	const size_t nrow = data.nrow();
-	const size_t ncol = data.ncol();
-    std::vector<double> cdata(nrow*ncol);
-	unsigned mb_size = INTEGER(rmb_size)[0];
-
-    // Figure out k and load centroids
-    std::string centroidfn = CHAR(STRING_ELT(rk,0));
-    std::ifstream in(centroidfn, std::ifstream::ate | std::ifstream::binary);
-    size_t k = in.tellg()/(sizeof(double)*ncol);
-    std::vector<double> ccentroids(k*ncol);
-    kbase::bin_rm_reader<double> br(centroidfn);
-    br.read(ccentroids);
-
-    if (nthread == -1)
-        nthread = kbase::get_num_omp_threads();
-
-    unsigned nnodes = kbase::get_num_nodes();
-
-#ifdef _OPENMP
-#pragma omp parallel for firstprivate(data) shared (cdata)
-#endif
-	for (size_t row = 0; row < nrow; row++)
-		for (size_t col = 0; col < ncol; col++)
-			cdata[row*ncol + col] = data(row, col);
-
-    knor::coordinator::ptr coord = kprune::kmeans_task_coordinator::create(
-            "", nrow, ncol, k, max_iters, nnodes,
-            nthread, &ccentroids[0], "none", tolerance, dist_type);
-    auto kc = std::static_pointer_cast<kprune::kmeans_task_coordinator>(coord);
-    kc->set_mini_batch_size(mb_size);
-
-    kbase::cluster_t kret = kc->mb_run(&cdata[0]);
-
-	Rcpp::List ret;
-    marshall_c_to_r(kret, ret);
-	return ret;
-}
-
-/**
   * Data only in-memory
   **/
 RcppExport SEXP R_knor_mbkmeans_data_im(SEXP rdata, SEXP rk,

@@ -180,7 +180,7 @@ Kmedoids <- function(data, centers, nrow=-1, ncol=-1,
                          as.character(dist.type),
                          PACKAGE="knor")
         } else if (class(centers) == "matrix") {
-            ret <- .Call("R_knor_kmedoids_centroids_im(",
+            ret <- .Call("R_knor_kmedoids_centroids_im",
                          normalizePath(as.character(data)),
                          as.matrix(centers), as.double(nrow),
                          as.double(iter.max), as.integer(nthread),
@@ -256,7 +256,7 @@ Skmeans <- function(data, centers, nrow=-1, ncol=-1,
                          as.character(init), as.double(tolerance),
                          PACKAGE="knor")
         } else if (class(centers) == "matrix") {
-            ret <- .Call("R_knor_skmeans_centroids_im(",
+            ret <- .Call("R_knor_skmeans_centroids_im",
                          normalizePath(as.character(data)),
                          as.matrix(centers), as.double(nrow),
                          as.double(iter.max), as.integer(nthread),
@@ -410,12 +410,6 @@ MiniBatchKmeans <- function(data, centers, nrow=-1, ncol=-1,
         } else if (class(centers) == "matrix") {
             ret <- .Call("R_knor_mbkmeans_data_centroids_im", as.matrix(data),
                          as.matrix(centers), as.integer(batch.size),
-                         as.double(iter.max), as.integer(nthread),
-                         as.double(tolerance), as.character(dist.type),
-                         PACKAGE="knor")
-        } else if (class(centers) == "character") {
-            ret <- .Call("R_knor_mbkmeans_data_im_centroids_em", as.matrix(data),
-                         normalizePath(centers), as.integer(batch.size),
                          as.double(iter.max), as.integer(nthread),
                          as.double(tolerance), as.character(dist.type),
                          PACKAGE="knor")
