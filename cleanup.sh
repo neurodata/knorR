@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-rm -rf ..Rcheck/\
+rm -vrf ..Rcheck/\
     config.*\
     autom4te.cache\
     aclocal.m4\
