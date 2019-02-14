@@ -8,8 +8,8 @@ A soft variant of the kmeans algorithm where each data point are assigned a
 \usage{
 FuzzyCMeans(data, centers, nrow = -1, ncol = -1,
   iter.max = .Machine$integer.max, nthread = -1, fuzz.index = 2,
-  init = c("forgy"), tolerance = 1e-06, dist.type = c("sqeucl",
-  "eucl", "cos", "taxi"))
+  init = c("forgy", "none"), tolerance = 1e-06,
+  dist.type = c("sqeucl", "eucl", "cos", "taxi"))
 }
 \arguments{
 \item{data}{Data file name on disk (NUMA optimized) or In memory data matrix}
@@ -48,7 +48,7 @@ See: https://en.wikipedia.org/wiki/Fuzzy_clustering#Fuzzy_C-means_clustering
 \examples{
 iris.mat <- as.matrix(iris[,1:4])
 k <- length(unique(iris[, dim(iris)[2]])) # Number of unique classes
-fcm <- FuzzyCMeans(iris.mat, k)
+fcm <- FuzzyCMeans(iris.mat, k, iter.max=5)
 
 }
 \author{

@@ -22,11 +22,11 @@
 #' in this paper https://arxiv.org/pdf/1606.08905.pdf.
 #'
 #' @param data Data file name on disk (NUMA optimized) or In memory data matrix
+#' @param centers Either (i) The number of centers (i.e., k), or
 #' @param nrow The number of samples in the dataset
 #' @param ncol The number of features in the dataset
 #' @param iter.max The maximum number of iteration of k-means to perform
 #' @param nthread The number of parallel threads to run
-#' @param centers Either (i) The number of centers (i.e., k), or
 #'  (ii) an In-memory data matrix, or (iii) A 2-Element \emph{list} with element 1
 #'  being a filename for precomputed centers, and element 2
 #'  the number of centroids.
@@ -55,7 +55,7 @@
 Kmeans <- function(data, centers, nrow=-1, ncol=-1,
                    iter.max=.Machine$integer.max, nthread=-1,
                    init=c("kmeanspp", "random", "forgy", "none"),
-                   tolerance=1E-6, dist.type=c("eucl", "cos", "taxi")) {
+                   tolerance=1E-6, dist.type=c("eucl", "sqeucl", "cos", "taxi")) {
 
     if (class(data) == "character") {
         if (class(centers) == "numeric" || class(centers) == "integer") {
@@ -119,14 +119,14 @@ Kmeans <- function(data, centers, nrow=-1, ncol=-1,
 #'  step with updated medoids.
 #'
 #' @param data Data file name on disk or In memory data matrix
+#' @param centers The number of centers (i.e., k)
 #' @param nrow The number of samples in the dataset
 #' @param ncol The number of features in the dataset
 #' @param iter.max The maximum number of iteration of k-means to perform
 #' @param nthread The number of parallel threads to run
-#' @param centers The number of centers (i.e., k)
 #' @param init The type of initialization to use c("forgy")
 #' @param tolerance The convergence tolerance
-#' @param dist.type What dissimilarity metric to use c("taxi", "eucl", "cos")
+#' @param dist.type What dissimilarity metric to use
 #'
 #' @return A list containing the attributes of the output of kmedoids.
 #'  cluster: A vector of integers (from 1:\strong{k}) indicating the cluster to
@@ -182,12 +182,12 @@ Kmedoids <- function(data, centers, nrow=-1, ncol=-1,
 #'  min-max normalized the dissimilarity metric is Cosine distance.
 #'
 #' @param data Data file name on disk (NUMA optmized) or In-memory data matrix
+#' @param centers Either (i) The number of centers (i.e., k), or
+#'  (ii) an In-memory data matrix
 #' @param nrow The number of samples in the dataset
 #' @param ncol The number of features in the dataset
 #' @param iter.max The maximum number of iteration of k-means to perform
 #' @param nthread The number of parallel threads to run
-#' @param centers Either (i) The number of centers (i.e., k), or
-#'  (ii) an In-memory data matrix
 #' @param init The type of initialization to use c("kmeanspp",
 #'  "random", "forgy", "none")
 #' @param tolerance The convergence tolerance
@@ -286,7 +286,8 @@ Skmeans <- function(data, centers, nrow=-1, ncol=-1,
 #' @rdname KmeansPP
 
 KmeansPP <- function(data, centers, nrow=-1, ncol=-1,
-                     nstart=1, nthread=-1, dist.type=c("taxi", "eucl", "cos")) {
+                     nstart=1, nthread=-1,
+                     dist.type=c("sqeucl", "eucl","cos", "taxi")) {
     if (class(data) == "matrix") {
         if (class(centers) == "numeric" || class(centers) == "integer") {
             ret <- .Call("R_knor_kmeanspp_data_im", as.matrix(data),
@@ -331,7 +332,7 @@ KmeansPP <- function(data, centers, nrow=-1, ncol=-1,
 #' @param iter.max The maximum number of iteration of k-means to perform
 #' @param nthread The number of parallel threads to run
 #' @param init The type of initialization to use c("kmeanspp", "random",
-#'  "forgy", "none")
+#'          "forgy", "none")
 #' @param tolerance The convergence tolerance
 #' @param dist.type What dissimilarity metric to use
 #' @param max.no.improvement Control early stopping based on the consecutive
@@ -359,7 +360,7 @@ MiniBatchKmeans <- function(data, centers, nrow=-1, ncol=-1,
                             batch.size=100,
                    iter.max=.Machine$integer.max, nthread=-1,
                    init=c("kmeanspp", "random", "forgy", "none"),
-                   tolerance=1E-2, dist.type=c("eucl", "cos", "taxi"),
+                   tolerance=1E-2, dist.type=c("sqeucl", "eucl","cos", "taxi"),
                    max.no.improvement=3) {
 
     # TODO: Use a batch size of .2 if not provided
@@ -434,7 +435,7 @@ MiniBatchKmeans <- function(data, centers, nrow=-1, ncol=-1,
 #' @examples
 #' iris.mat <- as.matrix(iris[,1:4])
 #' k <- length(unique(iris[, dim(iris)[2]])) # Number of unique classes
-#' fcm <- FuzzyCMeans(iris.mat, k)
+#' fcm <- FuzzyCMeans(iris.mat, k, iter.max=5)
 #'
 #' @export
 #' @name FuzzyCMeans
@@ -443,7 +444,7 @@ MiniBatchKmeans <- function(data, centers, nrow=-1, ncol=-1,
 
 FuzzyCMeans <- function(data, centers, nrow=-1, ncol=-1,
                    iter.max=.Machine$integer.max, nthread=-1,
-                   fuzz.index=2, init=c("forgy"), tolerance=1E-6,
+                   fuzz.index=2, init=c("forgy", "none"), tolerance=1E-6,
                    dist.type=c("sqeucl", "eucl","cos", "taxi")) {
 
     if (class(data) == "character") {
@@ -502,7 +503,8 @@ FuzzyCMeans <- function(data, centers, nrow=-1, ncol=-1,
 #' @param iter.max The maximum number of iteration of k-means to perform
 #' @param nthread The number of parallel threads to run
 #' @param init The type of initialization to use c("forgy") or initial centers
-#' @param tolerance The convergence tolerance for k-means at each hierarchical split
+#' @param tolerance The convergence tolerance for k-means at each
+#'      hierarchical split
 #' @param dist.type What dissimilarity metric to use
 #' @param min.clust.size The minimum size of a cluster when it cannot be split
 #'
@@ -515,8 +517,8 @@ FuzzyCMeans <- function(data, centers, nrow=-1, ncol=-1,
 #'
 #' @examples
 #' iris.mat <- as.matrix(iris[,1:4])
-#' k <- length(unique(iris[, dim(iris)[2]])) # Number of unique classes
-#' kms <- Hmeans(iris.mat, k)
+#' kmax <- length(unique(iris[, dim(iris)[2]])) # Number of unique classes
+#' kms <- Hmeans(iris.mat, kmax)
 #'
 #' @export
 #' @name Hmeans
@@ -525,7 +527,8 @@ FuzzyCMeans <- function(data, centers, nrow=-1, ncol=-1,
 
 Hmeans <- function(data, kmax, nrow=-1, ncol=-1, iter.max=20,
                    nthread=-1, init=c("forgy"), tolerance=1E-6,
-                   dist.type=c("eucl", "cos", "taxi"), min.clust.size=1) {
+                   dist.type=c("eucl", "cos", "sqeucl", "taxi"),
+                   min.clust.size=1) {
 
     if (class(data) == "character") {
         if (class(init) == "character") {
@@ -601,8 +604,8 @@ Hmeans <- function(data, kmax, nrow=-1, ncol=-1, iter.max=20,
 #'
 #' @examples
 #' iris.mat <- as.matrix(iris[,1:4])
-#' k <- length(unique(iris[, dim(iris)[2]])) # Number of unique classes
-#' xms <- Xmeans(iris.mat, k)
+#' kmax <- length(unique(iris[, dim(iris)[2]])) # Number of unique classes
+#' xms <- Xmeans(iris.mat, kmax)
 #'
 #' @export
 #' @name Xmeans
@@ -675,10 +678,12 @@ Xmeans <- function(data, kmax, nrow=-1, ncol=-1, iter.max=20,
 #' @param iter.max The maximum number of iteration of k-means to perform
 #' @param nthread The number of parallel threads to run
 #' @param init The type of initialization to use c("forgy") or initial centers
-#' @param tolerance The convergence tolerance for k-means at each hierarchical split
+#' @param tolerance The convergence tolerance for k-means at each
+#'          hierarchical split
 #' @param dist.type What dissimilarity metric to use
 #' @param min.clust.size The minimum size of a cluster when it cannot be split
-#' @param strictness The Anderson-Darling strictness level. Should be between 1 and 4 inclusive
+#' @param strictness The Anderson-Darling strictness level.
+#'          Should be between 1 and 4 inclusive
 #'
 #' @return A list of lists containing the attributes of the output of kmeans.
 #'  cluster: A vector of integers (from 1:\strong{k}) indicating the cluster to
@@ -689,7 +694,7 @@ Xmeans <- function(data, kmax, nrow=-1, ncol=-1, iter.max=20,
 #'
 #' @examples
 #' iris.mat <- as.matrix(iris[,1:4])
-#' k <- length(unique(iris[, dim(iris)[2]])) # Number of unique classes
+#' kmax <- length(unique(iris[, dim(iris)[2]])) # Number of unique classes
 #' xms <- Gmeans(iris.mat, kmax)
 #'
 #' @export

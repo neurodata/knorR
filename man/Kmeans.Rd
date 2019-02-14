@@ -7,15 +7,12 @@
 Kmeans(data, centers, nrow = -1, ncol = -1,
   iter.max = .Machine$integer.max, nthread = -1, init = c("kmeanspp",
   "random", "forgy", "none"), tolerance = 1e-06, dist.type = c("eucl",
-  "cos", "taxi"))
+  "sqeucl", "cos", "taxi"))
 }
 \arguments{
 \item{data}{Data file name on disk (NUMA optimized) or In memory data matrix}
 
-\item{centers}{Either (i) The number of centers (i.e., k), or
-(ii) an In-memory data matrix, or (iii) A 2-Element \emph{list} with element 1
-being a filename for precomputed centers, and element 2
-the number of centroids.}
+\item{centers}{Either (i) The number of centers (i.e., k), or}
 
 \item{nrow}{The number of samples in the dataset}
 
@@ -23,7 +20,10 @@ the number of centroids.}
 
 \item{iter.max}{The maximum number of iteration of k-means to perform}
 
-\item{nthread}{The number of parallel threads to run}
+\item{nthread}{The number of parallel threads to run
+(ii) an In-memory data matrix, or (iii) A 2-Element \emph{list} with element 1
+being a filename for precomputed centers, and element 2
+the number of centroids.}
 
 \item{init}{The type of initialization to use c("kmeanspp", "random",
 "forgy", "none")}

@@ -10,3 +10,6 @@
 ^src/cknor/utils/.*$
 ^src/cknor/libkcommon/cxxopts/*$
 ^src/cknor/exec/*$
+^.travis.yml$
+^src/cknor/.git*$
+^src/cknor/.travis.yml$

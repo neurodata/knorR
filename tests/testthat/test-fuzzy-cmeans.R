@@ -25,8 +25,7 @@ k <- 8
 nrow <- 50
 ncol <- 5
 nthread <- 2
-mb.size <- 20
-iter.max <- 100
+iter.max <- 20
 
 # Data in memory, compute centroids
 test.data.in.mem <- function() {

@@ -44,8 +44,8 @@ A recursive (not acutally implemented as recursion) partitioning of data into
 }
 \examples{
 iris.mat <- as.matrix(iris[,1:4])
-k <- length(unique(iris[, dim(iris)[2]])) # Number of unique classes
-xms <- Xmeans(iris.mat, k)
+kmax <- length(unique(iris[, dim(iris)[2]])) # Number of unique classes
+xms <- Xmeans(iris.mat, kmax)
 
 }
 \author{

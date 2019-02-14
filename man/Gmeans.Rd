@@ -24,13 +24,15 @@ Gmeans(data, kmax, nrow = -1, ncol = -1, iter.max = 20,
 
 \item{init}{The type of initialization to use c("forgy") or initial centers}
 
-\item{tolerance}{The convergence tolerance for k-means at each hierarchical split}
+\item{tolerance}{The convergence tolerance for k-means at each
+hierarchical split}
 
 \item{dist.type}{What dissimilarity metric to use}
 
 \item{min.clust.size}{The minimum size of a cluster when it cannot be split}
 
-\item{strictness}{The Anderson-Darling strictness level. Should be between 1 and 4 inclusive}
+\item{strictness}{The Anderson-Darling strictness level.
+Should be between 1 and 4 inclusive}
 }
 \value{
 A list of lists containing the attributes of the output of kmeans.
@@ -47,7 +49,7 @@ A hierarchical cluster algorithm that chooses the number of clusters based on
 }
 \examples{
 iris.mat <- as.matrix(iris[,1:4])
-k <- length(unique(iris[, dim(iris)[2]])) # Number of unique classes
+kmax <- length(unique(iris[, dim(iris)[2]])) # Number of unique classes
 xms <- Gmeans(iris.mat, kmax)
 
 }

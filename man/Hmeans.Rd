@@ -4,26 +4,27 @@
 \alias{Hmeans}
 \title{Perform parallel hierarchical clustering on a data matrix.}
 \usage{
-Hmeans(data, nrow = -1, ncol = -1, centers = 0, iter.max = 20,
-  nthread = -1, init = c("forgy", "none"), tolerance = 1e-06,
-  dist.type = c("eucl", "cos", "taxi"), min.clust.size = 1)
+Hmeans(data, kmax, nrow = -1, ncol = -1, iter.max = 20,
+  nthread = -1, init = c("forgy"), tolerance = 1e-06,
+  dist.type = c("eucl", "cos", "sqeucl", "taxi"), min.clust.size = 1)
 }
 \arguments{
 \item{data}{Data file name on disk (NUMA optmized) or In memory data matrix}
+
+\item{kmax}{The maximum number of centers}
 
 \item{nrow}{The number of samples in the dataset}
 
 \item{ncol}{The number of features in the dataset}
 
-\item{centers}{The number of centers (i.e., k)}
-
 \item{iter.max}{The maximum number of iteration of k-means to perform}
 
 \item{nthread}{The number of parallel threads to run}
 
-\item{init}{The type of initialization to use c("forgy", "none")}
+\item{init}{The type of initialization to use c("forgy") or initial centers}
 
-\item{tolerance}{The convergence tolerance for k-means at each hierarchical split}
+\item{tolerance}{The convergence tolerance for k-means at each
+hierarchical split}
 
 \item{dist.type}{What dissimilarity metric to use}
 
@@ -44,8 +45,8 @@ A recursive (not acutally implemented as recursion) partitioning of data into
 }
 \examples{
 iris.mat <- as.matrix(iris[,1:4])
-k <- length(unique(iris[, dim(iris)[2]])) # Number of unique classes
-kms <- Hmeans(iris.mat, k)
+kmax <- length(unique(iris[, dim(iris)[2]])) # Number of unique classes
+kms <- Hmeans(iris.mat, kmax)
 
 }
 \author{

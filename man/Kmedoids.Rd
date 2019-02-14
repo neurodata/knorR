@@ -9,14 +9,13 @@ After initialization the k-medoids algorithm partitions data by testing which
  step with updated medoids.}
 \usage{
 Kmedoids(data, centers, nrow = -1, ncol = -1,
-  iter.max = .Machine$integer.max, nthread = -1, init = c("forgy",
-  "none"), tolerance = 1e-06, dist.type = c("taxi", "eucl", "cos"))
+  iter.max = .Machine$integer.max, nthread = -1, init = c("forgy"),
+  tolerance = 1e-06, dist.type = c("taxi", "eucl", "cos"))
 }
 \arguments{
 \item{data}{Data file name on disk or In memory data matrix}
 
-\item{centers}{Either (i) The number of centers (i.e., k), or
-(ii) an In-memory data matrix}
+\item{centers}{The number of centers (i.e., k)}
 
 \item{nrow}{The number of samples in the dataset}
 
@@ -26,11 +25,11 @@ Kmedoids(data, centers, nrow = -1, ncol = -1,
 
 \item{nthread}{The number of parallel threads to run}
 
-\item{init}{The type of initialization to use c("forgy", "none")}
+\item{init}{The type of initialization to use c("forgy")}
 
 \item{tolerance}{The convergence tolerance}
 
-\item{dist.type}{What dissimilarity metric to use c("taxi", "eucl", "cos")}
+\item{dist.type}{What dissimilarity metric to use}
 }
 \value{
 A list containing the attributes of the output of kmedoids.
