@@ -1062,18 +1062,17 @@ RcppExport SEXP R_knor_fcm_data_em_centroids_im(SEXP rdata, SEXP rk,
 ////////////////////////////// END FUZZY C-MEANS ///////////////////////////////
 
 ////////////////////////////////// HMEANS //////////////////////////////////////
-
 /**
-  * Data on disk provided k
+  * Data on disk str init
   */
-RcppExport SEXP R_knor_hmeans_data_em_k(SEXP rdata, SEXP rnrow, SEXP rncol,
-        SEXP rk, SEXP rmax_iters, SEXP rnthread, SEXP rinit,
+RcppExport SEXP R_knor_hmeans_data_em_init(SEXP rdata, SEXP rkmax,
+        SEXP rnrow, SEXP rncol, SEXP rmax_iters, SEXP rnthread, SEXP rinit,
         SEXP rtolerance, SEXP rdist_type, SEXP rmin_clust_size) {
 
     std::string data = CHAR(STRING_ELT(rdata,0));
+	unsigned kmax = INTEGER(rkmax)[0];
 	size_t nrow = static_cast<size_t>(REAL(rnrow)[0]);
 	size_t ncol = static_cast<size_t>(REAL(rncol)[0]);
-	unsigned k = INTEGER(rk)[0]; // FIXME: kmax
 	size_t max_iters = static_cast<size_t>(REAL(rmax_iters)[0]);
 	int nthread = INTEGER(rnthread)[0];
 	std::string init = CHAR(STRING_ELT(rinit,0));
@@ -1086,7 +1085,7 @@ RcppExport SEXP R_knor_hmeans_data_em_k(SEXP rdata, SEXP rnrow, SEXP rncol,
     unsigned nnodes = kbase::get_num_nodes();
 
     kbase::cluster_t kret =
-                knor::hclust_coordinator::create(data, nrow, ncol, k,
+                knor::hclust_coordinator::create(data, nrow, ncol, kmax,
                 max_iters, nnodes, nthread, NULL,
                 init, tolerance, dist_type, min_clust_size)->run();
 
@@ -1098,19 +1097,17 @@ RcppExport SEXP R_knor_hmeans_data_em_k(SEXP rdata, SEXP rnrow, SEXP rncol,
 /**
   * Data on disk centers provided
   */
-RcppExport SEXP R_knor_hmeans_data_em_centers(SEXP rdata, SEXP rnrow,
-        SEXP rncol, SEXP rk, SEXP rmax_iters, SEXP rnthread,
-        SEXP rtolerance, SEXP rdist_type, SEXP rmin_clust_size) {
+RcppExport SEXP R_knor_hmeans_data_em_centers(SEXP rdata, SEXP rkmax,
+        SEXP rnrow, SEXP rncol, SEXP rmax_iters, SEXP rnthread,
+        SEXP rinit, SEXP rtolerance, SEXP rdist_type, SEXP rmin_clust_size) {
 
     std::string data = CHAR(STRING_ELT(rdata,0));
 	size_t nrow = static_cast<size_t>(REAL(rnrow)[0]);
 	size_t ncol = static_cast<size_t>(REAL(rncol)[0]);
-
-    Rcpp::NumericMatrix centroids = Rcpp::NumericMatrix(rk); // FIXME
-	unsigned k = INTEGER(rk)[0]; // FIXME: kmax
-
 	size_t max_iters = static_cast<size_t>(REAL(rmax_iters)[0]);
 	int nthread = INTEGER(rnthread)[0];
+	int kmax = INTEGER(rkmax)[0];
+    Rcpp::NumericMatrix centroids = Rcpp::NumericMatrix(rinit);
 	double tolerance = REAL(rtolerance)[0];
 	std::string dist_type = CHAR(STRING_ELT(rdist_type,0));
 	unsigned min_clust_size = INTEGER(rmin_clust_size)[0];
@@ -1128,7 +1125,7 @@ RcppExport SEXP R_knor_hmeans_data_em_centers(SEXP rdata, SEXP rnrow,
     unsigned nnodes = kbase::get_num_nodes();
 
     kbase::cluster_t kret =
-        knor::hclust_coordinator::create(data, nrow, ncol, k,
+        knor::hclust_coordinator::create(data, nrow, ncol, kmax,
                 max_iters, nnodes, nthread, &ccentroids[0], "none",
                 tolerance, dist_type, min_clust_size)->run();
 
@@ -1138,14 +1135,15 @@ RcppExport SEXP R_knor_hmeans_data_em_centers(SEXP rdata, SEXP rnrow,
 }
 
 /**
-  * Data in memory and provided k
+  * Data in memory and str init
 **/
-RcppExport SEXP R_knor_hmeans_data_im_k(SEXP rdata, SEXP rk,
+RcppExport SEXP R_knor_hmeans_data_im_init(SEXP rdata, SEXP rkmax,
         SEXP rmax_iters, SEXP rnthread,
         SEXP rinit, SEXP rtolerance,
         SEXP rdist_type, SEXP rmin_clust_size) {
+
     Rcpp::NumericMatrix data = Rcpp::NumericMatrix(rdata);
-	unsigned k = INTEGER(rk)[0]; // FIXME: kmax
+	unsigned kmax = INTEGER(rkmax)[0];
 	size_t max_iters = static_cast<size_t>(REAL(rmax_iters)[0]);
 	int nthread = INTEGER(rnthread)[0];
 	std::string init = CHAR(STRING_ELT(rinit,0));
@@ -1170,7 +1168,7 @@ RcppExport SEXP R_knor_hmeans_data_im_k(SEXP rdata, SEXP rk,
 			cdata[row*ncol + col] = data(row, col);
 
     kbase::cluster_t kret =
-        knor::hclust_coordinator::create("", nrow, ncol, k,
+        knor::hclust_coordinator::create("", nrow, ncol, kmax,
                 max_iters, nnodes, nthread, NULL, init, tolerance,
                 dist_type, min_clust_size)->run(&cdata[0]);
 
@@ -1180,20 +1178,21 @@ RcppExport SEXP R_knor_hmeans_data_im_k(SEXP rdata, SEXP rk,
 }
 
 /**
-  * Data in memory and provided centers
+  * Data in memory and provided init centers
 **/
-RcppExport SEXP R_knor_hmeans_data_im_centers(SEXP rdata, SEXP rk,
-        SEXP rmax_iters, SEXP rnthread, SEXP rtolerance,
+RcppExport SEXP R_knor_hmeans_data_im_centers(SEXP rdata, SEXP rkmax,
+        SEXP rmax_iters, SEXP rnthread, SEXP rinit, SEXP rtolerance,
         SEXP rdist_type, SEXP rmin_clust_size) {
 
     Rcpp::NumericMatrix data = Rcpp::NumericMatrix(rdata);
-    Rcpp::NumericMatrix centroids = Rcpp::NumericMatrix(rk); // FIXME
-	unsigned k = INTEGER(rk)[0]; // FIXME: kmax
+	unsigned kmax = INTEGER(rkmax)[0];
 	size_t max_iters = static_cast<size_t>(REAL(rmax_iters)[0]);
 	int nthread = INTEGER(rnthread)[0];
+    Rcpp::NumericMatrix centroids = Rcpp::NumericMatrix(rinit);
 	double tolerance = REAL(rtolerance)[0];
 	std::string dist_type = CHAR(STRING_ELT(rdist_type,0));
 	unsigned min_clust_size = INTEGER(rmin_clust_size)[0];
+
 	const size_t nrow = data.nrow();
 	const size_t ncol = data.ncol();
 
@@ -1213,12 +1212,12 @@ RcppExport SEXP R_knor_hmeans_data_im_centers(SEXP rdata, SEXP rk,
 #ifdef _OPENMP
 #pragma omp parallel for firstprivate(centroids) shared (ccentroids)
 #endif
-	for (size_t row = 0; row < k; row++)
+	for (size_t row = 0; row < centroids.nrow(); row++)
 		for (size_t col = 0; col < ncol; col++)
 			ccentroids[row*ncol + col] = centroids(row, col);
 
     kbase::cluster_t kret =
-        knor::hclust_coordinator::create("", nrow, ncol, k,
+        knor::hclust_coordinator::create("", nrow, ncol, kmax,
                 max_iters, nnodes, nthread, &ccentroids[0], "none", tolerance,
                 dist_type, min_clust_size)->run(&cdata[0]);
 

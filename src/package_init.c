@@ -59,10 +59,14 @@ extern SEXP R_knor_fcm_data_em_centroids_im(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, 
 extern SEXP R_knor_fcm_data_em(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 
 // Hmeans
-extern SEXP R_knor_hmeans_data_em_k(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
-extern SEXP R_knor_hmeans_data_em_centers(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
-extern SEXP R_knor_hmeans_data_im_k(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
-extern SEXP R_knor_hmeans_data_im_centers(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP R_knor_hmeans_data_em_init(
+        SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP R_knor_hmeans_data_em_centers(
+        SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP R_knor_hmeans_data_im_init(
+        SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP R_knor_hmeans_data_im_centers(
+        SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 
 // Xmeans
 extern SEXP R_knor_xmeans_data_em_init(
@@ -116,10 +120,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"R_knor_fcm_data_em_centroids_im",    (DL_FUNC) &R_knor_fcm_data_em_centroids_im,     9},
     {"R_knor_fcm_data_em",                 (DL_FUNC) &R_knor_fcm_data_em,                 10},
 
-    {"R_knor_hmeans_data_em_k",            (DL_FUNC) &R_knor_hmeans_data_em_k,            10},
-    {"R_knor_hmeans_data_em_centers",      (DL_FUNC) &R_knor_hmeans_data_em_centers,       9},
-    {"R_knor_hmeans_data_im_k",            (DL_FUNC) &R_knor_hmeans_data_im_k,             8},
-    {"R_knor_hmeans_data_im_centers",      (DL_FUNC) &R_knor_hmeans_data_im_centers,       7},
+    {"R_knor_hmeans_data_em_init",         (DL_FUNC) &R_knor_hmeans_data_em_init,          10},
+    {"R_knor_hmeans_data_em_centers",      (DL_FUNC) &R_knor_hmeans_data_em_centers,       10},
+    {"R_knor_hmeans_data_im_init",         (DL_FUNC) &R_knor_hmeans_data_im_init,           8},
+    {"R_knor_hmeans_data_im_centers",      (DL_FUNC) &R_knor_hmeans_data_im_centers,        8},
 
     {"R_knor_xmeans_data_em_init",         (DL_FUNC) &R_knor_xmeans_data_em_init,          10},
     {"R_knor_xmeans_data_em_centers",      (DL_FUNC) &R_knor_xmeans_data_em_centers,       10},
