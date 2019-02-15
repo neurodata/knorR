@@ -3,7 +3,7 @@
 \docType{data}
 \name{test_data}
 \alias{test_data}
-\title{A small dataset of dim: (50,5) used as for micro-benchmarks of the knor
+\title{A small dataset of dim: (50,5) used as for micro-benchmarks of the clusternor
 package. The data are randomly generated hence a clear number of clusters
 will be hard to find.}
 \format{An object of class \code{"matrix"}}
@@ -11,7 +11,7 @@ will be hard to find.}
 data(test_data)
 }
 \description{
-A small dataset of dim: (50,5) used as for micro-benchmarks of the knor
+A small dataset of dim: (50,5) used as for micro-benchmarks of the clusternor
 package. The data are randomly generated hence a clear number of clusters
 will be hard to find.
 }

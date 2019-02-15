@@ -1,4 +1,4 @@
 library(testthat)
-library(knor)
+library(clusternor)
 
-test_check("knor")
+test_check("clusternor")

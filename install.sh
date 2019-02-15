@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-PACK="knor*.tar.gz"
+PACK="clusternor*.tar.gz"
 ./cleanup.sh
 autoconf
 ./configure

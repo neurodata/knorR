@@ -25,62 +25,52 @@ k <- 8
 nrow <- 50
 ncol <- 5
 nthread <- 2
+iter.max <- 20
 
 # Data in memory, compute centroids
 test.data.in.mem <- function() {
     cat("Data ==> memory, centroids ==> compute\n\n")
-    print(Kmeans(test_data, k, nrow, ncol, nthread=nthread))
+    print(FuzzyCMeans(test_data, k, nrow, ncol, iter.max=iter.max,
+                      fuzz.index=2, nthread=nthread))
 }
 
 # Data on disk, compute centroids
 test.data.ex.mem <- function() {
     cat("Data ==> disk, centroids ==> compute\n\n")
-    print(Kmeans(fn, k, nrow, ncol, nthread=nthread))
+    print(FuzzyCMeans(fn, k, nrow, ncol, nthread=nthread, fuzz.index=5,
+                          iter.max=iter.max))
 }
 
 # Data on disk, centroids in memory
 test.centroids.in.mem <- function() {
     cat("Data ==> disk, centroids ==> memory\n\n")
-    print(Kmeans(fn, test_centroids, nrow, nthread=nthread))
+    print(FuzzyCMeans(fn, test_centroids, nrow,
+                          iter.max=iter.max, fuzz.index=5, nthread=nthread))
 }
 
 # Data in memory, centroids in memory
 test.data.centroids.in.mem <- function() {
     cat("Data ==> memory, centroids ==> memory\n\n")
-    Kmeans(test_data, test_centroids, nthread=nthread)
-}
-
-# Data in memory, centroids on disk
-test.data.in.mem.centroids.em <- function() {
-    cat("Data ==> memory, centroids ==> disk\n\n")
-    Kmeans(test_data, centroidfn, nthread=nthread)
-}
-
-# Data on disk, centroids on disk
-test.data.centroids.em <- function() {
-    cat("Data ==> disk, centroids ==> disk\n\n")
-    print(Kmeans(fn, list(centroidfn, k), nrow=nrow,
-                 ncol=ncol,nthread=nthread))
+    FuzzyCMeans(test_data, test_centroids,
+                    iter.max=iter.max, fuzz.index=5, nthread=nthread)
 }
 
 # Main
-test.data.in.mem()
-test.data.ex.mem()
 
-test.centroids.in.mem()
-test.data.centroids.em()
-
+#test.centroids.in.mem()
 ret1 <- test.data.centroids.in.mem()
 ret2 <- test.data.centroids.in.mem()
 test_that("Data in-mem compared to same", {
               expect_identical(ret1, ret2)
 })
-
-ret1 <- test.data.in.mem.centroids.em()
-ret2 <- test.data.in.mem.centroids.em()
-test_that("centroids EM compared to same", {
+ret1 <- test.data.in.mem()
+ret2 <- test.data.in.mem()
+test_that("data IM compared to same", {
               expect_identical(ret1, ret2)
 })
 
-source("verify-correctness.R")
-test.iris()
+ret1 <- test.data.ex.mem()
+ret2 <- test.data.ex.mem()
+test_that("data EM compared to same", {
+              expect_identical(ret1, ret2)
+})
