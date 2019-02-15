@@ -9,6 +9,7 @@ rm -vrf ..Rcheck/\
     src/libauto/*.o\
     src/libkcommon/*.o\
     src/libman/*.o\
+    src/libdist/*.o\
     src/*.tar.gz\
     knor*.tar.gz\
     knor*.Rcheck\

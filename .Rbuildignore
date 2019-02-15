@@ -13,3 +13,12 @@
 ^.travis.yml$
 ^src/cknor/.git*$
 ^src/cknor/.travis.yml$
+^src/cknor/libauto/*$
+^src/cknor/libkcommon/*.o$
+^src/cknor/libman/*.o$
+^src/cknor/libman/gmm*$
+^src/cknor/test-data/*$
+^src/cknor/libkcommon/unit-test/*$
+^src/cknor/libman/unit-test/*$
+^src/cknor/libdist/*$
+^src/cknor/release-test/*$
