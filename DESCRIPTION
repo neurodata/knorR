@@ -1,9 +1,9 @@
-Package: knor
-Version: 0.0-7
-Date: 2019-02-14
-Title: Non-Uniform Memory Access ('NUMA') Optimized, Parallel Clustering Library
+Package: clusternor
+Version: 0.0-1
+Date: 2019-02-15
+Title: A Parallel Clustering Non-Uniform Memory Access ('NUMA') Optimized Library
 Authors@R: c(person("Disa", "Mhembere", role = c("aut", "cre"), email = "disa@jhu.edu"), person("Neurodata (https://neurodata.io)", role="cph"))
-Description: The 'k' 'NUMA' Optimized Routine library or 'knor' is a highly optimized and fast library for performing clustering in parallel with accelerations for the majority of multi-core machines which are Non-Uniform Memory Access ('NUMA') architectures.
+Description: The clustering 'NUMA' Optimized Routines library or 'clusterNOR' is a highly optimized library for performing clustering in parallel with accelerations specifically targetting multi-core Non-Uniform Memory Access ('NUMA') hardware architectures.
 LinkingTo: Rcpp
 Depends:
     R (>= 3.0),

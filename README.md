@@ -1,7 +1,7 @@
 [![Build
 Status](https://travis-ci.org/flashxio/knorR.svg?branch=master)](https://travis-ci.org/flashxio/knorR)
 
-# knor ('K' NUMA optimized routines library for clustering)
+# clusternor (clustering NUMA optimized routines library for clustering)
 
 - [Repo contents](#repo-contents)
 - [Best Performance configuration](#best-performance-configuration)
@@ -21,14 +21,14 @@ Status](https://travis-ci.org/flashxio/knorR.svg?branch=master)](https://travis-
 - [**src**](https://github.com/flashxio/knorR/tree/master/src): `R` bindings interface and C++ submodule to base repo.
 - [**tests**](https://github.com/flashxio/knorR/tree/master/tests): `R` unit tests written using the `testthat` package.
 
-R bindings for *`k`* NUMA optimized routines. This package is supported for **Linux**, **Mac OSX** and **Windows**.
+R bindings for Clustering NUMA optimized routines. This package is supported for **Linux**, **Mac OSX** and **Windows**.
 
 **NOTE**: This is a package from C++ source that will compile using your
 `gcc` compiler.
 
 ## Tested on
-- Mac OSX: 10.11 (El Capitan), 10.12 (Sierra), 10.13 (High Sierra)
-- Linux: Ubuntu 14.04, 16.04, CentOS 6, Fedora 25, Fedora 26
+- Mac OSX: 10.11 (El Capitan), 10.12 (Sierra), 10.13 (High Sierra), 10.14 (Mojave)
+- Linux: Ubuntu 14.04, 16.04, 18.04, CentOS 6, Fedora 25, Fedora 26
 - Windows: 8.1, 10
 
 ## Hardware requirements
@@ -36,7 +36,7 @@ R bindings for *`k`* NUMA optimized routines. This package is supported for **Li
 
 ## License
 
-Our software is licensed under the [Apache version 2.0 license](https://github.com/flashxio/knor/blob/master/LICENSE).
+This software is licensed under the [Apache version 2.0 license](https://github.com/flashxio/knor/blob/master/LICENSE).
 
 ## Best Performance configuration
 
@@ -56,7 +56,7 @@ apt-get install -y build-essential libnuma-dbg libnuma-dev libnuma1
 Install from CRAN directly. Installation time is normally **~2min**.
 
 ```
-install.packages("knor")
+install.packages("clusternor")
 ```
 
 ### Bleeding edge install
@@ -86,8 +86,8 @@ A Docker images with all dependencies installed can be obtained by:
 docker pull flashxio/knorr-base
 ```
 
-**NOTE**: The knor `R` package must still be installed on this image via:
-`install.packages("knor")`
+**NOTE**: The clusternor `R` package must still be installed on this image via:
+`install.packages("clusternor")`
 
 If you prefer to build the image yourself, you can use this
 [Dockerfile](https://github.com/flashxio/knor/tree/dev/R/Dockerfile)
@@ -114,14 +114,14 @@ kms <-Kmeans(fn, nrow, ncol, k, init="kmeanspp", nthread=2)
 
 # Test data
 
-We provide [test data](https://github.com/flashxio/knorR/tree/master/data) that is included as part of the package and can be accessed directly via [this link](https://github.com/flashxio/knorR/tree/master/data) or through the `R` interpreter after the package is `require`d in `R` as `knor::test_data`.
+We provide [test data](https://github.com/flashxio/knorR/tree/master/data) that is included as part of the package and can be accessed directly via [this link](https://github.com/flashxio/knorR/tree/master/data) or through the `R` interpreter after the package is `require`d in `R` as `clusternor::test_data`.
 
 
 # Reproduction and Verification
 
 ```
-require(knor)
-kms <- Kmeans(knor::test_data, knor::test_centroids)
+require(clusternor)
+kms <- Kmeans(test_data, test_centroids)
 ```
 
 **Expected output**:
@@ -162,12 +162,16 @@ $size
 ```
 
 ## Help
-Check the R docs provided:
+Please refere to the docs provided:
 
 ```
-?knor::Kmeans
-?knor::Skmeans
-?knor::KmeansPP
-?knor::Kmedoids
-?knor::Hclust
+?clusternor::Kmeans
+?clusternor::Skmeans
+?clusternor::KmeansPP
+?clusternor::Hmeans
+?clusternor::Xmeans
+?clusternor::Gmeans
+?clusternor::MiniBatchKmeans
+?clusternor::FuzzyCMeans
+?clusternor::Kmedoids
 ```

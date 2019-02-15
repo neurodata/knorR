@@ -35,13 +35,13 @@
 #define PACKAGE_BUGREPORT "disa@jhu.edu"
 
 /* Define to the full name of this package. */
-#define PACKAGE_NAME "knor"
+#define PACKAGE_NAME "clusternor"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "knor @VERSION@"
+#define PACKAGE_STRING "clusternor @VERSION@"
 
 /* Define to the one symbol short name of this package. */
-#define PACKAGE_TARNAME "knor"
+#define PACKAGE_TARNAME "clusternor"
 
 /* Define to the home page for this package. */
 #define PACKAGE_URL ""

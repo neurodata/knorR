@@ -75,7 +75,7 @@ static void marshall_c_to_r(const kbase::cluster_t& kret,
 /**
   * Data and centroids in-memory
   **/
-RcppExport SEXP R_knor_kmeans_data_centroids_im(SEXP rdata, SEXP rk,
+RcppExport SEXP R_kmeans_data_centroids_im(SEXP rdata, SEXP rk,
         SEXP rmax_iters, SEXP rnthread, SEXP rtolerance, SEXP rdist_type) {
 
     Rcpp::NumericMatrix data = Rcpp::NumericMatrix(rdata);
@@ -124,7 +124,7 @@ RcppExport SEXP R_knor_kmeans_data_centroids_im(SEXP rdata, SEXP rk,
 /**
   * Data only in-memory
   **/
-RcppExport SEXP R_knor_kmeans_data_im(SEXP rdata, SEXP rk,
+RcppExport SEXP R_kmeans_data_im(SEXP rdata, SEXP rk,
         SEXP rmax_iters, SEXP rnthread,
         SEXP rinit, SEXP rtolerance,
         SEXP rdist_type) {
@@ -165,7 +165,7 @@ RcppExport SEXP R_knor_kmeans_data_im(SEXP rdata, SEXP rk,
 /**
   * Centroids only in-memory
   */
-RcppExport SEXP R_knor_kmeans_centroids_im(SEXP rdata, SEXP rk,
+RcppExport SEXP R_kmeans_centroids_im(SEXP rdata, SEXP rk,
         SEXP rnrow, SEXP rmax_iters, SEXP rnthread, SEXP rtolerance,
         SEXP rdist_type) {
 
@@ -205,7 +205,7 @@ RcppExport SEXP R_knor_kmeans_centroids_im(SEXP rdata, SEXP rk,
 /**
   * Data on disk, centroids computed by init method
   */
-RcppExport SEXP R_knor_kmeans(SEXP rdata, SEXP rk,
+RcppExport SEXP R_kmeans(SEXP rdata, SEXP rk,
         SEXP rnrow, SEXP rncol,
         SEXP rmax_iters, SEXP rnthread,
         SEXP rinit, SEXP rtolerance,
@@ -238,7 +238,7 @@ RcppExport SEXP R_knor_kmeans(SEXP rdata, SEXP rk,
 /**
   * Data in-memory and centroids on disk
   **/
-RcppExport SEXP R_knor_kmeans_data_im_centroids_em(
+RcppExport SEXP R_kmeans_data_im_centroids_em(
         SEXP rdata, SEXP rk,
         SEXP rmax_iters, SEXP rnthread,
         SEXP rtolerance,
@@ -285,7 +285,7 @@ RcppExport SEXP R_knor_kmeans_data_im_centroids_em(
 /**
   * Data on disk and centroids on disk
   **/
-RcppExport SEXP R_knor_kmeans_data_centroids_em(
+RcppExport SEXP R_kmeans_data_centroids_em(
         SEXP rdata, SEXP rcentroids, SEXP rk,
         SEXP rnrow, SEXP rncol,
         SEXP rmax_iters, SEXP rnthread,
@@ -329,7 +329,7 @@ RcppExport SEXP R_knor_kmeans_data_centroids_em(
 /**
   * Data in memory
 **/
-RcppExport SEXP R_knor_kmedoids_data_im(SEXP rdata, SEXP rk,
+RcppExport SEXP R_kmedoids_data_im(SEXP rdata, SEXP rk,
         SEXP rmax_iters, SEXP rnthread,
         SEXP rinit, SEXP rtolerance,
         SEXP rdist_type) {
@@ -369,7 +369,7 @@ RcppExport SEXP R_knor_kmedoids_data_im(SEXP rdata, SEXP rk,
 /**
   * Data and centroids in-memory
 **/
-RcppExport SEXP R_knor_kmedoids_data_centroids_im(SEXP rdata, SEXP rk,
+RcppExport SEXP R_kmedoids_data_centroids_im(SEXP rdata, SEXP rk,
         SEXP rmax_iters, SEXP rnthread,
         SEXP rtolerance, SEXP rdist_type) {
 
@@ -418,7 +418,7 @@ RcppExport SEXP R_knor_kmedoids_data_centroids_im(SEXP rdata, SEXP rk,
 /**
   * Centroids only in-memory
   */
-RcppExport SEXP R_knor_kmedoids_centroids_im(SEXP rdata, SEXP rk,
+RcppExport SEXP R_kmedoids_centroids_im(SEXP rdata, SEXP rk,
         SEXP rnrow, SEXP rmax_iters, SEXP rnthread, SEXP rtolerance,
         SEXP rdist_type) {
 
@@ -458,7 +458,7 @@ RcppExport SEXP R_knor_kmedoids_centroids_im(SEXP rdata, SEXP rk,
 /**
   * Data on disk, centroids computed by init method
   */
-RcppExport SEXP R_knor_kmedoids_data_em(SEXP rdata, SEXP rk,
+RcppExport SEXP R_kmedoids_data_em(SEXP rdata, SEXP rk,
         SEXP rnrow, SEXP rncol,
         SEXP rmax_iters, SEXP rnthread,
         SEXP rinit, SEXP rtolerance,
@@ -498,7 +498,7 @@ RcppExport SEXP R_knor_kmedoids_data_em(SEXP rdata, SEXP rk,
 /**
   * Data in memory
 **/
-RcppExport SEXP R_knor_skmeans_data_im(SEXP rdata, SEXP rk,
+RcppExport SEXP R_skmeans_data_im(SEXP rdata, SEXP rk,
         SEXP rmax_iters, SEXP rnthread,
         SEXP rinit, SEXP rtolerance) {
 
@@ -536,7 +536,7 @@ RcppExport SEXP R_knor_skmeans_data_im(SEXP rdata, SEXP rk,
 /**
   * Data and centroids in-memory
   **/
-RcppExport SEXP R_knor_skmeans_data_centroids_im(SEXP rdata, SEXP rk,
+RcppExport SEXP R_skmeans_data_centroids_im(SEXP rdata, SEXP rk,
         SEXP rmax_iters, SEXP rnthread, SEXP rtolerance) {
 
     Rcpp::NumericMatrix data = Rcpp::NumericMatrix(rdata);
@@ -583,7 +583,7 @@ RcppExport SEXP R_knor_skmeans_data_centroids_im(SEXP rdata, SEXP rk,
 /**
   * Data on disk, centroids computed by init method
   */
-RcppExport SEXP R_knor_skmeans_data_em(SEXP rdata, SEXP rk,
+RcppExport SEXP R_skmeans_data_em(SEXP rdata, SEXP rk,
         SEXP rnrow, SEXP rncol,
         SEXP rmax_iters, SEXP rnthread,
         SEXP rinit, SEXP rtolerance) {
@@ -614,7 +614,7 @@ RcppExport SEXP R_knor_skmeans_data_em(SEXP rdata, SEXP rk,
 /**
   * Centroids only in-memory
   */
-RcppExport SEXP R_knor_skmeans_centroids_im(SEXP rdata, SEXP rk,
+RcppExport SEXP R_skmeans_centroids_im(SEXP rdata, SEXP rk,
         SEXP rnrow, SEXP rmax_iters, SEXP rnthread, SEXP rtolerance) {
 
     std::string data = CHAR(STRING_ELT(rdata,0));
@@ -654,7 +654,7 @@ RcppExport SEXP R_knor_skmeans_centroids_im(SEXP rdata, SEXP rk,
 /**
   * Data on disk
   */
-RcppExport SEXP R_knor_kmeanspp_data_em(SEXP rdata, SEXP rk,
+RcppExport SEXP R_kmeanspp_data_em(SEXP rdata, SEXP rk,
         SEXP rnrow, SEXP rncol, SEXP rnstart, SEXP rnthread, SEXP rdist_type) {
 
     std::string data = CHAR(STRING_ELT(rdata,0));
@@ -682,7 +682,7 @@ RcppExport SEXP R_knor_kmeanspp_data_em(SEXP rdata, SEXP rk,
 /**
   * Data in memory
   */
-RcppExport SEXP R_knor_kmeanspp_data_im(SEXP rdata, SEXP rk,
+RcppExport SEXP R_kmeanspp_data_im(SEXP rdata, SEXP rk,
         SEXP rnstart, SEXP rnthread, SEXP rdist_type) {
 
     Rcpp::NumericMatrix data = Rcpp::NumericMatrix(rdata);
@@ -721,7 +721,7 @@ RcppExport SEXP R_knor_kmeanspp_data_im(SEXP rdata, SEXP rk,
 /**
   * Data on disk, centroids computed by init method
   */
-RcppExport SEXP R_knor_mbkmeans(SEXP rdata, SEXP rk,
+RcppExport SEXP R_mbkmeans(SEXP rdata, SEXP rk,
         SEXP rnrow, SEXP rncol, SEXP rmb_size,
         SEXP rmax_iters, SEXP rnthread,
         SEXP rinit, SEXP rtolerance,
@@ -758,7 +758,7 @@ RcppExport SEXP R_knor_mbkmeans(SEXP rdata, SEXP rk,
 /**
   * Centroids only in-memory
   */
-RcppExport SEXP R_knor_mbkmeans_centroids_im(SEXP rdata, SEXP rk,
+RcppExport SEXP R_mbkmeans_centroids_im(SEXP rdata, SEXP rk,
         SEXP rnrow, SEXP rmb_size, SEXP rmax_iters, SEXP rnthread,
         SEXP rtolerance, SEXP rdist_type) {
 
@@ -799,7 +799,7 @@ RcppExport SEXP R_knor_mbkmeans_centroids_im(SEXP rdata, SEXP rk,
 	return ret;
 }
 
-RcppExport SEXP R_knor_mbkmeans_data_centroids_im(SEXP rdata, SEXP rk,
+RcppExport SEXP R_mbkmeans_data_centroids_im(SEXP rdata, SEXP rk,
         SEXP rmb_size, SEXP rmax_iters, SEXP rnthread, SEXP rtolerance,
         SEXP rdist_type) {
 
@@ -854,7 +854,7 @@ RcppExport SEXP R_knor_mbkmeans_data_centroids_im(SEXP rdata, SEXP rk,
 /**
   * Data only in-memory
   **/
-RcppExport SEXP R_knor_mbkmeans_data_im(SEXP rdata, SEXP rk,
+RcppExport SEXP R_mbkmeans_data_im(SEXP rdata, SEXP rk,
         SEXP rmb_size, SEXP rmax_iters, SEXP rnthread,
         SEXP rinit, SEXP rtolerance, SEXP rdist_type) {
 
@@ -900,7 +900,7 @@ RcppExport SEXP R_knor_mbkmeans_data_im(SEXP rdata, SEXP rk,
 /**
   * Data in memory
 **/
-RcppExport SEXP R_knor_fcm_data_im(SEXP rdata, SEXP rk,
+RcppExport SEXP R_fcm_data_im(SEXP rdata, SEXP rk,
         SEXP rmax_iters, SEXP rnthread, SEXP rfuzzindex,
         SEXP rinit, SEXP rtolerance, SEXP rdist_type) {
 
@@ -940,7 +940,7 @@ RcppExport SEXP R_knor_fcm_data_im(SEXP rdata, SEXP rk,
 /**
   * Data and centroids in-memory
   **/
-RcppExport SEXP R_knor_fcm_data_centroids_im(SEXP rdata, SEXP rk,
+RcppExport SEXP R_fcm_data_centroids_im(SEXP rdata, SEXP rk,
         SEXP rmax_iters, SEXP rnthread, SEXP rfuzzindex,
         SEXP rtolerance, SEXP rdist_type) {
 
@@ -990,7 +990,7 @@ RcppExport SEXP R_knor_fcm_data_centroids_im(SEXP rdata, SEXP rk,
 /**
   * Data on disk, centroids computed by init method
   */
-RcppExport SEXP R_knor_fcm_data_em(SEXP rdata, SEXP rk,
+RcppExport SEXP R_fcm_data_em(SEXP rdata, SEXP rk,
         SEXP rnrow, SEXP rncol,
         SEXP rmax_iters, SEXP rnthread, SEXP rfuzzindex,
         SEXP rinit, SEXP rtolerance, SEXP rdist_type) {
@@ -1023,7 +1023,7 @@ RcppExport SEXP R_knor_fcm_data_em(SEXP rdata, SEXP rk,
 /**
   * Data on disk, centroids in memory
   */
-RcppExport SEXP R_knor_fcm_data_em_centroids_im(SEXP rdata, SEXP rk,
+RcppExport SEXP R_fcm_data_em_centroids_im(SEXP rdata, SEXP rk,
         SEXP rnrow, SEXP rncol,
         SEXP rmax_iters, SEXP rnthread, SEXP rfuzzindex,
         SEXP rtolerance, SEXP rdist_type) {
@@ -1065,7 +1065,7 @@ RcppExport SEXP R_knor_fcm_data_em_centroids_im(SEXP rdata, SEXP rk,
 /**
   * Data on disk str init
   */
-RcppExport SEXP R_knor_hmeans_data_em_init(SEXP rdata, SEXP rkmax,
+RcppExport SEXP R_hmeans_data_em_init(SEXP rdata, SEXP rkmax,
         SEXP rnrow, SEXP rncol, SEXP rmax_iters, SEXP rnthread, SEXP rinit,
         SEXP rtolerance, SEXP rdist_type, SEXP rmin_clust_size) {
 
@@ -1097,7 +1097,7 @@ RcppExport SEXP R_knor_hmeans_data_em_init(SEXP rdata, SEXP rkmax,
 /**
   * Data on disk centers provided
   */
-RcppExport SEXP R_knor_hmeans_data_em_centers(SEXP rdata, SEXP rkmax,
+RcppExport SEXP R_hmeans_data_em_centers(SEXP rdata, SEXP rkmax,
         SEXP rnrow, SEXP rncol, SEXP rmax_iters, SEXP rnthread,
         SEXP rinit, SEXP rtolerance, SEXP rdist_type, SEXP rmin_clust_size) {
 
@@ -1137,7 +1137,7 @@ RcppExport SEXP R_knor_hmeans_data_em_centers(SEXP rdata, SEXP rkmax,
 /**
   * Data in memory and str init
 **/
-RcppExport SEXP R_knor_hmeans_data_im_init(SEXP rdata, SEXP rkmax,
+RcppExport SEXP R_hmeans_data_im_init(SEXP rdata, SEXP rkmax,
         SEXP rmax_iters, SEXP rnthread,
         SEXP rinit, SEXP rtolerance,
         SEXP rdist_type, SEXP rmin_clust_size) {
@@ -1180,7 +1180,7 @@ RcppExport SEXP R_knor_hmeans_data_im_init(SEXP rdata, SEXP rkmax,
 /**
   * Data in memory and provided init centers
 **/
-RcppExport SEXP R_knor_hmeans_data_im_centers(SEXP rdata, SEXP rkmax,
+RcppExport SEXP R_hmeans_data_im_centers(SEXP rdata, SEXP rkmax,
         SEXP rmax_iters, SEXP rnthread, SEXP rinit, SEXP rtolerance,
         SEXP rdist_type, SEXP rmin_clust_size) {
 
@@ -1231,7 +1231,7 @@ RcppExport SEXP R_knor_hmeans_data_im_centers(SEXP rdata, SEXP rkmax,
 /**
   * Data on disk str init
   */
-RcppExport SEXP R_knor_xmeans_data_em_init(SEXP rdata, SEXP rkmax,
+RcppExport SEXP R_xmeans_data_em_init(SEXP rdata, SEXP rkmax,
         SEXP rnrow, SEXP rncol, SEXP rmax_iters, SEXP rnthread, SEXP rinit,
         SEXP rtolerance, SEXP rdist_type, SEXP rmin_clust_size) {
 
@@ -1263,7 +1263,7 @@ RcppExport SEXP R_knor_xmeans_data_em_init(SEXP rdata, SEXP rkmax,
 /**
   * Data on disk centers provided
   */
-RcppExport SEXP R_knor_xmeans_data_em_centers(SEXP rdata, SEXP rkmax,
+RcppExport SEXP R_xmeans_data_em_centers(SEXP rdata, SEXP rkmax,
         SEXP rnrow, SEXP rncol, SEXP rmax_iters, SEXP rnthread,
         SEXP rinit, SEXP rtolerance, SEXP rdist_type, SEXP rmin_clust_size) {
 
@@ -1303,7 +1303,7 @@ RcppExport SEXP R_knor_xmeans_data_em_centers(SEXP rdata, SEXP rkmax,
 /**
   * Data in memory and str init
 **/
-RcppExport SEXP R_knor_xmeans_data_im_init(SEXP rdata, SEXP rkmax,
+RcppExport SEXP R_xmeans_data_im_init(SEXP rdata, SEXP rkmax,
         SEXP rmax_iters, SEXP rnthread,
         SEXP rinit, SEXP rtolerance,
         SEXP rdist_type, SEXP rmin_clust_size) {
@@ -1346,7 +1346,7 @@ RcppExport SEXP R_knor_xmeans_data_im_init(SEXP rdata, SEXP rkmax,
 /**
   * Data in memory and provided init centers
 **/
-RcppExport SEXP R_knor_xmeans_data_im_centers(SEXP rdata, SEXP rkmax,
+RcppExport SEXP R_xmeans_data_im_centers(SEXP rdata, SEXP rkmax,
         SEXP rmax_iters, SEXP rnthread, SEXP rinit, SEXP rtolerance,
         SEXP rdist_type, SEXP rmin_clust_size) {
 
@@ -1397,7 +1397,7 @@ RcppExport SEXP R_knor_xmeans_data_im_centers(SEXP rdata, SEXP rkmax,
 /**
   * Data on disk str init
   */
-RcppExport SEXP R_knor_gmeans_data_em_init(SEXP rdata, SEXP rkmax,
+RcppExport SEXP R_gmeans_data_em_init(SEXP rdata, SEXP rkmax,
         SEXP rnrow, SEXP rncol, SEXP rmax_iters, SEXP rnthread, SEXP rinit,
         SEXP rtolerance, SEXP rdist_type, SEXP rmin_clust_size,
         SEXP rstrictness) {
@@ -1431,7 +1431,7 @@ RcppExport SEXP R_knor_gmeans_data_em_init(SEXP rdata, SEXP rkmax,
 /**
   * Data on disk centers provided
   */
-RcppExport SEXP R_knor_gmeans_data_em_centers(SEXP rdata, SEXP rkmax,
+RcppExport SEXP R_gmeans_data_em_centers(SEXP rdata, SEXP rkmax,
         SEXP rnrow, SEXP rncol, SEXP rmax_iters, SEXP rnthread,
         SEXP rinit, SEXP rtolerance, SEXP rdist_type,
         SEXP rmin_clust_size, SEXP rstrictness) {
@@ -1473,7 +1473,7 @@ RcppExport SEXP R_knor_gmeans_data_em_centers(SEXP rdata, SEXP rkmax,
 /**
   * Data in memory and str init
 **/
-RcppExport SEXP R_knor_gmeans_data_im_init(SEXP rdata, SEXP rkmax,
+RcppExport SEXP R_gmeans_data_im_init(SEXP rdata, SEXP rkmax,
         SEXP rmax_iters, SEXP rnthread,
         SEXP rinit, SEXP rtolerance,
         SEXP rdist_type, SEXP rmin_clust_size, SEXP rstrictness) {
@@ -1517,7 +1517,7 @@ RcppExport SEXP R_knor_gmeans_data_im_init(SEXP rdata, SEXP rkmax,
 /**
   * Data in memory and provided init centers
 **/
-RcppExport SEXP R_knor_gmeans_data_im_centers(SEXP rdata, SEXP rkmax,
+RcppExport SEXP R_gmeans_data_im_centers(SEXP rdata, SEXP rkmax,
         SEXP rmax_iters, SEXP rnthread, SEXP rinit, SEXP rtolerance,
         SEXP rdist_type, SEXP rmin_clust_size, SEXP rstrictness) {
 

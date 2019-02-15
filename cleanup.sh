@@ -11,6 +11,6 @@ rm -vrf ..Rcheck/\
     src/libman/*.o\
     src/libdist/*.o\
     src/*.tar.gz\
-    knor*.tar.gz\
-    knor*.Rcheck\
+    clusternor*.tar.gz\
+    clusternor*.Rcheck\
     configure

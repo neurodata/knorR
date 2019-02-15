@@ -15,7 +15,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require(knor)
+require(clusternor)
 require(testthat)
 
 verify.equivalent <- function(data, k) {
@@ -23,9 +23,9 @@ verify.equivalent <- function(data, k) {
         stats::kmeans(data, k, iter.max=1, algorithm="Lloyd")$centers)
 
     kms <- stats::kmeans(data, centroids, iter.max=10, algorithm="Lloyd")
-    knor.kms <- knor::Kmeans(data, centroids, iter.max=10, nthread=4)
+    clusternor.kms <- clusternor::Kmeans(data, centroids, iter.max=10, nthread=4)
     test_that("Verify equivalent test",{
-                  expect_equivalent(knor.kms$centers, kms$centers)
+                  expect_equivalent(clusternor.kms$centers, kms$centers)
         })
 }
 

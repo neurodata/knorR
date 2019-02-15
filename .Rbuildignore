@@ -3,11 +3,11 @@
 ^autom4te.cache$
 ^README.md$
 ^Dockerfile$
-^knor_.*\.tar\.gz$
+^clsuternor_.*\.tar\.gz$
 ^.*\.sh$
 ^\..*$
-^src/cknor/libsem/.*$
-^src/cknor/utils/.*$
+^src/cknor/libsem/*$
+^src/cknor/utils/*$
 ^src/cknor/libkcommon/cxxopts/*$
 ^src/cknor/exec/*$
 ^.travis.yml$

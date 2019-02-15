@@ -59,51 +59,51 @@ Kmeans <- function(data, centers, nrow=-1, ncol=-1,
 
     if (class(data) == "character") {
         if (class(centers) == "numeric" || class(centers) == "integer") {
-            ret <- .Call("R_knor_kmeans", normalizePath(as.character(data)),
+            ret <- .Call("R_kmeans", normalizePath(as.character(data)),
                          as.integer(centers), as.double(nrow),
                          as.double(ncol), as.double(iter.max),
                          as.integer(nthread), as.character(init),
                          as.double(tolerance), as.character(dist.type),
-                         PACKAGE="knor")
+                         PACKAGE="clusternor")
         } else if (class(centers) == "matrix") {
-            ret <- .Call("R_knor_kmeans_centroids_im",
+            ret <- .Call("R_kmeans_centroids_im",
                          normalizePath(as.character(data)),
                          as.matrix(centers), as.double(nrow),
                          as.double(iter.max), as.integer(nthread),
                          as.double(tolerance), as.character(dist.type),
-                         PACKAGE="knor")
+                         PACKAGE="clusternor")
         }
         else if (class(centers) == "list") {
-            ret <- .Call("R_knor_kmeans_data_centroids_em",
+            ret <- .Call("R_kmeans_data_centroids_em",
                          normalizePath(as.character(data)),
                          normalizePath(as.character(centers[1])),
                          as.integer(centers[2]),
                          as.double(nrow), as.double(ncol),
                          as.double(iter.max), as.integer(nthread),
                          as.double(tolerance), as.character(dist.type),
-                         PACKAGE="knor")
+                         PACKAGE="clusternor")
         } else {
             stop(paste("Cannot handle centers of type", class(centers), "\n"))
         }
     } else if (class(data) == "matrix") {
         if (class(centers) == "numeric" || class(centers) == "integer") {
-            ret <- .Call("R_knor_kmeans_data_im", as.matrix(data),
+            ret <- .Call("R_kmeans_data_im", as.matrix(data),
                          as.integer(centers), as.double(iter.max),
                          as.integer(nthread), as.character(init),
                          as.double(tolerance), as.character(dist.type),
-                         PACKAGE="knor")
+                         PACKAGE="clusternor")
         } else if (class(centers) == "matrix") {
-            ret <- .Call("R_knor_kmeans_data_centroids_im", as.matrix(data),
+            ret <- .Call("R_kmeans_data_centroids_im", as.matrix(data),
                          as.matrix(centers),
                          as.double(iter.max), as.integer(nthread),
                          as.double(tolerance), as.character(dist.type),
-                         PACKAGE="knor")
+                         PACKAGE="clusternor")
         } else if (class(centers) == "character") {
-            ret <- .Call("R_knor_kmeans_data_im_centroids_em", as.matrix(data),
+            ret <- .Call("R_kmeans_data_im_centroids_em", as.matrix(data),
                          normalizePath(centers),
                          as.double(iter.max), as.integer(nthread),
                          as.double(tolerance), as.character(dist.type),
-                         PACKAGE="knor")
+                         PACKAGE="clusternor")
         } else {
             stop(paste("Cannot handle centers of type", class(centers), "\n"))
         }
@@ -152,25 +152,25 @@ Kmedoids <- function(data, centers, nrow=-1, ncol=-1,
 
     if (class(data) == "matrix") {
         if (class(centers) == "numeric" || class(centers) == "integer") {
-            ret <- .Call("R_knor_kmedoids_data_im", as.matrix(data),
+            ret <- .Call("R_kmedoids_data_im", as.matrix(data),
                          as.integer(centers),
                          as.double(iter.max), as.integer(nthread),
                          as.character(init), as.double(tolerance),
                          as.character(dist.type),
-                         PACKAGE="knor")
+                         PACKAGE="clusternor")
         } else {
             stop(paste("Cannot handle centers of type", class(centers), "\n"))
         }
     } else if (class(data) == "character") {
         if (class(centers) == "numeric" || class(centers) == "integer") {
-            ret <- .Call("R_knor_kmedoids_data_em",
+            ret <- .Call("R_kmedoids_data_em",
                          normalizePath(as.character(data)),
                          as.integer(centers), as.double(nrow),
                          as.double(ncol),
                          as.double(iter.max), as.integer(nthread),
                          as.character(init), as.double(tolerance),
                          as.character(dist.type),
-                         PACKAGE="knor")
+                         PACKAGE="clusternor")
         } else {
             stop(paste("Cannot handle data of type", class(data), "\n"))
         }
@@ -216,36 +216,36 @@ Skmeans <- function(data, centers, nrow=-1, ncol=-1,
 
     if (class(data) == "matrix") {
         if (class(centers) == "numeric" || class(centers) == "integer") {
-            ret <- .Call("R_knor_skmeans_data_im", as.matrix(data),
+            ret <- .Call("R_skmeans_data_im", as.matrix(data),
                          as.integer(centers),
                          as.double(iter.max), as.integer(nthread),
                          as.character(init), as.double(tolerance),
-                         PACKAGE="knor")
+                         PACKAGE="clusternor")
         } else if (class(centers) == "matrix") {
-            ret <- .Call("R_knor_skmeans_data_centroids_im", as.matrix(data),
+            ret <- .Call("R_skmeans_data_centroids_im", as.matrix(data),
                          as.matrix(centers),
                          as.double(iter.max), as.integer(nthread),
                          as.double(tolerance),
-                         PACKAGE="knor")
+                         PACKAGE="clusternor")
         } else {
             stop(paste("Cannot handle centers of type", class(centers), "\n"))
         }
     } else if (class(data) == "character") {
         if (class(centers) == "numeric" || class(centers) == "integer") {
-            ret <- .Call("R_knor_skmeans_data_em",
+            ret <- .Call("R_skmeans_data_em",
                          normalizePath(as.character(data)),
                          as.integer(centers), as.double(nrow),
                          as.double(ncol),
                          as.double(iter.max), as.integer(nthread),
                          as.character(init), as.double(tolerance),
-                         PACKAGE="knor")
+                         PACKAGE="clusternor")
         } else if (class(centers) == "matrix") {
-            ret <- .Call("R_knor_skmeans_centroids_im",
+            ret <- .Call("R_skmeans_centroids_im",
                          normalizePath(as.character(data)),
                          as.matrix(centers), as.double(nrow),
                          as.double(iter.max), as.integer(nthread),
                          as.double(tolerance),
-                         PACKAGE="knor")
+                         PACKAGE="clusternor")
         }
     } else {
         stop(paste("Cannot handle data of type", class(data), "\n"))
@@ -290,10 +290,10 @@ KmeansPP <- function(data, centers, nrow=-1, ncol=-1,
                      dist.type=c("sqeucl", "eucl","cos", "taxi")) {
     if (class(data) == "matrix") {
         if (class(centers) == "numeric" || class(centers) == "integer") {
-            ret <- .Call("R_knor_kmeanspp_data_im", as.matrix(data),
+            ret <- .Call("R_kmeanspp_data_im", as.matrix(data),
                           as.integer(centers), as.integer(nstart),
                           as.integer(nthread), as.character(dist.type),
-                          PACKAGE="knor")
+                          PACKAGE="clusternor")
             ret$iters <- NULL
             ret
         } else {
@@ -301,12 +301,12 @@ KmeansPP <- function(data, centers, nrow=-1, ncol=-1,
         }
     } else if (class(data) == "character") {
         if (class(centers) == "numeric" || class(centers) == "integer") {
-            ret <- .Call("R_knor_kmeanspp_data_em",
+            ret <- .Call("R_kmeanspp_data_em",
                          normalizePath(as.character(data)),
                          as.integer(centers), as.double(nrow),
                          as.double(ncol), as.integer(nstart),
                          as.integer(nthread), as.character(dist.type),
-                         PACKAGE="knor")
+                         PACKAGE="clusternor")
             ret$iters <- NULL
             ret
         } else {
@@ -366,38 +366,38 @@ MiniBatchKmeans <- function(data, centers, nrow=-1, ncol=-1,
     # TODO: Use a batch size of .2 if not provided
     if (class(data) == "character") {
         if (class(centers) == "numeric" || class(centers) == "integer") {
-            ret <- .Call("R_knor_mbkmeans", normalizePath(as.character(data)),
+            ret <- .Call("R_mbkmeans", normalizePath(as.character(data)),
                          as.integer(centers), as.double(nrow),
                          as.double(ncol), as.integer(batch.size),
                          as.double(iter.max),
                          as.integer(nthread), as.character(init),
                          as.double(tolerance), as.character(dist.type),
-                         PACKAGE="knor")
+                         PACKAGE="clusternor")
         } else if (class(centers) == "matrix") {
-            ret <- .Call("R_knor_mbkmeans_centroids_im",
+            ret <- .Call("R_mbkmeans_centroids_im",
                          normalizePath(as.character(data)),
                          as.matrix(centers), as.double(nrow),
                          as.integer(batch.size),
                          as.double(iter.max), as.integer(nthread),
                          as.double(tolerance), as.character(dist.type),
-                         PACKAGE="knor")
+                         PACKAGE="clusternor")
         } else {
             stop(paste("Cannot handle centers of type", class(centers), "\n"))
         }
     } else if (class(data) == "matrix") {
         if (class(centers) == "numeric" || class(centers) == "integer") {
-            ret <- .Call("R_knor_mbkmeans_data_im", as.matrix(data),
+            ret <- .Call("R_mbkmeans_data_im", as.matrix(data),
                          as.integer(centers), as.integer(batch.size),
                          as.double(iter.max), as.integer(nthread),
                          as.character(init), as.double(tolerance),
                          as.character(dist.type),
-                         PACKAGE="knor")
+                         PACKAGE="clusternor")
         } else if (class(centers) == "matrix") {
-            ret <- .Call("R_knor_mbkmeans_data_centroids_im", as.matrix(data),
+            ret <- .Call("R_mbkmeans_data_centroids_im", as.matrix(data),
                          as.matrix(centers), as.integer(batch.size),
                          as.double(iter.max), as.integer(nthread),
                          as.double(tolerance), as.character(dist.type),
-                         PACKAGE="knor")
+                         PACKAGE="clusternor")
         } else {
             stop(paste("Cannot handle centers of type", class(centers), "\n"))
         }
@@ -449,39 +449,39 @@ FuzzyCMeans <- function(data, centers, nrow=-1, ncol=-1,
 
     if (class(data) == "character") {
         if (class(centers) == "numeric" || class(centers) == "integer") {
-            ret <- .Call("R_knor_fcm_data_em", normalizePath(as.character(data)),
+            ret <- .Call("R_fcm_data_em", normalizePath(as.character(data)),
                          as.integer(centers), as.double(nrow),
                          as.double(ncol), as.double(iter.max),
                          as.integer(nthread),
                          as.integer(fuzz.index), as.character(init),
                          as.double(tolerance), as.character(dist.type),
-                         PACKAGE="knor")
+                         PACKAGE="clusternor")
         } else if (class(centers) == "matrix") {
-            ret <- .Call("R_knor_fcm_data_em_centroids_im",
+            ret <- .Call("R_fcm_data_em_centroids_im",
                          normalizePath(as.character(data)),
                          as.matrix(centers), as.double(nrow), as.double(ncol),
                          as.double(iter.max), as.integer(nthread),
                          as.integer(fuzz.index),
                          as.double(tolerance), as.character(dist.type),
-                         PACKAGE="knor")
+                         PACKAGE="clusternor")
         } else {
             stop(paste("Cannot handle centers of type", class(centers), "\n"))
         }
     } else if (class(data) == "matrix") {
         if (class(centers) == "numeric" || class(centers) == "integer") {
-            ret <- .Call("R_knor_fcm_data_im", as.matrix(data),
+            ret <- .Call("R_fcm_data_im", as.matrix(data),
                          as.integer(centers), as.double(iter.max),
                          as.integer(nthread), as.integer(fuzz.index),
                          as.character(init),
                          as.double(tolerance), as.character(dist.type),
-                         PACKAGE="knor")
+                         PACKAGE="clusternor")
         } else if (class(centers) == "matrix") {
-            ret <- .Call("R_knor_fcm_data_centroids_im", as.matrix(data),
+            ret <- .Call("R_fcm_data_centroids_im", as.matrix(data),
                          as.matrix(centers),
                          as.double(iter.max), as.integer(nthread),
                          as.integer(fuzz.index),
                          as.double(tolerance), as.character(dist.type),
-                         PACKAGE="knor")
+                         PACKAGE="clusternor")
         } else {
             stop(paste("Cannot handle centers of type", class(centers), "\n"))
         }
@@ -532,46 +532,46 @@ Hmeans <- function(data, kmax, nrow=-1, ncol=-1, iter.max=20,
 
     if (class(data) == "character") {
         if (class(init) == "character") {
-            ret <- .Call("R_knor_hmeans_data_em_init", as.character(data),
+            ret <- .Call("R_hmeans_data_em_init", as.character(data),
                          as.integer(kmax),
                          as.double(nrow), as.double(ncol),
                          as.double(iter.max), as.integer(nthread),
                          as.character(init), as.double(tolerance),
                          as.character(dist.type), as.integer(min.clust.size),
-                         PACKAGE="knor")
+                         PACKAGE="clusternor")
         } else if (class(init) == "matrix") {
             if (!(all(dim(init) == c(2, ncol), TRUE)))
                 stop("init centers must have dim: `c(2, ncol)'")
 
-            ret <- .Call("R_knor_hmeans_data_em_centers", as.character(data),
+            ret <- .Call("R_hmeans_data_em_centers", as.character(data),
                          as.integer(kmax),
                          as.double(nrow), as.double(ncol),
                          as.double(iter.max), as.integer(nthread),
                          as.matrix(init), as.double(tolerance),
                          as.character(dist.type), as.integer(min.clust.size),
-                         PACKAGE="knor")
+                         PACKAGE="clusternor")
         } else {
             stop(paste("Cannot handle init of type", class(init), "\n"))
         }
     } else if (class(data) == "matrix") {
         if (class(init) == "character") {
 
-            ret <- .Call("R_knor_hmeans_data_im_init", as.matrix(data),
+            ret <- .Call("R_hmeans_data_im_init", as.matrix(data),
                          as.integer(kmax), as.double(iter.max),
                          as.integer(nthread), as.character(init),
                          as.double(tolerance), as.character(dist.type),
                          as.integer(min.clust.size),
-                         PACKAGE="knor")
+                         PACKAGE="clusternor")
         } else if (class(init) == "matrix") {
             if (!(all(dim(init) == c(2, dim(data)[2]), TRUE)))
                 stop("init centers must have dim: `c(2, dim(data)[1])'")
 
-            ret <- .Call("R_knor_hmeans_data_im_centers", as.matrix(data),
+            ret <- .Call("R_hmeans_data_im_centers", as.matrix(data),
                          as.integer(kmax), as.double(iter.max),
                          as.integer(nthread), as.matrix(init),
                          as.double(tolerance), as.character(dist.type),
                          as.integer(min.clust.size),
-                         PACKAGE="knor")
+                         PACKAGE="clusternor")
         } else {
             stop(paste("Cannot handle init of type", class(init), "\n"))
         }
@@ -619,46 +619,46 @@ Xmeans <- function(data, kmax, nrow=-1, ncol=-1, iter.max=20,
     if (class(data) == "character") {
         if (class(init) == "character") {
 
-            ret <- .Call("R_knor_xmeans_data_em_init", as.character(data),
+            ret <- .Call("R_xmeans_data_em_init", as.character(data),
                          as.integer(kmax),
                          as.double(nrow), as.double(ncol),
                          as.double(iter.max), as.integer(nthread),
                          as.character(init), as.double(tolerance),
                          as.character(dist.type), as.integer(min.clust.size),
-                         PACKAGE="knor")
+                         PACKAGE="clusternor")
         } else if (class(init) == "matrix") {
             if (!(all(dim(init) == c(2, ncol), TRUE)))
                 stop("init centers must have dim: `c(2, ncol)'")
 
-            ret <- .Call("R_knor_xmeans_data_em_centers", as.character(data),
+            ret <- .Call("R_xmeans_data_em_centers", as.character(data),
                          as.integer(kmax),
                          as.double(nrow), as.double(ncol),
                          as.double(iter.max), as.integer(nthread),
                          as.matrix(init), as.double(tolerance),
                          as.character(dist.type), as.integer(min.clust.size),
-                         PACKAGE="knor")
+                         PACKAGE="clusternor")
         } else {
             stop(paste("Cannot handle init of type", class(init), "\n"))
         }
     } else if (class(data) == "matrix") {
         if (class(init) == "character") {
 
-            ret <- .Call("R_knor_xmeans_data_im_init", as.matrix(data),
+            ret <- .Call("R_xmeans_data_im_init", as.matrix(data),
                          as.integer(kmax), as.double(iter.max),
                          as.integer(nthread), as.character(init),
                          as.double(tolerance), as.character(dist.type),
                          as.integer(min.clust.size),
-                         PACKAGE="knor")
+                         PACKAGE="clusternor")
         } else if (class(init) == "matrix") {
             if (!(all(dim(init) == c(2, dim(data)[2]), TRUE)))
                 stop("init centers must have dim: `c(2, dim(data)[1])'")
 
-            ret <- .Call("R_knor_xmeans_data_im_centers", as.matrix(data),
+            ret <- .Call("R_xmeans_data_im_centers", as.matrix(data),
                          as.integer(kmax), as.double(iter.max),
                          as.integer(nthread), as.matrix(init),
                          as.double(tolerance), as.character(dist.type),
                          as.integer(min.clust.size),
-                         PACKAGE="knor")
+                         PACKAGE="clusternor")
         } else {
             stop(paste("Cannot handle init of type", class(init), "\n"))
         }
@@ -712,48 +712,48 @@ Gmeans <- function(data, kmax, nrow=-1, ncol=-1, iter.max=20,
     if (class(data) == "character") {
         if (class(init) == "character") {
 
-            ret <- .Call("R_knor_gmeans_data_em_init", as.character(data),
+            ret <- .Call("R_gmeans_data_em_init", as.character(data),
                          as.integer(kmax),
                          as.double(nrow), as.double(ncol),
                          as.double(iter.max), as.integer(nthread),
                          as.character(init), as.double(tolerance),
                          as.character(dist.type), as.integer(min.clust.size),
                          as.integer(strictness),
-                         PACKAGE="knor")
+                         PACKAGE="clusternor")
         } else if (class(init) == "matrix") {
             if (!(all(dim(init) == c(2, ncol), TRUE)))
                 stop("init centers must have dim: `c(2, ncol)'")
 
-            ret <- .Call("R_knor_gmeans_data_em_centers", as.character(data),
+            ret <- .Call("R_gmeans_data_em_centers", as.character(data),
                          as.integer(kmax),
                          as.double(nrow), as.double(ncol),
                          as.double(iter.max), as.integer(nthread),
                          as.matrix(init), as.double(tolerance),
                          as.character(dist.type), as.integer(min.clust.size),
                          as.integer(strictness),
-                         PACKAGE="knor")
+                         PACKAGE="clusternor")
         } else {
             stop(paste("Cannot handle init of type", class(init), "\n"))
         }
     } else if (class(data) == "matrix") {
         if (class(init) == "character") {
 
-            ret <- .Call("R_knor_gmeans_data_im_init", as.matrix(data),
+            ret <- .Call("R_gmeans_data_im_init", as.matrix(data),
                          as.integer(kmax), as.double(iter.max),
                          as.integer(nthread), as.character(init),
                          as.double(tolerance), as.character(dist.type),
                          as.integer(min.clust.size), as.integer(strictness),
-                         PACKAGE="knor")
+                         PACKAGE="clusternor")
         } else if (class(init) == "matrix") {
             if (!(all(dim(init) == c(2, dim(data)[2]), TRUE)))
                 stop("init centers must have dim: `c(2, dim(data)[1])'")
 
-            ret <- .Call("R_knor_gmeans_data_im_centers", as.matrix(data),
+            ret <- .Call("R_gmeans_data_im_centers", as.matrix(data),
                          as.integer(kmax), as.double(iter.max),
                          as.integer(nthread), as.matrix(init),
                          as.double(tolerance), as.character(dist.type),
                          as.integer(min.clust.size), as.integer(strictness),
-                         PACKAGE="knor")
+                         PACKAGE="clusternor")
         } else {
             stop(paste("Cannot handle init of type", class(init), "\n"))
         }
