@@ -1116,7 +1116,7 @@ RcppExport SEXP R_hmeans_data_em_centers(SEXP rdata, SEXP rkmax,
 #ifdef _OPENMP
 #pragma omp parallel for firstprivate(centroids) shared (ccentroids)
 #endif
-	for (size_t row = 0; row < centroids.nrow(); row++)
+	for (int row = 0; row < centroids.nrow(); row++)
 		for (size_t col = 0; col < ncol; col++)
 			ccentroids[row*ncol + col] = centroids(row, col);
 
@@ -1212,7 +1212,7 @@ RcppExport SEXP R_hmeans_data_im_centers(SEXP rdata, SEXP rkmax,
 #ifdef _OPENMP
 #pragma omp parallel for firstprivate(centroids) shared (ccentroids)
 #endif
-	for (size_t row = 0; row < centroids.nrow(); row++)
+	for (int row = 0; row < centroids.nrow(); row++)
 		for (size_t col = 0; col < ncol; col++)
 			ccentroids[row*ncol + col] = centroids(row, col);
 
@@ -1282,7 +1282,7 @@ RcppExport SEXP R_xmeans_data_em_centers(SEXP rdata, SEXP rkmax,
 #ifdef _OPENMP
 #pragma omp parallel for firstprivate(centroids) shared (ccentroids)
 #endif
-	for (size_t row = 0; row < centroids.nrow(); row++)
+	for (int row = 0; row < centroids.nrow(); row++)
 		for (size_t col = 0; col < ncol; col++)
 			ccentroids[row*ncol + col] = centroids(row, col);
 
@@ -1378,7 +1378,7 @@ RcppExport SEXP R_xmeans_data_im_centers(SEXP rdata, SEXP rkmax,
 #ifdef _OPENMP
 #pragma omp parallel for firstprivate(centroids) shared (ccentroids)
 #endif
-	for (size_t row = 0; row < centroids.nrow(); row++)
+	for (int row = 0; row < centroids.nrow(); row++)
 		for (size_t col = 0; col < ncol; col++)
 			ccentroids[row*ncol + col] = centroids(row, col);
 
@@ -1452,7 +1452,7 @@ RcppExport SEXP R_gmeans_data_em_centers(SEXP rdata, SEXP rkmax,
 #ifdef _OPENMP
 #pragma omp parallel for firstprivate(centroids) shared (ccentroids)
 #endif
-	for (size_t row = 0; row < centroids.nrow(); row++)
+	for (int row = 0; row < centroids.nrow(); row++)
 		for (size_t col = 0; col < ncol; col++)
 			ccentroids[row*ncol + col] = centroids(row, col);
 
@@ -1550,7 +1550,7 @@ RcppExport SEXP R_gmeans_data_im_centers(SEXP rdata, SEXP rkmax,
 #ifdef _OPENMP
 #pragma omp parallel for firstprivate(centroids) shared (ccentroids)
 #endif
-	for (size_t row = 0; row < centroids.nrow(); row++)
+	for (int row = 0; row < centroids.nrow(); row++)
 		for (size_t col = 0; col < ncol; col++)
 			ccentroids[row*ncol + col] = centroids(row, col);
 
