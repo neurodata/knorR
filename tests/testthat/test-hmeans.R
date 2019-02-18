@@ -25,7 +25,6 @@ kmax <- 8
 nrow <- 50
 ncol <- 5
 nthread <- 2
-mb.size <- 20
 iter.max <- 20
 
 # Data in memory, compute centroids
@@ -44,31 +43,31 @@ test.data.centroids.in.mem <- function() {
 
 ## Data on disk, compute centroids
 test.data.ex.mem <- function() {
-    cat("Data ==> disk, centroids ==> compute\n\n")
+    cat("Data ==> ", fn, ", centroids ==> compute\n\n")
     print(Hmeans(fn, kmax, nrow, ncol, iter.max=iter.max,
                  nthread=nthread, init="forgy"))
 }
 
 ## Data on disk, centroids in memory
 test.centroids.in.mem <- function() {
-    cat("Data ==> disk, centroids ==> memory\n\n")
+    cat("Data ==> ", ",centroids ==> memory\n\n")
     print(Hmeans(fn, kmax,  nrow, ncol, iter.max=iter.max,
                  init=test_centroids[1:2,], nthread=nthread))
 }
 
 # Main
 
-test.centroids.in.mem()
-ret1 <- test.data.centroids.in.mem()
-ret2 <- test.data.centroids.in.mem()
-test_that("Data in-mem compared to same", {
-              expect_identical(ret1, ret2)})
+#test.centroids.in.mem()
+#ret1 <- test.data.centroids.in.mem()
+#ret2 <- test.data.centroids.in.mem()
+#test_that("Data in-mem compared to same", {
+              #expect_identical(ret1, ret2)})
 
-ret1 <- test.data.in.mem()
-ret2 <- test.data.in.mem()
-test_that("data IM compared to same", {
-              expect_identical(ret1, ret2)
-})
+#ret1 <- test.data.in.mem()
+#ret2 <- test.data.in.mem()
+#test_that("data IM compared to same", {
+              #expect_identical(ret1, ret2)
+#})
 
 ret1 <- test.data.ex.mem()
 ret2 <- test.data.ex.mem()
