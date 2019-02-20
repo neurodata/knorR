@@ -1,6 +1,6 @@
 Package: clusternor
 Version: 0.0-1
-Date: 2019-02-15
+Date: 2019-02-20
 Title: A Parallel Clustering Non-Uniform Memory Access ('NUMA') Optimized Library
 Authors@R: c(person("Disa", "Mhembere", role = c("aut", "cre"), email = "disa@jhu.edu"), person("Neurodata (https://neurodata.io)", role="cph"))
 Description: The clustering 'NUMA' Optimized Routines library or 'clusterNOR' is a highly optimized library for performing clustering in parallel with accelerations specifically targetting multi-core Non-Uniform Memory Access ('NUMA') hardware architectures.
