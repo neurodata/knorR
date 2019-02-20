@@ -58,6 +58,7 @@ test.centroids.in.mem <- function() {
 
 # Main
 
+cat("\n\n***Running test for xmeans***\n\n")
 test.centroids.in.mem()
 
 ret1 <- test.data.ex.mem()

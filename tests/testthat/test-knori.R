@@ -64,6 +64,7 @@ test.data.centroids.em <- function() {
 }
 
 # Main
+cat("\n\n***Running test for knori***\n\n")
 test.data.in.mem()
 test.data.ex.mem()
 

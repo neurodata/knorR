@@ -57,17 +57,19 @@ test.centroids.in.mem <- function() {
 
 # Main
 
-#test.centroids.in.mem()
-#ret1 <- test.data.centroids.in.mem()
-#ret2 <- test.data.centroids.in.mem()
-#test_that("Data in-mem compared to same", {
-              #expect_identical(ret1, ret2)})
+cat("\n\n***Running test for hmeans***\n\n")
 
-#ret1 <- test.data.in.mem()
-#ret2 <- test.data.in.mem()
-#test_that("data IM compared to same", {
-              #expect_identical(ret1, ret2)
-#})
+test.centroids.in.mem()
+ret1 <- test.data.centroids.in.mem()
+ret2 <- test.data.centroids.in.mem()
+test_that("Data in-mem compared to same", {
+              expect_identical(ret1, ret2)})
+
+ret1 <- test.data.in.mem()
+ret2 <- test.data.in.mem()
+test_that("data IM compared to same", {
+              expect_identical(ret1, ret2)
+})
 
 ret1 <- test.data.ex.mem()
 ret2 <- test.data.ex.mem()

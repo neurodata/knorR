@@ -40,6 +40,7 @@ test.data.ex.mem <- function() {
     cat("Computed successfully\n")
 }
 
+cat("\n\n***Running test for kmedoids***\n\n")
 ret1 <- test.data.in.mem()
 ret2 <- test.data.in.mem()
 test_that("Data IM other compared to same", {

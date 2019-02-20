@@ -51,6 +51,7 @@ test.data.centroids.in.mem <- function() {
 }
 
 # Main
+cat("\n\n***Running test for skmeans***\n\n")
 test.centroids.in.mem()
 ret1 <- test.data.centroids.in.mem()
 ret2 <- test.data.centroids.in.mem()

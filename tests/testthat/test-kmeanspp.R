@@ -39,6 +39,8 @@ test.data.ex.mem <- function() {
 }
 
 # Main
+cat("\n\n***Running test for kmeanspp***\n\n")
+
 test.data.in.mem()
 test.data.ex.mem()
 
