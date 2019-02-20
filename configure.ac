@@ -1,4 +1,4 @@
-AC_INIT(clusternor, @VERSION@, disa@jhu.edu)
+AC_INIT(clusternor, @VERSION@, disa@cs.jhu.edu)
 AC_CONFIG_SRCDIR(src/rinterface.cpp)
 AC_CONFIG_HEADERS(src/config.h)
 AC_CONFIG_MACRO_DIR([/usr/share/aclocal])
