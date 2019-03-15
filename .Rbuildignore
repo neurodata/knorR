@@ -11,6 +11,7 @@
 ^src/cknor/libkcommon/cxxopts/*$
 ^src/cknor/exec/*$
 ^.travis.yml$
+^Rhub.check.R$
 ^src/cknor/.git*$
 ^src/cknor/.travis.yml$
 ^src/cknor/libauto/*$
