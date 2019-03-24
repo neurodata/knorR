@@ -676,6 +676,7 @@ RcppExport SEXP R_kmeanspp_data_em(SEXP rdata, SEXP rk,
     marshall_c_to_r(kret.second, ret);
     ret["best.start"] = kret.first.first;
     ret["energy"] = kret.first.second;
+    ret["iters"] = NULL;
     return ret;
 }
 
