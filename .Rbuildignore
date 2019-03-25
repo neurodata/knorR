@@ -2,6 +2,7 @@
 ^src/Makevars$
 ^autom4te.cache$
 ^README.md$
+^example_verifier.R$
 ^Dockerfile$
 ^clsuternor_.*\.tar\.gz$
 ^.*\.sh$
