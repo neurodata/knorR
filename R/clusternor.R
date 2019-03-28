@@ -35,7 +35,7 @@
 #' @param tolerance The convergence tolerance
 #' @param dist.type What dissimilarity metric to use
 #'
-#' @return A list containing the attributes of the output of kmeans.
+#' @return A list containing the attributes of the output.
 #'  cluster: A vector of integers (from 1:\strong{k}) indicating the cluster to
 #'          which each point is allocated.
 #'  centers: A matrix of cluster centres.
@@ -112,70 +112,70 @@ Kmeans <- function(data, centers, nrow=-1, ncol=-1,
     }
 }
 
-#' Perform k-medoids clustering on a data matrix.
-#' After initialization the k-medoids algorithm partitions data by testing which
-#'  data member of a cluster Ci may make a better candidate as medoid (centroid)
-#'  by reducing the sum of distance (usually taxi), then running a reclustering
-#'  step with updated medoids.
-#'
-#' @param data Data file name on disk or In memory data matrix
-#' @param centers The number of centers (i.e., k)
-#' @param nrow The number of samples in the dataset
-#' @param ncol The number of features in the dataset
-#' @param iter.max The maximum number of iteration of k-means to perform
-#' @param nthread The number of parallel threads to run
-#' @param init The type of initialization to use c("forgy")
-#' @param tolerance The convergence tolerance
-#' @param dist.type What dissimilarity metric to use
-#'
-#' @return A list containing the attributes of the output of kmedoids.
-#'  cluster: A vector of integers (from 1:\strong{k}) indicating the cluster to
-#'          which each point is allocated.
-#'  centers: A matrix of cluster centres.
-#'  size: The number of points in each cluster.
-#'  iter: The number of (outer) iterations.
-#'
-#' @examples
-#' iris.mat <- as.matrix(iris[,1:4])
-#' k <- length(unique(iris[, dim(iris)[2]])) # Number of unique classes
-#' km <- Kmedoids(iris.mat, k)
-#'
-#' @export
-#' @name Kmedoids
-#' @author Disa Mhembere <disa@@cs.jhu.edu>
-#' @rdname Kmedoids
+##' Perform k-medoids clustering on a data matrix.
+##' After initialization the k-medoids algorithm partitions data by testing which
+##'  data member of a cluster Ci may make a better candidate as medoid (centroid)
+##'  by reducing the sum of distance (usually taxi), then running a reclustering
+##'  step with updated medoids.
+##'
+##' @param data Data file name on disk or In memory data matrix
+##' @param centers The number of centers (i.e., k)
+##' @param nrow The number of samples in the dataset
+##' @param ncol The number of features in the dataset
+##' @param iter.max The maximum number of iteration of k-means to perform
+##' @param nthread The number of parallel threads to run
+##' @param init The type of initialization to use c("forgy")
+##' @param tolerance The convergence tolerance
+##' @param dist.type What dissimilarity metric to use
+##'
+##' @return A list containing the attributes of the output of kmedoids.
+##'  cluster: A vector of integers (from 1:\strong{k}) indicating the cluster to
+##'          which each point is allocated.
+##'  centers: A matrix of cluster centres.
+##'  size: The number of points in each cluster.
+##'  iter: The number of (outer) iterations.
+##'
+##' @examples
+##' iris.mat <- as.matrix(iris[,1:4])
+##' k <- length(unique(iris[, dim(iris)[2]])) # Number of unique classes
+##' km <- Kmedoids(iris.mat, k)
+##'
+##' @export
+##' @name Kmedoids
+##' @author Disa Mhembere <disa@@cs.jhu.edu>
+##' @rdname Kmedoids
 
-Kmedoids <- function(data, centers, nrow=-1, ncol=-1,
-                   iter.max=.Machine$integer.max, nthread=-1,
-                   init=c("forgy"), tolerance=1E-6,
-                   dist.type=c("taxi", "eucl", "cos")) {
+#Kmedoids <- function(data, centers, nrow=-1, ncol=-1,
+                   #iter.max=.Machine$integer.max, nthread=-1,
+                   #init=c("forgy"), tolerance=1E-6,
+                   #dist.type=c("taxi", "eucl", "cos")) {
 
-    if (class(data) == "matrix") {
-        if (class(centers) == "numeric" || class(centers) == "integer") {
-            ret <- .Call("R_kmedoids_data_im", as.matrix(data),
-                         as.integer(centers),
-                         as.double(iter.max), as.integer(nthread),
-                         as.character(init), as.double(tolerance),
-                         as.character(dist.type),
-                         PACKAGE="clusternor")
-        } else {
-            stop(paste("Cannot handle centers of type", class(centers), "\n"))
-        }
-    } else if (class(data) == "character") {
-        if (class(centers) == "numeric" || class(centers) == "integer") {
-            ret <- .Call("R_kmedoids_data_em",
-                         normalizePath(as.character(data)),
-                         as.integer(centers), as.double(nrow),
-                         as.double(ncol),
-                         as.double(iter.max), as.integer(nthread),
-                         as.character(init), as.double(tolerance),
-                         as.character(dist.type),
-                         PACKAGE="clusternor")
-        } else {
-            stop(paste("Cannot handle data of type", class(data), "\n"))
-        }
-    }
-}
+    #if (class(data) == "matrix") {
+        #if (class(centers) == "numeric" || class(centers) == "integer") {
+            #ret <- .Call("R_kmedoids_data_im", as.matrix(data),
+                         #as.integer(centers),
+                         #as.double(iter.max), as.integer(nthread),
+                         #as.character(init), as.double(tolerance),
+                         #as.character(dist.type),
+                         #PACKAGE="clusternor")
+        #} else {
+            #stop(paste("Cannot handle centers of type", class(centers), "\n"))
+        #}
+    #} else if (class(data) == "character") {
+        #if (class(centers) == "numeric" || class(centers) == "integer") {
+            #ret <- .Call("R_kmedoids_data_em",
+                         #normalizePath(as.character(data)),
+                         #as.integer(centers), as.double(nrow),
+                         #as.double(ncol),
+                         #as.double(iter.max), as.integer(nthread),
+                         #as.character(init), as.double(tolerance),
+                         #as.character(dist.type),
+                         #PACKAGE="clusternor")
+        #} else {
+            #stop(paste("Cannot handle data of type", class(data), "\n"))
+        #}
+    #}
+#}
 
 #' Perform spherical k-means clustering on a data matrix.
 #' Similar to the k-means algorithm differing only in that data features are
@@ -192,7 +192,7 @@ Kmedoids <- function(data, centers, nrow=-1, ncol=-1,
 #'  "random", "forgy", "none")
 #' @param tolerance The convergence tolerance
 #'
-#' @return A list containing the attributes of the output of kmedoids.
+#' @return A list containing the attributes of the output.
 #'  cluster: A vector of integers (from 1:\strong{k}) indicating the cluster to
 #'          which each point is allocated.
 #'  centers: A matrix of cluster centres.
@@ -266,7 +266,7 @@ Skmeans <- function(data, centers, nrow=-1, ncol=-1,
 #' @param nthread The number of parallel threads to run
 #' @param dist.type What dissimilarity metric to use c("taxi", "eucl", "cos")
 #'
-#' @return A list containing the attributes of the output of kmedoids.
+#' @return A list containing the attributes of the output.
 #'  cluster: A vector of integers (from 1:\strong{k}) indicating the cluster to
 #'          which each point is allocated.
 #'  centers: A matrix of cluster centres.
@@ -339,7 +339,7 @@ KmeansPP <- function(data, centers, nrow=-1, ncol=-1,
 #'      number of mini batches that does not yield an improvement on the
 #'      smoothed inertia
 #'
-#' @return A list containing the attributes of the output of kmeans.
+#' @return A list containing the attributes of the output.
 #'  cluster: A vector of integers (from 1:\strong{k}) indicating the cluster to
 #'          which each point is allocated.
 #'  centers: A matrix of cluster centres.
@@ -424,7 +424,7 @@ MiniBatchKmeans <- function(data, centers, nrow=-1, ncol=-1,
 #' @param tolerance The convergence tolerance
 #' @param dist.type What dissimilarity metric to use
 #'
-#' @return A list containing the attributes of the output of kmeans.
+#' @return A list containing the attributes of the output.
 #'  cluster: A vector of integers (from 1:\strong{k}) indicating the cluster to
 #'          which each point is allocated.
 #'  centers: A matrix of cluster centres.
@@ -508,7 +508,7 @@ FuzzyCMeans <- function(data, centers, nrow=-1, ncol=-1,
 #' @param dist.type What dissimilarity metric to use
 #' @param min.clust.size The minimum size of a cluster when it cannot be split
 #'
-#' @return A list of lists containing the attributes of the output of kmeans.
+#' @return A list of lists containing the attributes of the output.
 #'  cluster: A vector of integers (from 1:\strong{k}) indicating the cluster to
 #'          which each point is allocated.
 #'  centers: A matrix of cluster centres.
@@ -595,7 +595,7 @@ Hmeans <- function(data, kmax, nrow=-1, ncol=-1, iter.max=20,
 #' @param dist.type What dissimilarity metric to use
 #' @param min.clust.size The minimum size of a cluster when it cannot be split
 #'
-#' @return A list of lists containing the attributes of the output of kmeans.
+#' @return A list of lists containing the attributes of the output.
 #'  cluster: A vector of integers (from 1:\strong{k}) indicating the cluster to
 #'          which each point is allocated.
 #'  centers: A matrix of cluster centres.
@@ -685,7 +685,7 @@ Xmeans <- function(data, kmax, nrow=-1, ncol=-1, iter.max=20,
 ##' @param strictness The Anderson-Darling strictness level.
 ##'          Should be between 1 and 4 inclusive
 ##'
-##' @return A list of lists containing the attributes of the output of kmeans.
+##' @return A list of lists containing the attributes of the output.
 ##'  cluster: A vector of integers (from 1:\strong{k}) indicating the cluster to
 ##'          which each point is allocated.
 ##'  centers: A matrix of cluster centres.
