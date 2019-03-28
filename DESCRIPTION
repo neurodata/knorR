@@ -12,7 +12,7 @@ License: Apache License 2.0
 URL: https://github.com/neurodata/knorR
 SystemRequirements: GNU make C++11, pthreads
 BugReports: https://github.com/flashxio/knor/issues
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Encoding: UTF-8
 LazyData: true
 NeedsCompilation: yes
