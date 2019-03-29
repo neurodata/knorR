@@ -31,7 +31,7 @@ hierarchical split}
 \item{min.clust.size}{The minimum size of a cluster when it cannot be split}
 }
 \value{
-A list of lists containing the attributes of the output of kmeans.
+A list of lists containing the attributes of the output.
  cluster: A vector of integers (from 1:\strong{k}) indicating the cluster to
          which each point is allocated.
  centers: A matrix of cluster centres.

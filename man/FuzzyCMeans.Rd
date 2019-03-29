@@ -34,7 +34,7 @@ FuzzyCMeans(data, centers, nrow = -1, ncol = -1,
 \item{dist.type}{What dissimilarity metric to use}
 }
 \value{
-A list containing the attributes of the output of kmeans.
+A list containing the attributes of the output.
  cluster: A vector of integers (from 1:\strong{k}) indicating the cluster to
          which each point is allocated.
  centers: A matrix of cluster centres.

@@ -30,7 +30,7 @@ Skmeans(data, centers, nrow = -1, ncol = -1,
 \item{tolerance}{The convergence tolerance}
 }
 \value{
-A list containing the attributes of the output of kmedoids.
+A list containing the attributes of the output.
  cluster: A vector of integers (from 1:\strong{k}) indicating the cluster to
          which each point is allocated.
  centers: A matrix of cluster centres.

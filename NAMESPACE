@@ -1,4 +1,4 @@
-useDynLib(clusternor, .registration = TRUE)
+useDynLib(clusternor)
 
 import(Rcpp)
 export(Kmeans)
