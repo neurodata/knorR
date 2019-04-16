@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/neurodata/knorR.svg?branch=master)](https://travis-ci.org/neurodata/knorR)[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/ggplot2)](https://cran.r-project.org/package=knor) [![Total Downloads](https://cranlogs.r-pkg.org/badges/grand-total/knor?color=blue)]
+[![Build Status](https://travis-ci.org/neurodata/knorR.svg?branch=master)](https://travis-ci.org/neurodata/knorR) [![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/ggplot2)](https://cran.r-project.org/package=knor) [![Downloads](https://cranlogs.r-pkg.org/badges/grand-total/knor?color=blue)](http://www.r-pkg.org/pkg/knor)
 
 [//]: # "![Downloads](http://cranlogs.r-pkg.org/badges/knor?color=brightgreen)](http://www.r-pkg.org/pkg/knor)"
 
