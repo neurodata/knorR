@@ -63,8 +63,9 @@ Kmeans <- function(data, centers, nrow=-1, ncol=-1,
                    tolerance=1E-6, dist.type=c("eucl", "cos"),
                    omp=FALSE, numa.opt=FALSE) {
 
-    if (class(data) == "character") {
-        if (class(centers) == "numeric" || class(centers) == "integer") {
+    if (is.element("character", class(data))) {
+        if (is.element("numeric", class(centers)) ||
+            is.element("integer", class(centers))) {
             ret <- .Call("R_knor_kmeans", normalizePath(as.character(data)),
                          as.integer(centers), as.double(nrow),
                          as.double(ncol),
@@ -72,7 +73,7 @@ Kmeans <- function(data, centers, nrow=-1, ncol=-1,
                          as.character(init), as.double(tolerance),
                          as.character(dist.type), as.logical(omp),
                          PACKAGE="knor")
-        } else if (class(centers) == "matrix") {
+        } else if (is.element("matrix", class(centers))) {
             ret <- .Call("R_knor_kmeans_centroids_im",
                          normalizePath(as.character(data)),
                          as.matrix(centers), as.double(nrow),
@@ -80,8 +81,7 @@ Kmeans <- function(data, centers, nrow=-1, ncol=-1,
                          as.double(tolerance),
                          as.character(dist.type), as.logical(omp),
                          PACKAGE="knor")
-        }
-        else if (class(centers) == "list") {
+        } else if (is.element("list", class(centers))) {
             ret <- .Call("R_knor_kmeans_data_centroids_em",
                          normalizePath(as.character(data)),
                          normalizePath(as.character(centers[1])),
@@ -103,7 +103,7 @@ Kmeans <- function(data, centers, nrow=-1, ncol=-1,
                          as.character(dist.type), as.logical(omp),
                          as.logical(numa.opt),
                          PACKAGE="knor")
-        } else if (class(centers) == "matrix") {
+        } else if (is.element("matrix" , class(centers))) {
             ret <- .Call("R_knor_kmeans_data_centroids_im", as.matrix(data),
                          as.matrix(centers),
                          as.double(iter.max), as.integer(nthread),
@@ -111,7 +111,7 @@ Kmeans <- function(data, centers, nrow=-1, ncol=-1,
                          as.character(dist.type), as.logical(omp),
                          as.logical(numa.opt),
                          PACKAGE="knor")
-        } else if (class(centers) == "character") {
+        } else if (is.element("character", class(centers))) {
             ret <- .Call("R_knor_kmeans_data_im_centroids_em", as.matrix(data),
                          normalizePath(centers),
                          as.double(iter.max), as.integer(nthread),
