@@ -94,8 +94,8 @@ Kmeans <- function(data, centers, nrow=-1, ncol=-1,
         } else {
             stop(paste("Cannot handle centers of type", class(centers), "\n"))
         }
-    } else if (class(data) == "matrix") {
-        if (class(centers) == "numeric" || class(centers) == "integer") {
+    } else if (inherits(data, "matrix")) {
+        if (inherits(centers, "numeric") || inherits(centers, "integer")) {
             ret <- .Call("R_knor_kmeans_data_im", as.matrix(data),
                          as.integer(centers),
                          as.double(iter.max), as.integer(nthread),
