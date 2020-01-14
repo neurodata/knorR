@@ -4,9 +4,18 @@
 \alias{Hmeans}
 \title{Perform parallel hierarchical clustering on a data matrix.}
 \usage{
-Hmeans(data, kmax, nrow = -1, ncol = -1, iter.max = 20,
-  nthread = -1, init = c("forgy"), tolerance = 1e-06,
-  dist.type = c("eucl", "cos", "sqeucl", "taxi"), min.clust.size = 1)
+Hmeans(
+  data,
+  kmax,
+  nrow = -1,
+  ncol = -1,
+  iter.max = 20,
+  nthread = -1,
+  init = c("forgy"),
+  tolerance = 1e-06,
+  dist.type = c("eucl", "cos", "sqeucl", "taxi"),
+  min.clust.size = 1
+)
 }
 \arguments{
 \item{data}{Data file name on disk (NUMA optmized) or In memory data matrix}
@@ -31,7 +40,7 @@ hierarchical split}
 \item{min.clust.size}{The minimum size of a cluster when it cannot be split}
 }
 \value{
-A list of lists containing the attributes of the output of kmeans.
+A list of lists containing the attributes of the output.
  cluster: A vector of integers (from 1:\strong{k}) indicating the cluster to
          which each point is allocated.
  centers: A matrix of cluster centres.

@@ -4,10 +4,17 @@
 \alias{Kmeans}
 \title{Perform k-means clustering on a data matrix.}
 \usage{
-Kmeans(data, centers, nrow = -1, ncol = -1,
-  iter.max = .Machine$integer.max, nthread = -1, init = c("kmeanspp",
-  "random", "forgy", "none"), tolerance = 1e-06, dist.type = c("eucl",
-  "sqeucl", "cos", "taxi"))
+Kmeans(
+  data,
+  centers,
+  nrow = -1,
+  ncol = -1,
+  iter.max = .Machine$integer.max,
+  nthread = -1,
+  init = c("kmeanspp", "random", "forgy", "none"),
+  tolerance = 1e-06,
+  dist.type = c("eucl", "sqeucl", "cos", "taxi")
+)
 }
 \arguments{
 \item{data}{Data file name on disk (NUMA optimized) or In memory data matrix}
@@ -33,7 +40,7 @@ the number of centroids.}
 \item{dist.type}{What dissimilarity metric to use}
 }
 \value{
-A list containing the attributes of the output of kmeans.
+A list containing the attributes of the output.
  cluster: A vector of integers (from 1:\strong{k}) indicating the cluster to
          which each point is allocated.
  centers: A matrix of cluster centres.

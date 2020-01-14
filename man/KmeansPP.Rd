@@ -4,8 +4,15 @@
 \alias{KmeansPP}
 \title{Perform the k-means++ clustering algorithm on a data matrix.}
 \usage{
-KmeansPP(data, centers, nrow = -1, ncol = -1, nstart = 1,
-  nthread = -1, dist.type = c("sqeucl", "eucl", "cos", "taxi"))
+KmeansPP(
+  data,
+  centers,
+  nrow = -1,
+  ncol = -1,
+  nstart = 1,
+  nthread = -1,
+  dist.type = c("sqeucl", "eucl", "cos", "taxi")
+)
 }
 \arguments{
 \item{data}{Data file name on disk (NUMA optimized) or In memory data matrix}
@@ -23,7 +30,7 @@ KmeansPP(data, centers, nrow = -1, ncol = -1, nstart = 1,
 \item{dist.type}{What dissimilarity metric to use c("taxi", "eucl", "cos")}
 }
 \value{
-A list containing the attributes of the output of kmedoids.
+A list containing the attributes of the output.
  cluster: A vector of integers (from 1:\strong{k}) indicating the cluster to
          which each point is allocated.
  centers: A matrix of cluster centres.
