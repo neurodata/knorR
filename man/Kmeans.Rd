@@ -4,10 +4,18 @@
 \alias{Kmeans}
 \title{Perform k-means clustering on a data matrix.}
 \usage{
-Kmeans(data, centers, nrow = -1, ncol = -1,
-  iter.max = .Machine$integer.max, nthread = -1, init = c("kmeanspp",
-  "random", "forgy", "none"), tolerance = 1e-06, dist.type = c("eucl",
-  "cos"), omp = FALSE, numa.opt = FALSE)
+Kmeans(
+  data,
+  centers,
+  nrow = -1,
+  ncol = -1,
+  iter.max = .Machine$integer.max,
+  nthread = -1,
+  init = c("kmeanspp", "random", "forgy", "none"),
+  tolerance = 1e-06,
+  dist.type = c("eucl", "cos"),
+  omp = FALSE
+)
 }
 \arguments{
 \item{data}{Data file name on disk or In memory data matrix}
@@ -33,11 +41,6 @@ the number of centroids.}
 \item{dist.type}{What dissimilarity metric to use}
 
 \item{omp}{Use (slower) OpenMP threads rather than pthreads}
-
-\item{numa.opt}{When passing \emph{data} as an in-memory data matrix you can
-optimize memory placement for Linux NUMA machines. \strong{NOTE:}
-performance may degrade with very large data & it requires
-2*memory of that without this.}
 }
 \value{
 A list containing the attributes of the output of kmeans.

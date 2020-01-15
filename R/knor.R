@@ -35,10 +35,6 @@
 #' @param tolerance The convergence tolerance
 #' @param dist.type What dissimilarity metric to use
 #' @param omp Use (slower) OpenMP threads rather than pthreads
-#' @param numa.opt When passing \emph{data} as an in-memory data matrix you can
-#'  optimize memory placement for Linux NUMA machines. \strong{NOTE:}
-#'  performance may degrade with very large data & it requires
-#'  2*memory of that without this.
 #'
 #' @return A list containing the attributes of the output of kmeans.
 #'  cluster: A vector of integers (from 1:\strong{k}) indicating the cluster to
@@ -61,7 +57,7 @@ Kmeans <- function(data, centers, nrow=-1, ncol=-1,
                    iter.max=.Machine$integer.max, nthread=-1,
                    init=c("kmeanspp", "random", "forgy", "none"),
                    tolerance=1E-6, dist.type=c("eucl", "cos"),
-                   omp=FALSE, numa.opt=FALSE) {
+                   omp=FALSE) {
 
     if (inherits(data, "character")) {
         if (inherits(centers, "numeric") ||
@@ -101,7 +97,6 @@ Kmeans <- function(data, centers, nrow=-1, ncol=-1,
                          as.double(iter.max), as.integer(nthread),
                          as.character(init), as.double(tolerance),
                          as.character(dist.type), as.logical(omp),
-                         as.logical(numa.opt),
                          PACKAGE="knor")
         } else if (inherits(centers, "matrix")) {
             ret <- .Call("R_knor_kmeans_data_centroids_im", as.matrix(data),
