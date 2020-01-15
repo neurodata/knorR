@@ -27,7 +27,7 @@ extern SEXP R_knor_kmeans(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, 
 extern SEXP R_knor_kmeans_centroids_im(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP R_knor_kmeans_data_centroids_em(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP R_knor_kmeans_data_centroids_im(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
-extern SEXP R_knor_kmeans_data_im(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
+extern SEXP R_knor_kmeans_data_im(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 extern SEXP R_knor_kmeans_data_im_centroids_em(SEXP, SEXP, SEXP, SEXP, SEXP, SEXP, SEXP);
 
 static const R_CallMethodDef CallEntries[] = {
@@ -35,7 +35,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"R_knor_kmeans_centroids_im",         (DL_FUNC) &R_knor_kmeans_centroids_im,          8},
     {"R_knor_kmeans_data_centroids_em",    (DL_FUNC) &R_knor_kmeans_data_centroids_em,    10},
     {"R_knor_kmeans_data_centroids_im",    (DL_FUNC) &R_knor_kmeans_data_centroids_im,     7},
-    {"R_knor_kmeans_data_im",              (DL_FUNC) &R_knor_kmeans_data_im,               9},
+    {"R_knor_kmeans_data_im",              (DL_FUNC) &R_knor_kmeans_data_im,               8},
     {"R_knor_kmeans_data_im_centroids_em", (DL_FUNC) &R_knor_kmeans_data_im_centroids_em,  7},
     {NULL, NULL, 0}
 };
