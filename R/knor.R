@@ -109,7 +109,6 @@ Kmeans <- function(data, centers, nrow=-1, ncol=-1,
                          as.double(iter.max), as.integer(nthread),
                          as.double(tolerance),
                          as.character(dist.type), as.logical(omp),
-                         as.logical(numa.opt),
                          PACKAGE="knor")
         } else if (inherits(centers, "character")) {
             ret <- .Call("R_knor_kmeans_data_im_centroids_em", as.matrix(data),
@@ -117,7 +116,6 @@ Kmeans <- function(data, centers, nrow=-1, ncol=-1,
                          as.double(iter.max), as.integer(nthread),
                          as.double(tolerance),
                          as.character(dist.type), as.logical(omp),
-                         as.logical(numa.opt),
                          PACKAGE="knor")
         } else {
             stop(paste("Cannot handle centers of type", class(centers), "\n"))
