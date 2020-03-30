@@ -1,6 +1,6 @@
 Package: clusternor
 Version: 0.0-4
-Date: 2020-01-13
+Date: 2020-02-15
 Title: A Parallel Clustering Non-Uniform Memory Access ('NUMA')
         Optimized Package
 Authors@R: c(person("Disa", "Mhembere", role = c("aut", "cre"), email = "disa@cs.jhu.edu"), person("Neurodata (https://neurodata.io)", role="cph"))
